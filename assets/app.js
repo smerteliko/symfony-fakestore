@@ -1,10 +1,31 @@
-import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import './styles/app.css';
+import Vue from "vue";
+import fakeStore from "./fakestore.vue";
+import router from './routes/router.js'
+import "./styles/app.css";
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+Vue.config.productionTip = false;
+Vue.prototype.$log = console.log;     //debug log
+Vue.prototype.$logt = console.table;  //debug log
+
+let FakeStore = new Vue({
+	el: "#fakestore",
+	//store: indexStore,
+	router: router,
+	data() {
+		return {
+			dataObject: {},
+			csrf_token: "",
+			lastUser: "",
+		};
+	},
+	beforeMount: function () {
+	// this.dataObject = JSON.parse(
+	// 		this.$el.attributes["data-dataObject"].value
+	// );
+	// this.csrf_token = this.$el.attributes["data-token"].value;
+	// this.lastUser = this.$el.attributes["data-lastUser"].value;
+	},
+	render: function (h) {
+		return h(fakeStore);
+	},
+})

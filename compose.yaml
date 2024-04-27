@@ -1,26 +1,82 @@
-version: '3'
+version: "3.8"
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
+  symfony-fakestore-php-fpm:
+    container_name: ${COMPOSE_PROJECT_NAME}_php-fpm
+    build:
+      context: docker
+      dockerfile: ./php-fpm/Dockerfile
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    healthcheck:
-      test: ["CMD", "pg_isready -U ${POSTGRES_USER:-app}"]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+      PHP_IDE_CONFIG: "serverName=Docker"
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - ./:/var/www/
+    networks:
+      - symfony-fakestore
+#    links:
+#      - redis
+
+  symfony-fakestore-nginx:
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    build:
+      context: docker/nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www:rw
+      - ./docker/php-fpm/php.ini:/etc/php/8.1/cli/php.ini
+    depends_on:
+      - symfony-fakestore-php-fpm
+    networks:
+      - symfony-fakestore
+
+  symfony-fakestore-database:
+    image: 'postgres:alpine'
+    container_name: ${COMPOSE_PROJECT_NAME}_database
+    restart: always
+    volumes:
+     - ./docker/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_BASE}
+    ports:
+        - '5432'
+    networks:
+        - symfony-fakestore
+
+
+#  mailer:
+#    image: maildev/maildev
+#    container_name: ${COMPOSE_PROJECT_NAME}_mailer
+#    ports:
+#      - "1025"
+#      - "1080"
+#    networks:
+#      - symfony-fakestore
+
+#  redis:
+#    container_name: ${COMPOSE_PROJECT_NAME}_redis
+#    image: redis:alpine
+#    ports:
+#      - "6379:6379"
+
+
+#  rabbitmq:
+#    container_name: ${COMPOSE_PROJECT_NAME}_rabbit
+#    hostname: rabbit
+#    image: rabbitmq:3-management
+#    environment:
+#      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+#      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+#    volumes:
+#      - ./docker/rabbitmq/:/var/lib/rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+
+networks:
+  symfony-fakestore:
+    driver: bridge
 
 volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  symfony-fakestore-database:
