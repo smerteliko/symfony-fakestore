@@ -27,9 +27,19 @@ class Category
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'Category')]
     private Collection $products;
 
+    /**
+     * @var Collection<int, SubCategory>
+     */
+    #[ORM\OneToMany(targetEntity: SubCategory::class, mappedBy: 'Category')]
+    private Collection $subCategories;
+
+    #[ORM\Column(length: 255)]
+    private ?string $descriprion = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->subCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,6 +97,48 @@ class Category
                 $product->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SubCategory>
+     */
+    public function getSubCategories(): Collection
+    {
+        return $this->subCategories;
+    }
+
+    public function addSubCategory(SubCategory $subCategory): static
+    {
+        if (!$this->subCategories->contains($subCategory)) {
+            $this->subCategories->add($subCategory);
+            $subCategory->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubCategory(SubCategory $subCategory): static
+    {
+        if ($this->subCategories->removeElement($subCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($subCategory->getCategory() === $this) {
+                $subCategory->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDescriprion(): ?string
+    {
+        return $this->descriprion;
+    }
+
+    public function setDescriprion(string $descriprion): static
+    {
+        $this->descriprion = $descriprion;
 
         return $this;
     }

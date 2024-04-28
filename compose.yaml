@@ -40,7 +40,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_BASE}
     ports:
-        - '5432'
+        - "5432:5432"
     networks:
         - symfony-fakestore
 

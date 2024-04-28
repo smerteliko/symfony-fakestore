@@ -21,6 +21,23 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+	public function newCategory($data): void {
+		$category = new Category();
+		$category->setName($data['Name']);
+		$category->setCreatedAt(new \DateTimeImmutable());
+
+		$this->getEntityManager()->persist($category);
+		$this->getEntityManager()->flush();
+	}
+
+	public function findAllArray() {
+		return $this->createQueryBuilder('c')
+                ->orderBy('c.id', 'ASC')
+                ->getQuery()
+                ->getArrayResult()
+            ;
+	}
+
     //    /**
     //     * @return Category[] Returns an array of Category objects
     //     */
