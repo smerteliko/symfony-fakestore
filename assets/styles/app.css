@@ -3,3 +3,17 @@ body {
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(13,13,213,1) 41%, rgba(0,212,255,1) 100%);
 }
+.container-color {
+    background-color: #f0f4f7
+}
+
+.component {
+    margin-bottom: 0.5rem !important;
+    margin-top: 3rem !important;
+    height: 100vh !important;
+}
+
+.component-flex {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
