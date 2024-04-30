@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -16,7 +18,7 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $Name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $Description = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
@@ -30,6 +32,17 @@ class Product
 
     #[ORM\ManyToOne(inversedBy: 'Product')]
     private ?SubCategory $subCategory = null;
+
+    /**
+     * @var Collection<int, ProductImages>
+     */
+    #[ORM\OneToMany(targetEntity: ProductImages::class, mappedBy: 'Product')]
+    private Collection $productImages;
+
+    public function __construct()
+    {
+        $this->productImages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +117,36 @@ class Product
     public function setSubCategory(?SubCategory $subCategory): static
     {
         $this->subCategory = $subCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductImages>
+     */
+    public function getProductImages(): Collection
+    {
+        return $this->productImages;
+    }
+
+    public function addProductImage(ProductImages $productImage): static
+    {
+        if (!$this->productImages->contains($productImage)) {
+            $this->productImages->add($productImage);
+            $productImage->setProductID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductImage(ProductImages $productImage): static
+    {
+        if ($this->productImages->removeElement($productImage)) {
+            // set the owning side to null (unless already changed)
+            if ($productImage->getProductID() === $this) {
+                $productImage->setProductID(null);
+            }
+        }
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,6 +22,33 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+
+	public function findProductsBy(array $options): array {
+		$qb = $this->getEntityManager()->createQueryBuilder();
+
+		$qb ->select('product')
+			->from(Product::class, 'product');
+
+		if (isset($options['id'])) {
+			$qb ->where('product.id = :id')
+				->setParameter('id', $options['id']);
+		}
+
+		if (isset($options['subID'])) {
+			$qb ->leftJoin('product.subCategory', 'sub')
+				->andWhere('sub.id = :subID')
+				->setParameter('subID', $options['subID']);
+		}
+
+		if (isset($options['catID'])) {
+			$qb ->leftJoin('product.Category', 'cat')
+				->andWhere('cat.id = :catID')
+				->setParameter('catID', $options['catID']);
+		}
+		$qb->addSelect('pI');
+		$qb->leftJoin('product.productImages', 'pI');
+		return $qb->getQuery()->getArrayResult();
+	}
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */
