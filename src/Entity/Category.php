@@ -33,7 +33,7 @@ class Category
     #[ORM\OneToMany(targetEntity: SubCategory::class, mappedBy: 'Category')]
     private Collection $subCategories;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $descriprion = null;
 
     public function __construct()

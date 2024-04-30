@@ -79,7 +79,7 @@ db_schema_validate:
 	${SYMFONY} doctrine:schema:validate
 
 db_migration_down:
-	${SYMFONY} doctrine:migrations:execute "App\Shared\Infrastructure\Database\Migrations\Version********" --down --dry-run
+	${SYMFONY} doctrine:migrations:execute "Version20240429105754" --down --dry-run
 
 db_drop:
 	${SYMFONY} doctrine:schema:drop --force
@@ -87,6 +87,9 @@ db_drop:
 db_up:
 	$(SYMFONY) doctrine:database:create --if-not-exists
 	$(SYMFONY) doctrine:schema:update --force
+
+db_command_create_sub_cat:
+	${SYMFONY} app:create-sub-cat ${Name} ${CategoryID}
 
 ##################
 # Cache

@@ -12,8 +12,8 @@ services:
       - ./:/var/www/
     networks:
       - symfony-fakestore
-#    links:
-#      - redis
+    links:
+      - symfony-fakestore-redis
 
   symfony-fakestore-nginx:
     container_name: ${COMPOSE_PROJECT_NAME}_nginx
@@ -54,11 +54,13 @@ services:
 #    networks:
 #      - symfony-fakestore
 
-#  redis:
-#    container_name: ${COMPOSE_PROJECT_NAME}_redis
-#    image: redis:alpine
-#    ports:
-#      - "6379:6379"
+  symfony-fakestore-redis:
+    container_name: ${COMPOSE_PROJECT_NAME}_redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - symfony-fakestore
 
 
 #  rabbitmq:
