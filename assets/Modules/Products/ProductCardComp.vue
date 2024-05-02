@@ -14,11 +14,8 @@
             <span> {{ this.product.Description }}</span>
         </div>
         <div class="card-footer">
-            <div class="d-flex"
-                 :class="{
-                    'flex-wrap':this.product.quantity > 0,
-                     'justify-content-between': this.product.quantity ===0
-                }">
+            <div class="d-flex  justify-content-between"
+                >
                 <div>
                     <h3> {{ this.product.totalPrice }}</h3>
                 </div>
@@ -28,27 +25,29 @@
                         Add to cart <i class="fa-solid fa-cart-plus"></i>
                     </button>
                 </div>
-                <div v-else>
-                    <div class="input-group quantity-selector">
+                <div v-else  class="d-flex justify-content-end">
+                    <div class="input-group input-group-sm input-width flex-nowrap ">
                         <button
-                            class="btn btn-outline-danger"
+                            class="btn btn-outline-danger border-end-0 border-radius"
                             type="button"
-                            @click="this.removeQuantity">
-                                <i class="fa-solid fa-minus"></i>
+                            @click="removeQuantity()">
+                            <i :class="{
+                                    'fa-solid fa-minus' : this.product.quantity !== 1,
+                                     'fa-regular fa-trash-can' : this.product.quantity === 1}" ></i>
                         </button>
-                        <input class="form-control border-dark"
+                        <input class="form-control border border-end-0 border-start-0 border-input"
                                value="1"
                                min="1"
                                type="number"
-                               v-model.number="product.quantity">
+                               disabled
+                               v-model.number="this.product.quantity">
                         <button
-                            class=" btn btn-outline-success "
+                            class=" btn btn-outline-success border-start-0 border-radius"
                             type="button"
-                            @click="this.addQuantity">
-                                <i class="fa-solid fa-plus"></i>
+                            @click="addQuantity()">
+                            <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -58,16 +57,15 @@
 <script>
 export default {
     name: "ProductCardComp",
-    props: ['ProductData'],
+    props: ['product'],
     data() {
         return {
-            product: this.ProductData,
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : ''
         }
     },
-    beforeMount() {
-        this.$set(this.product, 'quantity', 0);
-        this.$set(this.product, 'totalPrice', this.product.price);
+    beforeCreate() {
+        this.product['quantity'] = 0;
+        this.product['totalPrice'] = this.product.price;
     },
     watch:{
     },
@@ -78,8 +76,8 @@ export default {
             this.$store.dispatch('addToCart', this.product);
         },
         checkImg() {
-            if (this.ProductData.productImages.length > 0) {
-                return this.ProductData.productImages[0].FileNameBase;
+            if (this.product && this.product.productImages.length > 0) {
+                return this.product.productImages[0].FileNameBase;
             }
             return '';
         },
@@ -113,10 +111,36 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+    text-align: center;
 }
 
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
+    text-align: center;
 }
+
+input:disabled{
+    background: none;
+}
+
+.table-collapse {
+    border-collapse: separate;
+    border-spacing:0 20px;
+}
+
+.border-input {
+    border-style: solid !important;
+    border-image: linear-gradient(90deg, rgba(220,53,69,1) 0%, rgba(25,135,84,1) 100%) 1 !important;
+}
+
+.border-radius {
+    border-radius: 20px
+}
+
+.input-width {
+    width: 50% !important;
+}
+
+
 </style>

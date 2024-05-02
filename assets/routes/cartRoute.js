@@ -1,14 +1,10 @@
-import CartComp from "../Modules/Cart/CartComp.vue";
+const CartComp = () => import( "../Modules/Cart/CartComp.vue");
 
-export default [
+let cartRoute  = [
 	{
 		path: '/cart',
 		name: "CartComp",
 		component: CartComp
 	},
-	// {
-	// 	path: '/catalog/category/:id',
-	// 	name: "CategoryComp",
-	// 	component: CategoryComp
-	// },
 ];
+export default cartRoute;

@@ -1,5 +1,5 @@
 <template>
-    <nav class=" container navbar  navbar-expand-lg navbar-light bg-light ">
+    <nav class=" container navbar  navbar-expand-lg navbar-light bg-light mt-5">
         <div class="container-fluid">
             <div class="navbar-brand  align-content-start me-lg-5">
                 <RouterLink class="nav-link  link-primary" to="/">
@@ -23,7 +23,7 @@
                               <h3 class="text-lg-center mb-0">
                                   <i class="fa-solid fa-book-open"></i>
                               </h3>
-                              <p><small>Categories</small></p>
+                              <p class="mb-0"><small>Categories</small></p>
                           </RouterLink>
                           <div class="dropdown-menu"
                                aria-labelledby="navbarDropdownMenuLink"
@@ -45,14 +45,14 @@
                           <h3 class="text-lg-center mb-0">
                               <i class="fa-solid fa-cart-shopping"></i>
                           </h3>
-                          <p><small>Cart</small></p>
+                          <p class="mb-0"><small>Cart</small></p>
                       </RouterLink>
-                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">
-                          <h3 class="text-lg-center mb-0">
-                              <i class="fa-solid fa-house-user"></i>
-                          </h3>
-                          <p><small>User</small></p>
-                      </RouterLink>
+<!--                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">-->
+<!--                          <h3 class="text-lg-center mb-0">-->
+<!--                              <i class="fa-solid fa-house-user"></i>-->
+<!--                          </h3>-->
+<!--                          <p class="mb-0"><small>User</small></p>-->
+<!--                      </RouterLink>-->
                   </div>
               </div>
         </div>
@@ -128,7 +128,7 @@ export default {
 
   .dropdown>.dropdown-toggle:active {
       /*Without this, clicking will make it sticky*/
-      pointer-events: ;
+      /*pointer-events: ;*/
   }
 
 </style>

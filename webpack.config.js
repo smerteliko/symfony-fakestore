@@ -3,9 +3,8 @@ const Encore = require('@symfony/webpack-encore');
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
-    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+    Encore.configureRuntimeEnvironment(process.env.APP_ENV || 'dev');
 }
-
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
@@ -52,7 +51,13 @@ Encore
         config.corejs = '3.23';
     })
     .enableVueLoader(()=>{},{
-        runtimeCompilerBuild: true
+        runtimeCompilerBuild: true,
+    })
+    .configureDefinePlugin( (options) => {
+        options.__VUE_OPTIONS_API__ = true;
+        options.__VUE_PROD_DEVTOOLS__ = false;
+        options.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
+
     })
     // enables Sass/SCSS support
     //.enableSassLoader()

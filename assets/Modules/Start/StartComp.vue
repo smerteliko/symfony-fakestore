@@ -11,11 +11,11 @@
 
 <script>
 import {mapGetters} from "vuex";
-import ProductCardComp from "../Products/ProductCardComp.vue";
 import ProductListComp from "../Products/ProductsListComp.vue"
+
 export default {
     name: 'StartComp',
-    components: {ProductCardComp, ProductListComp},
+    components: { ProductListComp},
     beforeMount() {
         this.$store.dispatch('fetchProductList');
 

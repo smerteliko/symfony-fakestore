@@ -1,8 +1,7 @@
-import CatalogComp from "../Modules/Catalog/CatalogComp.vue";
-import CategoryComp from "../Modules/Catalog/CategoryComp.vue";
-import CatalogListComp from "../Modules/Catalog/CatalogListComp.vue";
+const CatalogListComp = () =>  import('../Modules/Catalog/CatalogListComp.vue');
+const CategoryComp = () => import( "../Modules/Catalog/CategoryComp.vue");
 
-export default [
+let catalogRoute = [
 	{
 		path: '/catalog',
 		name: "CatalogListComp",
@@ -14,3 +13,5 @@ export default [
 		component: CategoryComp
 	},
 ];
+
+export default catalogRoute;

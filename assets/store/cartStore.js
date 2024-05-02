@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export default {
 	state: {
 		cartItems: [],
@@ -8,7 +6,8 @@ export default {
 	mutations: {
 
 		SET_CART_ITEMS_LS(state,value) {
-			window.localStorage.setItem('cart', JSON.stringify(state.cartItems))
+			window.localStorage.setItem('cart', JSON.stringify(state.cartItems));
+
 		},
 
 		SET_NEW_CART_ITEMS(state, value) {
@@ -25,9 +24,14 @@ export default {
 		},
 
 		SET_CART_ITEM_QUANTITY(state, value) {
-
 			const index = state.cartItems.findIndex(item=>item.id === value.id);
 			state.cartItems[index].quantity = value.quantity;
+		},
+
+		SET_ALL_CART_SELECTED(state, value) {
+			state.cartItems.forEach((valueC, key)=>{
+				valueC.checked = value;
+			});
 		}
 
 	},
@@ -53,6 +57,11 @@ export default {
 
 		},
 
+		updateCartSelection({commit}, item) {
+			commit('SET_ALL_CART_SELECTED', item)
+			commit('SET_CART_ITEMS_LS');
+		},
+
 		calcCartTotal() {
 
 		}
@@ -63,6 +72,7 @@ export default {
 				state.cartItems = JSON.parse(window.localStorage.getItem('cart'));
 				return JSON.parse(window.localStorage.getItem('cart'));
 			}
+			return state.cartItems
 		},
 		// getCartTotalLS:(state)=>{
 		// 	if(window.localStorage.getItem('total')) {

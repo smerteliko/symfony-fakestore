@@ -38,11 +38,11 @@
 
 <script>
 import {mapGetters} from "vuex";
-import productCardComp from "../Products/ProductCardComp.vue";
 import ProductListComp from "../Products/ProductsListComp.vue"
+
 export default {
     name: "CategoryComp",
-    components: {productCardComp,ProductListComp},
+    components: {ProductListComp},
     data(){
         return {
             catData: {},
@@ -60,23 +60,31 @@ export default {
     },
     methods: {
         async changeSubCat(subID) {
-            console.log(subID)
+            this.loading = true;
+            await this.$store.dispatch('fetchProductListBySubCat', subID);
+            this.productsList = this.$store.getters.getProductListBySubCat;
+            this.total = this.productsList.length;
+            this.loading = false;
+        },
+
+        async setInitialData(params){
             this.loading = true
-            await this.$store.dispatch('fetchProductListBySubCat', subID)
-            this.productsList = this.$store.getters.getProductListBySubCat
-            this.total = this.productsList.length
+            await this.$store.dispatch('fetchCategoryData', params);
+            await this.$store.dispatch('fetchProductListByCat', this.$route.params);
+
+            this.catData = this.$store.getters.getCategoryData;
+            this.productsList = this.$store.getters.getProductListByCat;
+            this.total = this.productsList.length;
             this.loading = false;
         }
     },
-    async beforeMount() {
-        this.loading = true
-        await this.$store.dispatch('fetchCategoryData', this.$route.params)
-        await this.$store.dispatch('fetchProductListByCat', this.$route.params)
-        this.catData = this.$store.getters.getCategoryData
-        this.productsList = this.$store.getters.getProductListByCat
-        this.total = this.productsList.length
-        this.loading = false
-    }
+    beforeMount() {
+        this.setInitialData(this.$route.params);
+    },
+     beforeRouteUpdate(to, from) {
+         this.setInitialData(to.params)
+    },
+
 }
 </script>
 
