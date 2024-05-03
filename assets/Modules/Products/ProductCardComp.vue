@@ -17,9 +17,9 @@
             <div class="d-flex  justify-content-between"
                 >
                 <div>
-                    <h3> {{ this.product.totalPrice }}</h3>
+                    <h3> {{ this.totalPrice }}</h3>
                 </div>
-                <div v-if="this.product.quantity === 0">
+                <div v-if="this.quantity === 0">
                     <button class="btn btn-outline-danger"
                             @click="this.addItem">
                         Add to cart <i class="fa-solid fa-cart-plus"></i>
@@ -32,15 +32,15 @@
                             type="button"
                             @click="removeQuantity()">
                             <i :class="{
-                                    'fa-solid fa-minus' : this.product.quantity !== 1,
-                                     'fa-regular fa-trash-can' : this.product.quantity === 1}" ></i>
+                                    'fa-solid fa-minus' : this.quantity !== 1,
+                                     'fa-regular fa-trash-can' : this.quantity === 1}" ></i>
                         </button>
                         <input class="form-control border border-end-0 border-start-0 border-input"
                                value="1"
                                min="1"
                                type="number"
                                disabled
-                               v-model.number="this.product.quantity">
+                               v-model.number="this.quantity">
                         <button
                             class=" btn btn-outline-success border-start-0 border-radius"
                             type="button"
@@ -60,20 +60,20 @@ export default {
     props: ['product'],
     data() {
         return {
-            image: this.checkImg() ? require(`../../img/` + this.checkImg()) : ''
+            image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
+            quantity: this.product.quantity,
+            totalPrice: this.product.price
         }
     },
     beforeCreate() {
-        this.product['quantity'] = 0;
-        this.product['totalPrice'] = this.product.price;
     },
     watch:{
     },
 
     methods: {
         addItem() {
-            this.product.quantity += 1;
             this.$store.dispatch('addToCart', this.product);
+            this.quantity++;
         },
         checkImg() {
             if (this.product && this.product.productImages.length > 0) {
@@ -82,18 +82,18 @@ export default {
             return '';
         },
         addQuantity() {
-            this.product.quantity += 1;
-            this.product.totalPrice = this.product.price * this.product.quantity;
-            this.$store.dispatch('updateCartItemQuantity', this.product);
+            this.$store.dispatch('addCartItemQuantity', this.product);
+            this.quantity++;
+            this.totalPrice = this.product.price * this.product.quantity;
         },
         removeQuantity() {
-            this.product.quantity -= 1;
-            this.product.totalPrice = this.product.price * this.product.quantity;
-            if(this.product.quantity === 0) {
-                this.product.totalPrice = this.product.price;
+            this.quantity--;
+            this.totalPrice = this.product.price * this.quantity;
+            if(this.quantity === 0) {
+                this.totalPrice = this.product.price;
                 this.$store.dispatch('removeItemFromCart', this.product);
             } else {
-                this.$store.dispatch('updateCartItemQuantity', this.product);
+                this.$store.dispatch('removeCartItemQuantity', this.product);
             }
         }
     },

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
  * @method Product[]    findAll()
- * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit= null, $offset = null)
  */
 class ProductRepository extends ServiceEntityRepository
 {
@@ -47,8 +46,18 @@ class ProductRepository extends ServiceEntityRepository
 		}
 		$qb->addSelect('pI');
 		$qb->leftJoin('product.productImages', 'pI');
-		return $qb->getQuery()->getArrayResult();
+		return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
 	}
+
+	private function setAdditionalFields( array $result): array {
+		foreach($result as $key=>$oneRes) {
+			$result[$key]['quantity'] = 0;
+			$result[$key]['totalPrice'] = 0;
+		}
+		return $result;
+	}
+
+
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

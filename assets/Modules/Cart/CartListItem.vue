@@ -11,9 +11,9 @@
             <div
                 class=" link-underline-opacity-100 text-decoration-none">
                 <!--                            :to="{name: 'ProductComp', params:{id: prod.id}}"-->
-                <h6 class="mb-0 text-decoration-underline">{{ this.item.Name }}</h6>
+                <h6 class="mb-0 text-decoration-underline">{{ this.cartItem.Name }}</h6>
                 <div class="product-description">
-                    <small class="text-secondary"> {{this.item.Description}}</small>
+                    <small class="text-secondary"> {{this.cartItem.Description}}</small>
                 </div>
             </div>
         </td>
@@ -24,15 +24,15 @@
                     type="button"
                     @click="removeQuantity()">
                     <i :class="{
-                                    'fa-solid fa-minus' : this.item.quantity !== 1,
-                                     'fa-regular fa-trash-can' : this.item.quantity === 1}" ></i>
+                                    'fa-solid fa-minus' : this.cartItem.quantity !== 1,
+                                     'fa-regular fa-trash-can' : this.cartItem.quantity === 1}" ></i>
                 </button>
                 <input class="form-control border border-end-0 border-start-0 border-input"
                        value="1"
                        min="1"
                        type="number"
                        disabled
-                       v-model="this.item.quantity">
+                       v-model="this.cartItem.quantity">
                 <button
                     class=" btn btn-outline-success border-start-0 border-radius"
                     type="button"
@@ -43,9 +43,9 @@
         </td>
         <td class="align-content-center col-3">
 
-            <h5 class="mb-0"> Total: {{this.item.totalPrice}} <i class="fa-solid fa-dollar-sign"></i></h5>
+            <h5 class="mb-0"> Total: {{this.cartItem.totalPrice}} <i class="fa-solid fa-dollar-sign"></i></h5>
             <small class="text-secondary text-decoration-underline">
-                <i> Per each: {{this.item.price}} </i>
+                <i> Per each: {{this.cartItem.price}} </i>
                 <i class="fa-italic  fa-dollar-sign"></i>
             </small>
             <p class="align-text-bottom mb-0"> Shipping: </p>
@@ -55,7 +55,7 @@
             <div class="form-check">
                 <input type="checkbox"
                        class="form-check-input"
-                       v-model="this.item.checked"
+                       v-model="this.checked"
                 >
             </div>
         </td>
@@ -68,33 +68,38 @@ export default {
     props:["cartItem"],
     data() {
         return {
-            item: this.cartItem,
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
             checked: this.cartItem.checked
-
         }
     },
-    computed: {
+    computed:{
     },
-    watch: {
-        checked:{
-            handler(newVal) {
-                if(newVal === true) {
-                    this.selected.push(this.item);
-                }
 
-                if (newVal === false) {
-                    const index = this.selected.findIndex(item=>item.id === this.item.id);
-                    this.selected.splice(index, 1);
-                }
-            }
+    watch:{
+        checked: {
+            handler(newVal) {
+                this.$store.dispatch('updateCartItemSelection', {item:this.cartItem,checked:newVal});
+                //this.$forceUpdate()
+                this.checked = this.cartItem.checked;
+
+            },
+        },
+        'cartItem.checked': {
+            handler(newVal) {
+                this.checked = newVal
+            },
         },
     },
     beforeMount() {
-        this.item.totalPrice = this.item.price * this.item.quantity;
-        this.item.checked = false;
+        this.$store.commit('SET_CART_ITEM_TOTAL', this.cartItem);
+        this.$store.commit('SET_ALL_CART_UNSELECTED', false);
+        this.checked = this.cartItem.checked;
     },
     methods: {
+        toggleCheck() {
+            return this.checked;
+        },
+
         checkImg() {
             if (this.cartItem && this.cartItem.productImages.length > 0) {
                 return this.cartItem.productImages[0].FileNameBase;
@@ -103,22 +108,20 @@ export default {
         },
 
         addQuantity() {
-            this.item.quantity += 1
-            this.item.totalPrice = this.item.price * this.item.quantity;
-            this.$store.dispatch('updateCartItemQuantity', this.item);
-            this.$forceUpdate()
+            this.$store.dispatch('addCartItemQuantity', this.cartItem);
+            this.$store.commit('SET_CART_ITEM_TOTAL', this.cartItem);
 
         },
         removeQuantity() {
-            this.item.quantity -= 1;
-            this.item.totalPrice = this.item.price * this.item.quantity;
-            if(this.item.quantity === 0) {
-                this.item.totalPrice = this.item.price;
-                this.$store.dispatch('removeItemFromCart', this.item);
-            } else {
-                this.$store.dispatch('updateCartItemQuantity', this.item);
+            this.$store.dispatch('removeCartItemQuantity', this.cartItem);
+            this.$store.commit('SET_CART_ITEM_TOTAL', this.cartItem);
+            if(this.cartItem.quantity === 0) {
+                this.$store.dispatch('removeItemFromCart', this.cartItem);
+
             }
-            this.$forceUpdate()
+            this.$forceUpdate();
+
+
         }
     }
 }

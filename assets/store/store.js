@@ -13,6 +13,7 @@ const store = new Vuex.Store({
 		Products: productsStore,
 		Cart: cartStore
 	},
+	strict:true
 });
 
 

@@ -8,22 +8,25 @@
                     </div>
 
                 </div>
-                <div class="col-1 d-flex justify-content-between align-items-center">
+                <div class="col-2 d-flex justify-content-end align-items-center">
                     <div class="pe-calc ">
                         <button class="btn"
                                 @click="this.removeFromCart">
                             <i class="fs-x-large  fa-regular fa-trash-can" ></i>
                         </button>
                     </div>
-                    <div class="pe-calc  pe-10px form-check">
+                    <div class="pe-calc  pe-30px form-check">
                     <input class="pe-calc form-check-input" type="checkbox" v-model="this.checkedAll">
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="container col">
-                <CartListComp :cart-list-l-s=" this.cartItemList"></CartListComp>
+            <div class="container col-8">
+                <CartListComp :cart-list=" this.cartItemsList"></CartListComp>
+            </div>
+            <div class="container col-4">
+                <CartOrderComp></CartOrderComp>
             </div>
         </div>
     </div>
@@ -32,52 +35,45 @@
 <script>
 import CartListComp from "./CartListComp.vue";
 import {mapGetters} from "vuex";
+import CartOrderComp from "./CartOrderComp.vue";
 
 export default {
     name: 'CartComp',
-    components: {CartListComp},
+    components: {CartOrderComp, CartListComp},
     data(){
         return {
-            cartItemList: [],
+            cartItemsList: [],
             checkedAll: Boolean
         }
     },
     computed: {
         ...mapGetters([
-            'getCartItemsLS'
+            'getCartItems'
         ]),
     },
     watch: {
         checkedAll: {
              handler(newVal) {
-                 this.cartItemList.forEach((value)=>{
-                     value.checked = newVal;
-                 });
+                 this.$store.commit('SET_ALL_CART_SELECTED', newVal)
             }
         }
     },
     beforeMount() {
-        this.cartItemList = this.getCartItemsLS;
-        this.cartItemList.forEach((value)=>{
-            value.checked = false;
-            value.totalPrice = value.price * value.quantity;
-        });
+        this.$store.dispatch('updateCartListFromLS');
+        this.$store.commit('SET_ALL_CART_UNSELECTED', false);
+        this.cartItemsList = this.$store.getters.getCartItems;
     },
 
     methods:{
         removeFromCart() {
             let indexes = [];
-            this.cartItemList.forEach((value, key)=>{
+            this.cartItemsList.forEach((value, key)=>{
                 if(value.checked) {
-                    this.$store.dispatch('removeItemFromCart', value);
                     indexes.push(key);
                 }
 
             });
-            indexes.sort(function(a,b){ return a-b; });
-            for(let i = indexes.length -1; i >= 0; i--) {
-                this.cartItemList.splice(indexes[i],1)
-            }
+           this.$store.dispatch('removeSelectedCartItems',indexes)
         }
     },
 }
@@ -93,8 +89,8 @@ export default {
 
 }
 
-.pe-10px {
-    padding-right: 10px !important;
+.pe-30px {
+    padding-right: 30px !important;
 }
 
 .fs-x-large {

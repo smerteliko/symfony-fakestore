@@ -1,8 +1,8 @@
 <template>
     <div class="container container-color  align-content-lg-start ">
-        <table class="table table-collapse table-hover table-width " >
-            <tbody class="" v-for="prod in this.cartListLS">
-                <CartListItem :cart-item="prod"></CartListItem>
+        <table class="table table-collapse table-hover " >
+            <tbody class="" v-for="prod in this.cartList">
+                <CartListItem :cart-item="prod" :key="`cart-list-item-`+prod.id"></CartListItem>
             </tbody>
         </table>
     </div>
@@ -15,10 +15,10 @@ import CartListItem from "./CartListItem.vue";
 export default {
     name:'CartListComp',
     components: {CartListItem},
-    props: ['cartListLS'],
+    props: ['cartList'],
     data(){
         return {
-            cartList: this.cartListLS,
+            cartList: this.cartList,
 
         }
     },
