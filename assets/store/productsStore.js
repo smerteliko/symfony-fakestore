@@ -32,7 +32,7 @@ export default {
 					})
 		},
 		async fetchProductListByCat({commit}, id) {
-			const data = await axios.get('/products/ajax/category/'+id.id)
+			const data = await axios.get('/products/ajax/category/'+id)
 					.then((response )=> {
 						commit("SET_PRODUCTS_LIST_BY_CAT",response.data)
 					}).catch((reason)=>{

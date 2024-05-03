@@ -5,11 +5,17 @@ let catalogRoute = [
 	{
 		path: '/catalog',
 		name: "CatalogListComp",
-		component: CatalogListComp
+		component: CatalogListComp,
 	},
 	{
-		path: '/catalog/category/:id',
+		path: '/catalog/category/:catID',
 		name: "CategoryComp",
+		component: CategoryComp
+	},
+
+	{
+		path: '/catalog/category/:catID/subcategory/:subID',
+		name: "CategoryCompBuSub",
 		component: CategoryComp
 	},
 ];

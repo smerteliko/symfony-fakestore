@@ -2,8 +2,10 @@
 <template>
     <div class="component container bg-light component-flex">
         <div class="row mb-2  justify-content-center">
-            <div class="col-3 mt-5" v-for="categ in getShuffledArray(this.getCategoryList)">
-                <div class="card bg-body-secondary" style="width: 18rem;">
+            <div class="col-3 mt-5"
+                 v-for="categ in getShuffledArray(this.getCategoryList)"
+            >
+                <div class="card bg-body-secondary w-rem18">
                     <div class="card-header">
                         <h5 class="card-title">
                             <i :class="getIcon(categ.id)"></i>
@@ -14,20 +16,21 @@
                     <div class="card-body bg-body-secondary">
                         <ul class="list-group list-group-flush bg-body-secondary"
                             v-for="subCat in getShuffledArray(categ.subCategories)">
+
                             <li class="list-group-item
                                         bg-body-secondary
                                         list-group-item-action
                                         list-group-item-secondary">
-                                <RouterLink
+                                <RouterLink :key="`sub-category-`+subCat.Name"
                                     class="link-dark link-underline-opacity-0 "
-                                    :to="{name: 'CategoryComp', params:{id: categ.id}}"
+                                    :to="{name: 'CategoryCompBuSub', params:{catID: categ.id, subID:subCat.id}}"
                                     v-text="subCat.Name"></RouterLink>
                             </li>
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <RouterLink
-                            :to="{name: 'CategoryComp', params:{id: categ.id}}"
+                        <RouterLink :key="`category-`+categ.Name"
+                            :to="{name: 'CategoryComp', params:{catID: categ.id}}"
                             class="btn btn-primary"> Go to {{categ.Name}} </RouterLink>
                     </div>
                 </div>
@@ -81,5 +84,7 @@ export default {
 </script>
 
 <style scoped>
-
+.w-rem18 {
+    width: 18rem;
+}
 </style>

@@ -2,7 +2,7 @@
 
     <div class="container component component-flex bg-light ">
         <div class="container container-color">
-            <ProductListComp :product-list="getProductList"></ProductListComp>
+            <ProductListComp :product-list="this.getProductList"></ProductListComp>
         </div>
 
     </div>

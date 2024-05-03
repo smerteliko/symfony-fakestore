@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\CategoryRepository;
-use Kint\Kint;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 #[Route('/catalog')]
 class CatalogController extends AbstractController
@@ -24,8 +22,15 @@ class CatalogController extends AbstractController
 		return $this->render('base.html.twig', []);
 	}
 
-	#[Route('/category/{id}', name: 'app_catalog_category')]
-	public function category(int $id): Response {
+	#[Route('/category/{catID}', name: 'app_catalog_category')]
+	public function category(int $catID): Response {
+		return $this->render('base.html.twig',[
+
+		]);
+	}
+
+	#[Route('/category/{catID}/subcategory/{subID}', name: 'app_catalog_subcat_by_category')]
+	public function subCatBuCategory(int $catID, int $subID): Response {
 		return $this->render('base.html.twig',[
 
 		]);
@@ -42,20 +47,19 @@ class CatalogController extends AbstractController
 	public function catalogList(CacheInterface $cache): JsonResponse {
 		return new JsonResponse(
 			[
-				'dataObject'=> $this->categoryRepository->getAllCategoriesCached()
+				'list'=>$this->categoryRepository->getAllCategoriesCached()
 			],
 			Response::HTTP_OK);
 	}
 
 	/**
-	 * @throws InvalidArgumentException
 	 */
 	#[Route('/ajax/category/{id}', name: 'app_catalog_category_ajax', methods: [ 'GET'])]
 	public function ajaxCategory(int $id): JsonResponse {
 		$category = $this->categoryRepository->findCategoriesBy(['id'=> $id, 'withSubs'=>true])?:[];
 		return new JsonResponse(
 			[
-				'dataObject'=>$category[0]
+				"list"=>$category[0]
 			],
 			Response::HTTP_OK);
 	}

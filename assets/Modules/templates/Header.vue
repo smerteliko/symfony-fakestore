@@ -27,15 +27,29 @@
                           </RouterLink>
                           <div class="dropdown-menu"
                                aria-labelledby="navbarDropdownMenuLink"
-
                           >
-                              <div v-for="categ in this.getCategoryList">
-                                  <RouterLink class="dropdown-item" :to="{name: 'CategoryComp', params:{id: categ.id}}">
-                                      <i :class="getIcon(categ.id)"></i>
-                                      <span v-text="categ.Name"></span>
-                                      <hr class="dropdown-divider">
-                                  </RouterLink>
 
+                              <div class="dropend dropdown-item"
+                                   v-for="categ in this.getCategoryList" >
+                                  <RouterLink  :key="`header-category-`+categ.Name"
+                                               :to="{name: 'CategoryComp', params:{catID: categ.id}}"
+                                               type="button"
+                                               class="dropdown-toggle nav-link "
+                                               data-toggle="dropdown"
+                                               aria-haspopup="true"
+                                               aria-expanded="false">
+
+                                      <h6 class=""><i :class="getIcon(categ.id)"></i> {{categ.Name}} </h6>
+                                  </RouterLink>
+                                  <div class="dropdown-menu">
+                                      <div class="dropdown-item" v-for="subCat in categ.subCategories">
+                                          <RouterLink :key="`header-category-`+categ.Name+`-subcategory-`+subCat.Name"
+                                                      :to="{name: 'CategoryCompBuSub', params:{catID: categ.id, subID:subCat.id}}"
+                                                      class="nav-link">
+                                              <h6 class=""> {{subCat.Name}} </h6>
+                                          </RouterLink>
+                                      </div>
+                                  </div>
                               </div>
 
                           </div>
@@ -118,17 +132,27 @@ export default {
     backdrop-filter: saturate(180%) blur(20px);
   }
 
-  .dropdown:hover>.dropdown-menu {
+  .dropdown:hover>.dropdown-menu,
+  .dropend:hover>.dropdown-menu {
       display: block;
+      margin-top: 0.125em;
   }
+
+  .dropend:hover > .dropdown-menu {
+      position: absolute;
+      top: 0;
+      left: 100%;
+  }
+
+
 
   .dropdown-toggle::after {
       content:none;
   }
 
-  .dropdown>.dropdown-toggle:active {
-      /*Without this, clicking will make it sticky*/
-      /*pointer-events: ;*/
-  }
+/*  .dropdown>.dropdown-toggle:active {
+      !*Without this, clicking will make it sticky*!
+      pointer-events: none;
+  }*/
 
 </style>
