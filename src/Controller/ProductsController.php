@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
-use App\Entity\SubCategory;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +20,8 @@ class ProductsController extends AbstractController
     public function index(): Response {
 	    return $this->render('base.html.twig', []);
     }
+
+
 
 	#[Route('/ajax/category/{id}', name: 'app_products_list_category', methods: ['GET'])]
 	 public function listByCategory(int $id): Response {

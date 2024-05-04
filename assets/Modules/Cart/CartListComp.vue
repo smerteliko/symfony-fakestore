@@ -1,5 +1,5 @@
 <template>
-    <div class="container container-color  align-content-lg-start ">
+    <div class="container container-color  rounded-container align-content-lg-start ">
         <table class="table table-collapse table-hover " >
             <tbody class="" v-for="prod in this.cartList">
                 <CartListItem :cart-item="prod" :key="`cart-list-item-`+prod.id"></CartListItem>
@@ -46,5 +46,7 @@ export default {
 .table-width {
     width: 55% !important;
 }
-
+.rounded-container {
+    border-radius: 20px !important;
+}
 </style>

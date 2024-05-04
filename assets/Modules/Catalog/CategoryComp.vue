@@ -9,11 +9,13 @@
             <div class="container m-0 w-25 border-left-panel ">
                 <ul class="list-group list-group-flush border-left-panel mb-2 mt-2"
                     v-for="subCat in this.catData.subCategories">
-                    <li class="list-group-item
-                               list-group-item-action"
+                    <button class="list-group-item
+                               list-group-item-action btn"
+                            @click="changeSubCat(subCat.id)"
                         :class="{'active' : subCat.id === this.active}" >
-                        <button class="btn" @click="changeSubCat(subCat.id)">{{subCat.Name}}</button></li>
+                        {{subCat.Name}}</button>
                 </ul>
+                
             </div>
             <div class="container container-color m-0 w-75 d-flex flex-wrap">
                 <div class="container w-100">
@@ -69,7 +71,7 @@ export default {
             this.productsList = this.$store.getters.getProductListBySubCat;
             this.active = parseInt(subID);
             this.total = this.productsList.length;
-            
+
             this.loading = false;
         },
 

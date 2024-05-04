@@ -19,3 +19,16 @@ body {
     display: flex !important;
     flex-wrap: wrap !important;
 }
+
+.active {
+    z-index: 2 !important;
+    color: var(--bs-list-group-active-color)!important;
+    background-color: rgba(13,13,213,1)!important;
+    border-color: rgba(13,13,213,1)!important;
+}
+
+.link-primary {
+    color: RGBA(13,13,213,1) !important;
+    -webkit-text-decoration-color: RGBA(var(--bs-primary-rgb), var(--bs-link-underline-opacity, 1)) !important;
+    text-decoration-color: RGBA(var(--bs-primary-rgb), var(--bs-link-underline-opacity, 1)) !important;
+}

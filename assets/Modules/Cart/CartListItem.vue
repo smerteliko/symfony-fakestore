@@ -1,6 +1,6 @@
 <template>
     <tr class="d-flex tr-height">
-        <td class="align-content-center">
+        <td class="align-content-center ">
             <img :src="this.image"
                  class="img-thumbnail"
                  width="100px"
@@ -59,6 +59,15 @@
                 >
             </div>
         </td>
+        <td class="align-content-center col-1">
+            <div class="form-check">
+                <i class="fa-regular fa-heart"></i>
+                <input type="checkbox"
+                       class="form-check-input fa-regular fa-heart"
+                       v-model="this.checked"
+                >
+            </div>
+        </td>
     </tr>
 </template>
 
@@ -79,13 +88,13 @@ export default {
         checked: {
             handler(newVal) {
                 this.$store.dispatch('updateCartItemSelection', {item:this.cartItem,checked:newVal});
-                //this.$forceUpdate()
                 this.checked = this.cartItem.checked;
 
             },
         },
         'cartItem.checked': {
             handler(newVal) {
+                this.$store.dispatch('updateCartItemSelection', {item:this.cartItem,checked:newVal});
                 this.checked = newVal
             },
         },
@@ -96,9 +105,6 @@ export default {
         this.checked = this.cartItem.checked;
     },
     methods: {
-        toggleCheck() {
-            return this.checked;
-        },
 
         checkImg() {
             if (this.cartItem && this.cartItem.productImages.length > 0) {
@@ -177,4 +183,5 @@ input[type=checkbox]
 .border-radius {
     border-radius: 20px
 }
+
 </style>

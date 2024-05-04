@@ -3,30 +3,30 @@
         <div class="container">
             <div class="row">
                 <div class="col-5 d-flex justify-content-between align-items-center">
-                    <div class="">
+                    <div class="ms-4">
                         <h1>{{ 'Cart' }}</h1>
                     </div>
 
                 </div>
-                <div class="col-2 d-flex justify-content-end align-items-center">
+                <div class="col-2 d-flex justify-content-center align-items-center">
                     <div class="pe-calc ">
                         <button class="btn"
                                 @click="this.removeFromCart">
                             <i class="fs-x-large  fa-regular fa-trash-can" ></i>
                         </button>
                     </div>
-                    <div class="pe-calc  pe-30px form-check">
+                    <div class="pe-calc  pe-40px form-check">
                     <input class="pe-calc form-check-input" type="checkbox" v-model="this.checkedAll">
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="container col-8">
+            <div class="container col-7">
                 <CartListComp :cart-list=" this.cartItemsList"></CartListComp>
             </div>
             <div class="container col-4">
-                <CartOrderComp></CartOrderComp>
+                <CartOrderComp :selected-items="this.getCheckedCartItems"></CartOrderComp>
             </div>
         </div>
     </div>
@@ -48,7 +48,8 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'getCartItems'
+            'getCartItems',
+            'getCheckedCartItems'
         ]),
     },
     watch: {
@@ -89,8 +90,8 @@ export default {
 
 }
 
-.pe-30px {
-    padding-right: 30px !important;
+.pe-40px {
+    padding-right: 40px !important;
 }
 
 .fs-x-large {

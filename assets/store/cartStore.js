@@ -1,7 +1,8 @@
 export default {
 	state: {
 		cartItems: [],
-		cartTotal: 0
+		cartTotal: 0,
+		selectedCartItems: []
 	},
 	mutations: {
 
@@ -124,7 +125,18 @@ export default {
 				return JSON.parse(window.localStorage.getItem('cart'));
 			}
 		},
-
+		getCheckedCartItems:(state) => {
+			let checked = [];
+			state.cartItems.forEach((value)=>{
+				if(value.checked) {
+					checked.push(value);
+				}
+			})
+			return checked;
+		},
+		getCartTotalItems:(state) => {
+			return state.cartItems.length;
+		},
 		getCartTotal: (state) => {
 			return state.cartTotal;
 		},

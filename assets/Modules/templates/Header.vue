@@ -55,11 +55,16 @@
                           </div>
                       </div>
                   <div class="nav-item align-content-lg-center  d-lg-flex m-auto me-2">
-                      <RouterLink class="nav-link link-primary me-lg-3 " to="/cart">
+                      <RouterLink class="nav-link link-primary me-lg-3 position-relative" to="/cart" >
                           <h3 class="text-lg-center mb-0">
                               <i class="fa-solid fa-cart-shopping"></i>
                           </h3>
                           <p class="mb-0"><small>Cart</small></p>
+                          <span class="position-absolute badge-fs top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                v-text="this.getCartTotalItems">
+
+                          </span>
+
                       </RouterLink>
 <!--                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">-->
 <!--                          <h3 class="text-lg-center mb-0">-->
@@ -92,7 +97,8 @@ export default {
         ...mapGetters([
             'getCategoryList',
             'getCartItems',
-            'getCartTotal'
+            'getCartTotal',
+            'getCartTotalItems'
         ]),
     },
     watch:{
@@ -154,5 +160,9 @@ export default {
       !*Without this, clicking will make it sticky*!
       pointer-events: none;
   }*/
+
+  .badge-fs {
+      font-size: 0.6rem !important;
+  }
 
 </style>

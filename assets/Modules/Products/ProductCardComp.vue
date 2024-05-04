@@ -17,37 +17,14 @@
             <div class="d-flex  justify-content-between"
                 >
                 <div>
-                    <h3> {{ this.totalPrice }}</h3>
+                    <h3> {{ this.product.price }}</h3>
                 </div>
-                <div v-if="this.quantity === 0">
+                <div >
                     <button class="btn btn-outline-danger"
+                            :class="this.product.quantity !== 0 ? 'disabled':''"
                             @click="this.addItem">
                         Add to cart <i class="fa-solid fa-cart-plus"></i>
                     </button>
-                </div>
-                <div v-else  class="d-flex justify-content-end">
-                    <div class="input-group input-group-sm input-width flex-nowrap ">
-                        <button
-                            class="btn btn-outline-danger border-end-0 border-radius"
-                            type="button"
-                            @click="removeQuantity()">
-                            <i :class="{
-                                    'fa-solid fa-minus' : this.quantity !== 1,
-                                     'fa-regular fa-trash-can' : this.quantity === 1}" ></i>
-                        </button>
-                        <input class="form-control border border-end-0 border-start-0 border-input"
-                               value="1"
-                               min="1"
-                               type="number"
-                               disabled
-                               v-model.number="this.quantity">
-                        <button
-                            class=" btn btn-outline-success border-start-0 border-radius"
-                            type="button"
-                            @click="addQuantity()">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +39,6 @@ export default {
         return {
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
             quantity: this.product.quantity,
-            totalPrice: this.product.price
         }
     },
     beforeCreate() {
@@ -81,22 +57,7 @@ export default {
             }
             return '';
         },
-        addQuantity() {
-            this.$store.dispatch('addCartItemQuantity', this.product);
-            this.quantity++;
-            this.totalPrice = this.product.price * this.product.quantity;
-        },
-        removeQuantity() {
-            this.quantity--;
-            this.totalPrice = this.product.price * this.quantity;
-            if(this.quantity === 0) {
-                this.totalPrice = this.product.price;
-                this.$store.dispatch('removeItemFromCart', this.product);
-            } else {
-                this.$store.dispatch('removeCartItemQuantity', this.product);
-            }
-        }
-    },
+    }
 }
 </script>
 
