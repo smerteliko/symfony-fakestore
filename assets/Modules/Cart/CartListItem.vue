@@ -60,12 +60,12 @@
             </div>
         </td>
         <td class="align-content-center col-1">
-            <div class="form-check">
-                <i class="fa-regular fa-heart"></i>
-                <input type="checkbox"
-                       class="form-check-input fa-regular fa-heart"
-                       v-model="this.checked"
-                >
+            <div class="form-check ps-0">
+                <label class="fancy-checkbox font-size-x-large">
+                    <input class="form-check-input" type="checkbox" />
+                    <i class="fa-regular icon-color fa-heart unchecked"></i>
+                    <i class="fa-solid icon-color fa-heart checked"></i>
+                </label>
             </div>
         </td>
     </tr>
@@ -78,7 +78,8 @@ export default {
     data() {
         return {
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
-            checked: this.cartItem.checked
+            checked: this.cartItem.checked,
+            favourite: false,
         }
     },
     computed:{
@@ -183,5 +184,38 @@ input[type=checkbox]
 .border-radius {
     border-radius: 20px
 }
+
+.fancy-checkbox input[type="checkbox"],
+.fancy-checkbox .checked {
+    display: none !important;
+    width: 1em !important;
+    height: 1em !important;
+}
+
+.fancy-checkbox input[type="checkbox"],
+.fancy-checkbox .checked {
+    display: none !important;
+    width: 1em !important;
+    height: 1em !important;
+}
+
+.fancy-checkbox input[type="checkbox"]:checked ~ .checked
+{
+    display: inline-block!important;
+    width: 1em !important;
+    height: 1em !important;
+}
+
+.fancy-checkbox input[type="checkbox"]:checked ~ .unchecked
+{
+    display: none !important;
+    width: 1em!important;
+    height: 1em!important;
+}
+
+.font-size-x-large {
+    font-size: x-large !important;
+}
+
 
 </style>

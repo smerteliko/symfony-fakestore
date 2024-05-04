@@ -2,9 +2,12 @@
     <div class="container container-color rounded-container "
         :class="this.selectedItems.length === 0 ? 'container-danger' : 'container-success'">
         <div v-if="this.selectedItems.length === 0"
-             class=""
+             class="mt-4 mb-4 row align-items-center text-center"
         >
-            <h3 class="">Please select items</h3>
+            <div class="col text-col-danger">
+                <h2 class="">Please select items</h2>
+            </div>
+
         </div>
         <div v-else class="d-flex flex-column mt-3 mb-3">
             <div class="row align-items-center text-center">
@@ -103,6 +106,11 @@ export default {
 .container-danger {
     border: 1px solid darkred !important;
 }
+
+.text-col-danger {
+    color: darkred !important;
+}
+
 .container-success {
     border: 1px solid rgba(13,13,213,1) !important;
 }

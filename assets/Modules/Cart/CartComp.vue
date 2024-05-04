@@ -12,7 +12,7 @@
                     <div class="pe-calc ">
                         <button class="btn"
                                 @click="this.removeFromCart">
-                            <i class="fs-x-large  fa-regular fa-trash-can" ></i>
+                            <i class="fs-x-large icon-color  fa-regular fa-trash-can" ></i>
                         </button>
                     </div>
                     <div class="pe-calc  pe-40px form-check">
