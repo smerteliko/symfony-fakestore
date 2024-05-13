@@ -8,14 +8,13 @@
                  alt="No image">
         </td>
         <td class="align-content-center col-3 ">
-            <div
+            <RouterLink :to="{name: 'ProductComp', params:{id: this.cartItem.id}}"
                 class=" link-underline-opacity-100 text-decoration-none">
-                <!--                            :to="{name: 'ProductComp', params:{id: prod.id}}"-->
                 <h6 class="mb-0 text-decoration-underline">{{ this.cartItem.Name }}</h6>
                 <div class="product-description">
                     <small class="text-secondary"> {{this.cartItem.Description}}</small>
                 </div>
-            </div>
+            </RouterLink>
         </td>
         <td class="align-content-center col-2">
             <div class="input-group input-group-sm flex-nowrap w-100 ">

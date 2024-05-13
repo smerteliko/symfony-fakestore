@@ -90,7 +90,7 @@ export default {
     },
     async beforeCreate() {
         await this.$store.dispatch("fetchCatList");
-       // this.cartLS = this.$store.getters.getCartItemsLS;
+        this.$store.dispatch('updateCartListFromLS');
         this.cartList = this.$store.getters.getCartItems;
     },
     computed: {
