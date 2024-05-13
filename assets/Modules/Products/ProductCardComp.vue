@@ -1,9 +1,12 @@
 <template>
     <div class="card bg-light  border-product-foto w-18rem">
         <div class="card-header">
+            <RouterLink :to="{name: 'ProductComp', params:{id: this.product.id}}"
+                class=" link-underline-opacity-100 text-decoration-none">
             <h5 class="card-title">
                 {{ this.product.Name }}
             </h5>
+            </RouterLink>
         </div>
 
         <div class="card-body d-flex flex-wrap">
@@ -11,7 +14,7 @@
                  class="card-img-top border-product-foto img-thumbnail"
                  alt="No image">
 
-            <span> {{ this.product.Description }}</span>
+            <span> {{ this.desc }}</span>
         </div>
         <div class="card-footer">
             <div class="d-flex  justify-content-between">
@@ -38,11 +41,14 @@ export default {
         return {
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
             quantity: this.product.quantity,
+            desc: this.product.productDescription ? this.product.productDescription.BriefDesc : ''
+
         }
     },
     beforeCreate() {
     },
     watch:{
+
     },
 
     methods: {

@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Psr\Cache\InvalidArgumentException;
-use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -18,16 +16,14 @@ use Symfony\Contracts\Cache\CacheInterface;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-	private CacheInterface $cache;
 
-	public function __construct(ManagerRegistry $registry, CacheInterface $cache)
+	public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Product::class);
-		$this->cache = $cache;
     }
 
 
-	public function findProductsBy(array $options): array {
+	final  public function findProductBy(array $options): array {
 		$qb = $this->getEntityManager()->createQueryBuilder();
 
 		$qb ->select('product')
@@ -49,24 +45,22 @@ class ProductRepository extends ServiceEntityRepository
 				->andWhere('cat.id = :catID')
 				->setParameter('catID', $options['catID']);
 		}
-		$qb->addSelect('pI');
-		$qb->leftJoin('product.productImages', 'pI');
-		return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
-	}
 
-	/**
-	 * @throws InvalidArgumentException
-	 */
-	public function findCachedProductDataBy(array $options) {
-		return $this->cache->get('productData', function (ItemInterface $item) use ($options){
-			return $this->getEntityManager()->createQueryBuilder()
-				->select('product','pI')
-				->from(Product::class, 'product')
-				->where('product.id = :id')
-				->setParameter('id', $options['id'])
-				->getQuery()
-				->getArrayResult();
-		});
+		if(isset($options['withImages'])) {
+			$qb->addSelect('pI');
+			$qb->leftJoin('product.productImages', 'pI');
+		}
+
+		if(isset($options['withDescriptions'])) {
+			$qb->addSelect('pd');
+			$qb->leftJoin('product.productDescription', 'pd');
+		}
+
+		if(isset($options['withAdditionalFields'])) {
+			return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
+		}
+
+		return $qb->getQuery()->getArrayResult();
 	}
 
 	private function setAdditionalFields( array $result): array {

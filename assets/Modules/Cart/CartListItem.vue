@@ -79,6 +79,7 @@ export default {
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
             checked: this.cartItem.checked,
             favourite: false,
+            //desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : ''
         }
     },
     computed:{

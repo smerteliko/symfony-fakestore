@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Repository\ProductDescriptionRepository;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +13,12 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/products', name: 'app_products')]
 class ProductsController extends AbstractController
 {
-	private ProductImagesRepository $productImagesRepository;
-	private ProductRepository       $productRepository;
+	private ProductImagesRepository      $productImagesRepository;
+	private ProductRepository            $productRepository;
 	public function __construct(
-		ProductRepository $productRepository,
-		ProductImagesRepository $productImagesRepository
-	) {
+		ProductRepository            $productRepository,
+		ProductImagesRepository      $productImagesRepository,
+		ProductDescriptionRepository $productDescriptionRepository) {
 		$this->productRepository = $productRepository;
 		$this->productImagesRepository = $productImagesRepository;
 	}
@@ -34,33 +34,59 @@ class ProductsController extends AbstractController
 	}
 	#[Route('/ajax/category/{id}', name: 'app_products_list_category', methods: ['GET'])]
 	 public function listByCategory(int $id): Response {
-		return new JsonResponse($this->productRepository->findProductsBy(['catID'=>$id]));
+		return new JsonResponse(
+			$this->productRepository->findProductBy([
+				'catID'=>$id,
+				'withImages'=>TRUE,
+				'withDescriptions'=> true,
+				'withAdditionalFields' => true
+			])
+		);
 	 }
 
 	#[Route('/ajax/subcategory/{id}', name: 'app_products_list_subcategory', methods: ['GET'])]
 	 public function listBySubcategory(int $id): Response {
-		return new JsonResponse($this->productRepository->findProductsBy(['subID'=>$id]));
+		return new JsonResponse(
+			$this->productRepository->findProductBy([
+				'subID'=>$id,
+				'withImages'=>TRUE,
+				'withDescriptions'=> true,
+				'withAdditionalFields' => true
+			]
+			)
+		);
 	 }
 
 	#[Route('/ajax/list', name: 'app_products_list', methods: ['GET'])]
 	public function listProducts(): Response {
-		return new JsonResponse($this->productRepository->findProductsBy([]));
+		return new JsonResponse(
+			$this->productRepository->findProductBy([
+				'withImages'=>TRUE,
+				'withDescriptions'=> true,
+				'withAdditionalFields' => true
+		   ])
+		);
 	}
 
-	/**
-	 * @throws InvalidArgumentException
-	 */
+
 	#[Route('/ajax/{id}', name: 'app_product_data', methods: [ 'GET'])]
 	public function ProductData(int $id): Response {
-		return new JsonResponse(['productData'=>$this->productRepository->findCachedProductDataBy(['id'=>$id])[0]]);
+		return new JsonResponse([
+			'productData'=>$this->productRepository->findProductBy(
+			[
+				'id'=>$id,
+				'withDescriptions'=> true
+			])[0]
+		]);
 	}
 
-	/**
-	 * @throws InvalidArgumentException
-	 */
+
 	#[Route('/ajax/{id}/images/', name: 'app_product_images', methods: [ 'GET'])]
 	public function ProductImages(int $id): Response {
-		return new JsonResponse(['productImages'=>
-			                         $this->productImagesRepository->findCachedProductImagesBy(['prodId'=>$id])]);
+		return new JsonResponse([
+			'productImages'=> $this->productImagesRepository->findProductImagesBy(
+				['prodId'=>$id]
+			)
+		]);
 	}
 }

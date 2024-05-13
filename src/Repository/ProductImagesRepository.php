@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\ProductImages;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @extends ServiceEntityRepository<ProductImages>
@@ -17,23 +16,24 @@ use Symfony\Contracts\Cache\CacheInterface;
  */
 class ProductImagesRepository extends ServiceEntityRepository
 {
-	private CacheInterface $cache;
 
-	public function __construct(ManagerRegistry $registry , CacheInterface $cache)
+	public function __construct(ManagerRegistry $registry)
 	{
 		parent::__construct($registry, ProductImages::class);
-		$this->cache = $cache;
 	}
 	/**
 	 */
-	public function findCachedProductImagesBy(array $options): array {
-			return $this->getEntityManager()->createQueryBuilder()
-						->select('productImages')
-						->from(ProductImages::class, 'productImages')
-						->where('productImages.Product = :id')
-						->setParameter('id', $options['prodId'])
-						->getQuery()
-						->getArrayResult();
+	final public function findProductImagesBy(array $options): array {
+		$qb = $this->getEntityManager()
+		           ->createQueryBuilder()
+		           ->select('productImages')
+		           ->from(ProductImages::class, 'productImages');
+
+			if($options['prodId']) {
+				$qb ->where('productImages.Product = :id')
+					->setParameter('id', $options['prodId']);
+			}
+		return $qb->getQuery()->getArrayResult();
 	}
 
 }

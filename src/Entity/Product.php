@@ -39,6 +39,9 @@ class Product
     #[ORM\OneToMany(targetEntity: ProductImages::class, mappedBy: 'Product')]
     private Collection $productImages;
 
+    #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
+    private ?ProductDescription $productDescription = null;
+
     public function __construct()
     {
         $this->productImages = new ArrayCollection();
@@ -147,6 +150,28 @@ class Product
                 $productImage->setProductID(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProductDescription(): ?ProductDescription
+    {
+        return $this->productDescription;
+    }
+
+    public function setProductDescription(?ProductDescription $productDescription): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($productDescription === null && $this->productDescription !== null) {
+            $this->productDescription->setProduct(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($productDescription !== null && $productDescription->getProduct() !== $this) {
+            $productDescription->setProduct($this);
+        }
+
+        $this->productDescription = $productDescription;
 
         return $this;
     }
