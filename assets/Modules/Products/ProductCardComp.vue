@@ -1,25 +1,24 @@
 <template>
-    <div class="card bg-light  border-product-foto" style="width: 18rem;">
+    <div class="card bg-light  border-product-foto w-18rem">
         <div class="card-header">
             <h5 class="card-title">
                 {{ this.product.Name }}
             </h5>
-
         </div>
 
         <div class="card-body d-flex flex-wrap">
-            <img :src="this.image" class="card-img-top border-product-foto img-thumbnail"
+            <img :src="this.image"
+                 class="card-img-top border-product-foto img-thumbnail"
                  alt="No image">
 
             <span> {{ this.product.Description }}</span>
         </div>
         <div class="card-footer">
-            <div class="d-flex  justify-content-between"
-                >
+            <div class="d-flex  justify-content-between">
                 <div>
                     <h3> {{ this.product.price }}</h3>
                 </div>
-                <div >
+                <div>
                     <button class="btn btn-outline-danger"
                             :class="this.product.quantity !== 0 ? 'disabled':''"
                             @click="this.addItem">
@@ -53,7 +52,11 @@ export default {
         },
         checkImg() {
             if (this.product && this.product.productImages.length > 0) {
-                return this.product.productImages[0].FileNameBase;
+                return this.product.productImages.find(
+                    (value)=>{
+                        return value.Main === true;
+                    }
+                    ).FileNameBase;
             }
             return '';
         },
@@ -62,6 +65,9 @@ export default {
 </script>
 
 <style scoped>
+.w-18rem {
+    width: 18rem;
+}
 .border-product-foto {
     border: 1px solid #e3e8ef;
     border-radius: 10px;
