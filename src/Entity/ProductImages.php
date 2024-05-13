@@ -19,6 +19,9 @@ class ProductImages
     #[ORM\Column(length: 255)]
     private ?string $FileNameBase = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $Main = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class ProductImages
     public function setFileNameBase(string $FileNameBase): static
     {
         $this->FileNameBase = $FileNameBase;
+
+        return $this;
+    }
+
+    public function isMain(): ?bool
+    {
+        return $this->Main;
+    }
+
+    public function setMain(?bool $Main): static
+    {
+        $this->Main = $Main;
 
         return $this;
     }

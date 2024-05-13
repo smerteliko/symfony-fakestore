@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -12,13 +14,16 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
  * @method Product[]    findAll()
- * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit= null, $offset = null)
+ * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit=null, $offset = null)
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+	private CacheInterface $cache;
+
+	public function __construct(ManagerRegistry $registry, CacheInterface $cache)
     {
         parent::__construct($registry, Product::class);
+		$this->cache = $cache;
     }
 
 
@@ -49,6 +54,21 @@ class ProductRepository extends ServiceEntityRepository
 		return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
 	}
 
+	/**
+	 * @throws InvalidArgumentException
+	 */
+	public function findCachedProductDataBy(array $options) {
+		return $this->cache->get('productData', function (ItemInterface $item) use ($options){
+			return $this->getEntityManager()->createQueryBuilder()
+				->select('product','pI')
+				->from(Product::class, 'product')
+				->where('product.id = :id')
+				->setParameter('id', $options['id'])
+				->getQuery()
+				->getArrayResult();
+		});
+	}
+
 	private function setAdditionalFields( array $result): array {
 		foreach($result as $key=>$oneRes) {
 			$result[$key]['quantity'] = 0;
@@ -56,6 +76,7 @@ class ProductRepository extends ServiceEntityRepository
 		}
 		return $result;
 	}
+
 
 
     //    /**
