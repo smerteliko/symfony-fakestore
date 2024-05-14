@@ -1,11 +1,18 @@
 <template>
-    <div class="container container-color  rounded-container align-content-lg-start ">
-        <table class="table table-collapse table-hover " >
-            <tbody class="" v-for="prod in this.cartList">
-                <CartListItem :cart-item="prod" :key="`cart-list-item-`+prod.id"></CartListItem>
-            </tbody>
-        </table>
-    </div>
+  <div class="container container-color  rounded-container align-content-lg-start ">
+    <table class="table table-collapse table-hover ">
+      <tbody
+        v-for="prod in this.cartList"
+        :key="`cart-list-item-product`+prod.Name"
+        class=""
+      >
+        <CartListItem
+          :key="`cart-list-item-`+prod.id"
+          :cart-item="prod"
+        />
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -15,23 +22,22 @@ import CartListItem from "./CartListItem.vue";
 export default {
     name:'CartListComp',
     components: {CartListItem},
-    props: ['cartList'],
+    props: {
+      cartList: {
+        type: Object,
+        default() {
+          return {  }
+        }
+      }
+    },
     data(){
         return {
-            cartList: this.cartList,
 
         }
     },
     beforeMount() {
 
     },
-    computed: {
-
-    },
-    watch: {
-
-    },
-    methods:{ }
 }
 </script>
 

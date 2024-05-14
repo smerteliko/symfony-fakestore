@@ -6,7 +6,7 @@ export default {
 	},
 	mutations: {
 
-		SET_CART_ITEMS_LS(state,value) {
+		SET_CART_ITEMS_LS(state) {
 			window.localStorage.setItem('cart', JSON.stringify(state.cartItems));
 		},
 
@@ -29,13 +29,13 @@ export default {
 		},
 
 		SET_ALL_CART_SELECTED(state, value) {
-			state.cartItems.forEach((valueC, key)=>{
+			state.cartItems.forEach((valueC)=>{
 				valueC.checked = value;
 			});
 		},
 
 		SET_ALL_CART_UNSELECTED(state, value) {
-			state.cartItems.forEach((valueC, key)=>{
+			state.cartItems.forEach((valueC)=>{
 				valueC.checked = value;
 			});
 		},
@@ -93,12 +93,10 @@ export default {
 
 		addCartItemQuantity({commit}, item){
 			commit('ADD_CART_ITEM_QUANTITY', item);
-			commit('SET_CART_ITEM_QUANTITY', item)
 			commit('SET_CART_ITEMS_LS');
 		},
 		removeCartItemQuantity({commit}, item){
 			commit('REMOVE_CART_ITEM_QUANTITY', item);
-			commit('SET_CART_ITEM_QUANTITY', item)
 			commit('SET_CART_ITEMS_LS');
 		},
 
@@ -107,7 +105,7 @@ export default {
 			//commit('SET_CART_ITEMS_LS');
 		},
 
-		updateCartListFromLS({commit}, item) {
+		updateCartListFromLS({commit}) {
 			commit('SET_CART_ITEMS',JSON.parse(window.localStorage.getItem('cart')))
 		},
 
@@ -120,7 +118,7 @@ export default {
 		},
 	},
 	getters: {
-		getCartItemsLS: (state) => {
+		getCartItemsLS: () => {
 			if(window.localStorage.getItem('cart')) {
 				return JSON.parse(window.localStorage.getItem('cart'));
 			}

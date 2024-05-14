@@ -1,35 +1,40 @@
 <template>
-    <div class="component container bg-light vh-auto">
-        <div class="container">
-            <div class="row">
-                <div class="col-5 d-flex justify-content-between align-items-center">
-                    <div class="ms-4">
-                        <h1>{{ 'Cart' }}</h1>
-                    </div>
-
-                </div>
-                <div class="col-2 d-flex justify-content-center align-items-center">
-                    <div class="pe-calc ">
-                        <button class="btn"
-                                @click="this.removeFromCart">
-                            <i class="fs-x-large icon-color  fa-regular fa-trash-can" ></i>
-                        </button>
-                    </div>
-                    <div class="pe-calc  pe-40px form-check">
-                    <input class="pe-calc form-check-input" type="checkbox" v-model="this.checkedAll">
-                    </div>
-                </div>
-            </div>
+  <div class="component container bg-light vh-auto">
+    <div class="container">
+      <div class="row">
+        <div class="col-5 d-flex justify-content-between align-items-center">
+          <div class="ms-4">
+            <h1>{{ 'Cart' }}</h1>
+          </div>
         </div>
-        <div class="row">
-            <div class="container col-7">
-                <CartListComp :cart-list=" this.cartItemsList"></CartListComp>
-            </div>
-            <div class="container col-4">
-                <CartOrderComp :selected-items="this.getCheckedCartItems"></CartOrderComp>
-            </div>
+        <div class="col-2 d-flex justify-content-center align-items-center">
+          <div class="pe-calc ">
+            <button
+              class="btn"
+              @click="this.removeFromCart"
+            >
+              <i class="fs-x-large icon-color  fa-regular fa-trash-can" />
+            </button>
+          </div>
+          <div class="pe-calc  pe-40px form-check">
+            <input
+              v-model="this.checkedAll"
+              class="pe-calc form-check-input"
+              type="checkbox"
+            >
+          </div>
         </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="container col-7">
+        <CartListComp :cart-list="this.cartItemsList" />
+      </div>
+      <div class="container col-4">
+        <CartOrderComp :selected-items="this.getCheckedCartItems" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

@@ -1,28 +1,36 @@
 <template>
-    <div class="mt-4 container container-color">
-        <div class="row">
-            <div class="col-3">
-                <div class="row mb-2" v-for="(value, index) in this.images">
-                    <div class="btn button-hover"
-                         @click="this.setNewSlideIndex(index)"
-
-                    >
-                    <img :src="this.setCurrentImage(index)"
-                         class="img-fluid border-product-foto img-thumbnail"
-                         :class="index === this.currentSlideIndex ? 'button-selected':'' "
-                         alt="No image">
-                    </div>
-                </div>
-            </div>
-            <div class="col-9">
-                <div class="row">
-                    <img :src="this.setCurrentMain(this.currentSlideIndex)"
-                         class="img-fluid border-product-foto img-thumbnail"
-                         alt="No image">
-                </div>
-            </div>
+  <div class="mt-4 container container-color">
+    <div class="row">
+      <div class="col-3">
+        <div
+          v-for="(value, index) in images"
+          :key="`image-`+index"
+          class="row mb-2"
+        >
+          <div
+            class="btn button-hover"
+            @click="setNewSlideIndex(index)"
+          >
+            <img
+              :src="setCurrentImage(index)"
+              class="img-fluid border-product-foto img-thumbnail"
+              :class="index === currentSlideIndex ? 'button-selected':'' "
+              alt="No image"
+            >
+          </div>
         </div>
+      </div>
+      <div class="col-9">
+        <div class="row">
+          <img
+            :src="setCurrentMain(currentSlideIndex)"
+            class="img-fluid border-product-foto img-thumbnail"
+            alt="No image"
+          >
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 import {mapGetters} from "vuex";

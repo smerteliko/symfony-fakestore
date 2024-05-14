@@ -1,81 +1,112 @@
 <template>
-    <nav class=" container navbar  navbar-expand-lg navbar-light bg-light mt-5">
-        <div class="container-fluid">
-            <div class="navbar-brand  align-content-start me-lg-5">
-                <RouterLink class="nav-link  link-primary" to="/">
-                    <h3 class="text-lg-center mb-lg-0 ">
-                        Home
-                    </h3>
-                </RouterLink>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-              <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                      <div class="nav-item dropdown align-content-lg-center ms-lg-5">
-                          <RouterLink
-                              class="nav-link dropdown-toggle link-primary"
-                              :to="{name:'CatalogListComp'}"
-                              id="navbarDropdownMenuLink"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false">
-                              <h3 class="text-lg-center mb-0">
-                                  <i class="fa-solid fa-book-open"></i>
-                              </h3>
-                              <p class="mb-0"><small>Categories</small></p>
-                          </RouterLink>
-                          <div class="dropdown-menu"
-                               aria-labelledby="navbarDropdownMenuLink"
-                          >
-
-                              <div class="dropend dropdown-item"
-                                   v-for="categ in this.getCategoryList" >
-                                  <RouterLink  :key="`header-category-`+categ.Name"
-                                               :to="{name: 'CategoryComp', params:{catID: categ.id}}"
-                                               type="button"
-                                               class="dropdown-toggle nav-link "
-                                               data-toggle="dropdown"
-                                               aria-haspopup="true"
-                                               aria-expanded="false">
-
-                                      <h6 class=""><i :class="getIcon(categ.id)"></i> {{categ.Name}} </h6>
-                                  </RouterLink>
-                                  <div class="dropdown-menu">
-                                      <div class="dropdown-item" v-for="subCat in categ.subCategories">
-                                          <RouterLink :key="`header-category-`+categ.Name+`-subcategory-`+subCat.Name"
-                                                      :to="{name: 'CategoryCompBuSub', params:{catID: categ.id, subID:subCat.id}}"
-                                                      class="nav-link">
-                                              <h6 class=""> {{subCat.Name}} </h6>
-                                          </RouterLink>
-                                      </div>
-                                  </div>
-                              </div>
-
-                          </div>
-                      </div>
-                  <div class="nav-item align-content-lg-center  d-lg-flex m-auto me-2">
-                      <RouterLink class="nav-link link-primary me-lg-3 position-relative" to="/cart" >
-                          <h3 class="text-lg-center mb-0">
-                              <i class="fa-solid fa-cart-shopping"></i>
-                          </h3>
-                          <p class="mb-0"><small>Cart</small></p>
-                          <span class="position-absolute badge-fs top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                v-text="this.getCartTotalItems">
-
-                          </span>
-
-                      </RouterLink>
-<!--                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">-->
-<!--                          <h3 class="text-lg-center mb-0">-->
-<!--                              <i class="fa-solid fa-house-user"></i>-->
-<!--                          </h3>-->
-<!--                          <p class="mb-0"><small>User</small></p>-->
-<!--                      </RouterLink>-->
-                  </div>
+  <nav class=" container navbar  navbar-expand-lg navbar-light bg-light mt-5">
+    <div class="container-fluid">
+      <div class="navbar-brand  align-content-start me-lg-5">
+        <RouterLink
+          class="nav-link  link-primary"
+          to="/"
+        >
+          <h3 class="text-lg-center mb-lg-0 ">
+            Home
+          </h3>
+        </RouterLink>
+      </div>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapsibleNavbar"
+      >
+        <span class="navbar-toggler-icon" />
+      </button>
+      <div
+        id="collapsibleNavbar"
+        class="collapse navbar-collapse"
+      >
+        <div class="nav-item dropdown align-content-lg-center ms-lg-5">
+          <RouterLink
+            id="navbarDropdownMenuLink"
+            class="nav-link dropdown-toggle link-primary"
+            :to="{name:'CatalogListComp'}"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <h3 class="text-lg-center mb-0">
+              <i class="fa-solid fa-book-open" />
+            </h3>
+            <p class="mb-0">
+              <small>Categories</small>
+            </p>
+          </RouterLink>
+          <div
+            class="dropdown-menu"
+            aria-labelledby="navbarDropdownMenuLink"
+          >
+            <div
+              v-for="categ in getCategoryList"
+              :key="categ.id"
+              class="dropend dropdown-item"
+            >
+              <RouterLink
+                :key="`header-category-`+categ.Name"
+                :to="{name: 'CategoryComp', params:{catID: categ.id}}"
+                type="button"
+                class="dropdown-toggle nav-link "
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <h6 class="">
+                  <i :class="getIcon(categ.id)" /> {{ categ.Name }}
+                </h6>
+              </RouterLink>
+              <div class="dropdown-menu">
+                <div
+                  v-for="subCat in categ.subCategories"
+                  :key="subCat.id"
+                  class="dropdown-item"
+                >
+                  <RouterLink
+                    :key="`header-category-`+categ.Name+`-subcategory-`+subCat.Name"
+                    :to="{name: 'CategoryCompBuSub', params:{catID: categ.id, subID:subCat.id}}"
+                    class="nav-link"
+                  >
+                    <h6 class="">
+                      {{ subCat.Name }}
+                    </h6>
+                  </RouterLink>
+                </div>
               </div>
+            </div>
+          </div>
         </div>
-    </nav>
+        <div class="nav-item align-content-lg-center  d-lg-flex m-auto me-2">
+          <RouterLink
+            class="nav-link link-primary me-lg-3 position-relative"
+            to="/cart"
+          >
+            <h3 class="text-lg-center mb-0">
+              <i class="fa-solid fa-cart-shopping" />
+            </h3>
+            <p class="mb-0">
+              <small>Cart</small>
+            </p>
+            <span
+              class="position-absolute badge-fs top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              v-text="getCartTotalItems"
+            />
+          </RouterLink>
+          <!--                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">-->
+          <!--                          <h3 class="text-lg-center mb-0">-->
+          <!--                              <i class="fa-solid fa-house-user"></i>-->
+          <!--                          </h3>-->
+          <!--                          <p class="mb-0"><small>User</small></p>-->
+          <!--                      </RouterLink>-->
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>
 
 <script>
@@ -88,11 +119,6 @@ export default {
             cartList: {}
         }
     },
-    async beforeCreate() {
-        await this.$store.dispatch("fetchCatList");
-        this.$store.dispatch('updateCartListFromLS');
-        this.cartList = this.$store.getters.getCartItems;
-    },
     computed: {
         ...mapGetters([
             'getCategoryList',
@@ -101,7 +127,10 @@ export default {
             'getCartTotalItems'
         ]),
     },
-    watch:{
+    async beforeCreate() {
+        await this.$store.dispatch("fetchCatList");
+        this.$store.dispatch('updateCartListFromLS');
+        this.cartList = this.$store.getters.getCartItems;
     },
     methods: {
         getIcon(id) {

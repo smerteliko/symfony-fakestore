@@ -18,8 +18,6 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $Name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Description = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $Category = null;
@@ -42,6 +40,9 @@ class Product
     #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
     private ?ProductDescription $productDescription = null;
 
+    #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
+    private ?ProductCharacteristic $productCharacteristic = null;
+
     public function __construct()
     {
         $this->productImages = new ArrayCollection();
@@ -60,18 +61,6 @@ class Product
     public function setName(string $Name): static
     {
         $this->Name = $Name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(string $Description): static
-    {
-        $this->Description = $Description;
 
         return $this;
     }
@@ -175,4 +164,53 @@ class Product
 
         return $this;
     }
+
+    public function getProductCharacteristic(): ?ProductCharacteristic
+    {
+        return $this->productCharacteristic;
+    }
+
+    public function setProductCharacteristic(?ProductCharacteristic $productCharacteristic): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($productCharacteristic === null && $this->productCharacteristic !== null) {
+            $this->productCharacteristic->setProduct(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($productCharacteristic !== null && $productCharacteristic->getProduct() !== $this) {
+            $productCharacteristic->setProduct($this);
+        }
+
+        $this->productCharacteristic = $productCharacteristic;
+
+        return $this;
+    }
+
+	public function toArray(): array {
+		$rtrnData = [
+			'id' => $this->getId(),
+			'Name' => $this->getName(),
+			'Category' => $this->getCategory()->getName(),
+			'price' => $this->getPrice(),
+			'created_at' => $this->getCreatedAt(),
+			'subCategory' => $this->getSubCategory()->getName(),
+		];
+
+		if($this->getProductCharacteristic()) {
+			$rtrnData['productCharacteristic'] = [
+				'id'   => $this->getProductCharacteristic()->getId(),
+				'data' => $this->getProductCharacteristic()->getData(),
+				];
+		}
+
+		if($this->getProductDescription()) {
+			$rtrnData['productDescription'] = [
+				'id'   => $this->getProductDescription()->getId(),
+				'BriefDesc' => $this->getProductDescription()->getBriefDesc(),
+				'FullDescription' => $this->getProductDescription()->getFullDescription(),
+			];
+		}
+		return $rtrnData;
+	}
 }

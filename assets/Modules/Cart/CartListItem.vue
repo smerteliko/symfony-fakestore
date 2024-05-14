@@ -1,73 +1,91 @@
 <template>
-    <tr class="d-flex tr-height">
-        <td class="align-content-center ">
-            <img :src="this.image"
-                 class="img-thumbnail"
-                 width="100px"
-                 height="100px"
-                 alt="No image">
-        </td>
-        <td class="align-content-center col-3 ">
-            <RouterLink :to="{name: 'ProductComp', params:{id: this.cartItem.id}}"
-                class=" link-underline-opacity-100 text-decoration-none">
-                <h6 class="mb-0 text-decoration-underline">{{ this.cartItem.Name }}</h6>
-                <div class="product-description">
-                    <small class="text-secondary"> {{this.cartItem.Description}}</small>
-                </div>
-            </RouterLink>
-        </td>
-        <td class="align-content-center col-2">
-            <div class="input-group input-group-sm flex-nowrap w-100 ">
-                <button
-                    class="btn btn-outline-danger border-end-0 border-radius"
-                    type="button"
-                    @click="removeQuantity()">
-                    <i :class="{
-                                    'fa-solid fa-minus' : this.cartItem.quantity !== 1,
-                                     'fa-regular fa-trash-can' : this.cartItem.quantity === 1}" ></i>
-                </button>
-                <input class="form-control border border-end-0 border-start-0 border-input"
-                       value="1"
-                       min="1"
-                       type="number"
-                       disabled
-                       v-model="this.cartItem.quantity">
-                <button
-                    class=" btn btn-outline-success border-start-0 border-radius"
-                    type="button"
-                    @click="addQuantity()">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-        </td>
-        <td class="align-content-center col-3">
-
-            <h5 class="mb-0"> Total: {{this.cartItem.totalPrice}} <i class="fa-solid fa-dollar-sign"></i></h5>
-            <small class="text-secondary text-decoration-underline">
-                <i> Per each: {{this.cartItem.price}} </i>
-                <i class="fa-italic  fa-dollar-sign"></i>
-            </small>
-            <p class="align-text-bottom mb-0"> Shipping: </p>
-
-        </td>
-        <td class="align-content-center col-1">
-            <div class="form-check">
-                <input type="checkbox"
-                       class="form-check-input"
-                       v-model="this.checked"
-                >
-            </div>
-        </td>
-        <td class="align-content-center col-1">
-            <div class="form-check ps-0">
-                <label class="fancy-checkbox font-size-x-large">
-                    <input class="form-check-input" type="checkbox" />
-                    <i class="fa-regular icon-color fa-heart unchecked"></i>
-                    <i class="fa-solid icon-color fa-heart checked"></i>
-                </label>
-            </div>
-        </td>
-    </tr>
+  <tr class="d-flex tr-height">
+    <td class="align-content-center ">
+      <img
+        :src="this.image"
+        class="img-thumbnail"
+        width="100px"
+        height="100px"
+        alt="No image"
+      >
+    </td>
+    <td class="align-content-center col-3 ">
+      <RouterLink
+        :to="{name: 'ProductComp', params:{id: this.cartItem.id}}"
+        class=" link-underline-opacity-100 text-decoration-none"
+      >
+        <h6 class="mb-0 text-decoration-underline">
+          {{ this.cartItem.Name }}
+        </h6>
+        <div class="product-description">
+          <small class="text-secondary"> {{ this.cartItem.Description }}</small>
+        </div>
+      </RouterLink>
+    </td>
+    <td class="align-content-center col-2">
+      <div class="input-group input-group-sm flex-nowrap w-100 ">
+        <button
+          class="btn btn-outline-danger border-end-0 border-radius"
+          type="button"
+          @click="removeQuantity()"
+        >
+          <i
+            :class="{
+              'fa-solid fa-minus' : quantity !== 1,
+              'fa-regular fa-trash-can' : quantity === 1}"
+          />
+        </button>
+        <input
+          v-model="this.cartItem.quantity"
+          class="form-control border border-end-0 border-start-0 border-input"
+          value="1"
+          min="1"
+          type="number"
+          disabled
+        >
+        <button
+          class=" btn btn-outline-success border-start-0 border-radius"
+          type="button"
+          @click="addQuantity()"
+        >
+          <i class="fa-solid fa-plus" />
+        </button>
+      </div>
+    </td>
+    <td class="align-content-center col-3">
+      <h5 class="mb-0">
+        Total: {{ this.cartItem.totalPrice }} <i class="fa-solid fa-dollar-sign" />
+      </h5>
+      <small class="text-secondary text-decoration-underline">
+        <i> Per each: {{ this.cartItem.price }} </i>
+        <i class="fa-italic  fa-dollar-sign" />
+      </small>
+      <p class="align-text-bottom mb-0">
+        Shipping:
+      </p>
+    </td>
+    <td class="align-content-center col-1">
+      <div class="form-check">
+        <input
+          v-model="this.checked"
+          type="checkbox"
+          class="form-check-input"
+        >
+      </div>
+    </td>
+    <td class="align-content-center col-1">
+      <div class="form-check ps-0">
+        <label class="fancy-checkbox font-size-x-large">
+          <input
+            class="form-check-input"
+            type="checkbox"
+          >
+          <i class="fa-regular icon-color fa-heart unchecked" />
+          <i class="fa-solid icon-color fa-heart checked" />
+        </label>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -76,9 +94,10 @@ export default {
     props:["cartItem"],
     data() {
         return {
-            image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
             checked: this.cartItem.checked,
             favourite: false,
+            quantity: this.cartItem.quantity,
+            image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
             //desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : ''
         }
     },

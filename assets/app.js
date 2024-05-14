@@ -7,7 +7,7 @@ import 'bootstrap'
 
 const app = createApp(fakeStore);
 
-app.config.warnHandler = function (msg, vm, trace) {
+app.config.warnHandler = function () {
 	return null
 }
 

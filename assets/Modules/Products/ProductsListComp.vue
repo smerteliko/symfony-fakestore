@@ -1,12 +1,16 @@
 <template>
-    <div class="card-group">
-        <div class="col mt-5 mb-2 me-2"
-             v-for="prod in this.productList"
-             :key="`product-item-`+prod.id"
-        >
-            <ProductCardComp :product="prod" :key="`product-item-`+prod.id"></ProductCardComp>
-        </div>
+  <div class="card-group">
+    <div
+      v-for="prod in productList"
+      :key="`product-item-`+prod.id"
+      class="col mt-5 mb-2 me-2"
+    >
+      <ProductCardComp
+        :key="`product-item-`+prod.id"
+        :product="prod"
+      />
     </div>
+  </div>
 </template>
 
 <script>
@@ -14,12 +18,15 @@ import ProductCardComp from "./ProductCardComp.vue";
 
 export default {
     name: 'ProductsListComp',
-    props:['productList'],
-    created(){
+    components: {ProductCardComp},
+    props:{
+      productList: {
+        type: Object,
+        default() {
+          return {  }
+        }
+      }
     },
-    beforeMount() {
-    },
-    components: {ProductCardComp}
 }
 </script>
 

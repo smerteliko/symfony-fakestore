@@ -19,7 +19,7 @@ export default {
 	},
 	actions: {
 		async fetchCatList({commit}) {
-			const data = await axios.get('/catalog/ajax/list')
+			await axios.get('/catalog/ajax/list')
 
 					.then((response )=> {
 						commit("SET_CATEGORY_LIST",response.data.list)
@@ -29,7 +29,7 @@ export default {
 		},
 
 		async fetchCategoryData({commit}, id ) {
-			const data = await axios.get('/catalog/ajax/category/'+id)
+			await axios.get('/catalog/ajax/category/'+id)
 					.then((response )=> {
 						commit("SET_CATEGORY_DATA",response.data.list)
 					}).catch((reason)=>{

@@ -1,23 +1,21 @@
 <template>
-    <div class="component  container bg-light component-flex">
-        <div class="row mb-5 mt-2  ">
-            <div class="col-5">
-                <ProductImagesComp ></ProductImagesComp>
-            </div>
-            <div class="col-4">
-                   <ProductShortDescComp :product="this.product"></ProductShortDescComp>
-            </div>
-            <div class="col-3">
-                <ProductImagesComp ></ProductImagesComp>
-            </div>
-        </div>
-        <div class="hr mt-4 mb-2">
-
-        </div>
-        <div class="row">
-            <ProductFullDescComp :productDesc="this.product.productDescription"></ProductFullDescComp>
-        </div>
+  <div class="component  container bg-light component-flex">
+    <div class="row mb-2 mt-2  ">
+      <div class="col-5">
+        <ProductImagesComp />
+      </div>
+      <div class="col-4">
+        <ProductShortDescComp :product="product" />
+      </div>
+      <div class="col-3">
+        <ProductImagesComp />
+      </div>
     </div>
+    <div class="hr mt-2 mb-2" />
+    <div class="row mt-2 mb-2">
+      <ProductFullDescComp :product-desc="product.productDescription" />
+    </div>
+  </div>
 </template>
 
 <script>

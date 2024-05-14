@@ -27,7 +27,7 @@ export default {
 	},
 	actions: {
 		async fetchProductList({commit}) {
-			const data = await axios.get('/products/ajax/list')
+			await axios.get('/products/ajax/list')
 					.then((response )=> {
 						commit("SET_PRODUCTS_LIST",response.data);
 					}).catch((reason)=>{
@@ -35,7 +35,7 @@ export default {
 					});
 		},
 		async fetchProductListByCat({commit}, id) {
-			const data = await axios.get('/products/ajax/category/'+id)
+			await axios.get('/products/ajax/category/'+id)
 					.then((response )=> {
 						commit("SET_PRODUCTS_LIST_BY_CAT",response.data);
 					}).catch((reason)=>{
@@ -44,7 +44,7 @@ export default {
 		},
 
 		async fetchProductListBySubCat({commit}, id) {
-			const data = await axios.get('/products/ajax/subcategory/'+id)
+			await axios.get('/products/ajax/subcategory/'+id)
 					.then((response )=> {
 						commit("SET_PRODUCTS_LIST_BY_SUB_CAT",response.data);
 					}).catch((reason)=>{
@@ -53,7 +53,7 @@ export default {
 		},
 
 		async fetchProductData({commit}, id) {
-			const data = await axios.get('/products/ajax/'+id)
+			await axios.get('/products/ajax/'+id)
 					.then((response )=> {
 						commit("SET_PRODUCT_DATA",response.data.productData);
 					}).catch((reason)=>{
@@ -61,7 +61,7 @@ export default {
 					});
 		},
 		async fetchProductImages({commit}, id) {
-			const data = await axios.get('/products/ajax/'+id+'/images/')
+			await axios.get('/products/ajax/'+id+'/images/')
 					.then((response )=> {
 						commit("SET_PRODUCT_IMAGES",response.data.productImages);
 					}).catch((reason)=>{
