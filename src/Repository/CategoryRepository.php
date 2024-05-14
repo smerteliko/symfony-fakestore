@@ -14,92 +14,82 @@ use Symfony\Contracts\Cache\ItemInterface;
  *
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
  * @method Category|null findOneBy(array $criteria, array $orderBy = null)
- * @method Category[]	findAll()
- * @method Category[]	findBy(array $criteria, array $orderBy = null, $limit= null, $offset = null)
+ * @method Category[]    findAll()
+ * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit= null, $offset = null)
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-	private CacheInterface $cache;
+    private CacheInterface $cache;
 
-	public function __construct(ManagerRegistry $registry, CacheInterface $cache)
-	{
-		parent::__construct($registry, Category::class);
-		$this->cache = $cache;
-	}
+    public function __construct(ManagerRegistry $registry, CacheInterface $cache)
+    {
+        parent::__construct($registry, Category::class);
+        $this->cache = $cache;
+    }
 
-	/**
-	 * @param $data
-	 * @return void
-	 */
-	public function newCategory($data): void {
-		$category = new Category();
-		$category->setName($data['Name']);
+    public function newCategory($data): void
+    {
+        $category = new Category();
+        $category->setName($data['Name']);
 
-		if(trim($data['Description']) !== '') {
-			$category->setDescriprion($data['Description']);
-		}
+        if ('' !== trim($data['Description'])) {
+            $category->setDescriprion($data['Description']);
+        }
 
+        $category->setCreatedAt(new \DateTimeImmutable());
 
-		$category->setCreatedAt(new \DateTimeImmutable());
+        $this->getEntityManager()->persist($category);
+        $this->getEntityManager()->flush();
+    }
 
-		$this->getEntityManager()->persist($category);
-		$this->getEntityManager()->flush();
-	}
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getAllCategoriesCached(): mixed
+    {
+        return $this->cache->get('categoriesList', function (ItemInterface $item) {
+            return $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('category', 'sub')
+                        ->from(Category::class, 'category')
+                        ->leftJoin('category.subCategories', 'sub')
+                        ->orderBy('category.id', 'ASC')
+                        ->getQuery()
+                        ->getArrayResult()
+            ;
+        });
+    }
 
-	/**
-	 * @return mixed
-	 * @throws InvalidArgumentException
-	 */
-	public function getAllCategoriesCached(): mixed {
-		return $this->cache->get('categoriesList', function (ItemInterface $item) {
-			return $this->getEntityManager()
-						->createQueryBuilder()
-						->select('category', 'sub')
-						->from(Category::class, 'category')
-						->leftJoin('category.subCategories', 'sub')
-						->orderBy('category.id', 'ASC')
-						->getQuery()
-						->getArrayResult()
-				;
-		});
-	}
+    public function findCategoriesBy(array $options): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
 
-	/**
-	 * @param array $options
-	 * @return array
-	 */
-	public function findCategoriesBy(array $options): array {
-		$qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('category')
+            ->from(Category::class, 'category');
 
-		$qb->select('category')
-			->from(Category::class, 'category');
+        if ($options['id']) {
+            $qb->where('category.id = :id');
+            $qb->setParameter('id', $options['id']);
+        }
 
-		if($options['id']) {
-			$qb->where('category.id = :id');
-			$qb->setParameter('id', $options['id']);
-		}
+        if ($options['withSubs']) {
+            $qb->addSelect('sub');
+            $qb->leftJoin('category.subCategories', 'sub');
+        }
 
-		if($options['withSubs']) {
-			$qb->addSelect('sub');
-			$qb->leftJoin('category.subCategories', 'sub');
-		}
+        return $qb->getQuery()->getArrayResult();
+    }
 
-		return $qb->getQuery()->getArrayResult();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function findAllCatArray(): array {
-		return $this->getEntityManager()
-					->createQueryBuilder()
-					->select('category', 'sub')
-					->from(Category::class, 'category')
-					->leftJoin('category.subCategories', 'sub')
-					->orderBy('category.id', 'ASC')
-					->getQuery()
-					->getArrayResult()
-			;
-	}
-
+    public function findAllCatArray(): array
+    {
+        return $this->getEntityManager()
+                    ->createQueryBuilder()
+                    ->select('category', 'sub')
+                    ->from(Category::class, 'category')
+                    ->leftJoin('category.subCategories', 'sub')
+                    ->orderBy('category.id', 'ASC')
+                    ->getQuery()
+                    ->getArrayResult()
+        ;
+    }
 }

@@ -16,62 +16,66 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-
-	public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Product::class);
     }
 
+    final public function findProductBy(array $options): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
 
-	final  public function findProductBy(array $options): array {
-		$qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('product')
+            ->from(Product::class, 'product');
 
-		$qb ->select('product')
-			->from(Product::class, 'product');
+        if (isset($options['id'])) {
+            $qb->where('product.id = :id')
+                ->setParameter('id', $options['id']);
+        }
 
-		if (isset($options['id'])) {
-			$qb ->where('product.id = :id')
-				->setParameter('id', $options['id']);
-		}
+        if (isset($options['subID'])) {
+            $qb->leftJoin('product.subCategory', 'sub')
+                ->andWhere('sub.id = :subID')
+                ->setParameter('subID', $options['subID']);
+        }
 
-		if (isset($options['subID'])) {
-			$qb ->leftJoin('product.subCategory', 'sub')
-				->andWhere('sub.id = :subID')
-				->setParameter('subID', $options['subID']);
-		}
+        if (isset($options['catID'])) {
+            $qb->leftJoin('product.Category', 'cat')
+                ->andWhere('cat.id = :catID')
+                ->setParameter('catID', $options['catID']);
+        }
 
-		if (isset($options['catID'])) {
-			$qb ->leftJoin('product.Category', 'cat')
-				->andWhere('cat.id = :catID')
-				->setParameter('catID', $options['catID']);
-		}
+        if (isset($options['withImages'])) {
+            $qb->addSelect('pI');
+            $qb->leftJoin('product.productImages', 'pI');
+        }
 
-		if(isset($options['withImages'])) {
-			$qb->addSelect('pI');
-			$qb->leftJoin('product.productImages', 'pI');
-		}
+        if (isset($options['withDescriptions'])) {
+            $qb->addSelect('pd');
+            $qb->leftJoin('product.productDescription', 'pd');
+        }
 
-		if(isset($options['withDescriptions'])) {
-			$qb->addSelect('pd');
-			$qb->leftJoin('product.productDescription', 'pd');
-		}
+        if (isset($options['withCharacteristic'])) {
+            $qb->addSelect('pC');
+            $qb->leftJoin('product.productCharacteristic', 'pC');
+        }
 
-		if(isset($options['withAdditionalFields'])) {
-			return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
-		}
+        if (isset($options['withAdditionalFields'])) {
+            return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
+        }
 
-		return $qb->getQuery()->getArrayResult();
-	}
+        return $qb->getQuery()->getArrayResult();
+    }
 
-	private function setAdditionalFields( array $result): array {
-		foreach($result as $key=>$oneRes) {
-			$result[$key]['quantity'] = 0;
-			$result[$key]['totalPrice'] = 0;
-		}
-		return $result;
-	}
+    private function setAdditionalFields(array $result): array
+    {
+        foreach ($result as $key => $oneRes) {
+            $result[$key]['quantity'] = 0;
+            $result[$key]['totalPrice'] = 0;
+        }
 
-
+        return $result;
+    }
 
     //    /**
     //     * @return Product[] Returns an array of Product objects

@@ -18,7 +18,6 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $Name = null;
 
-
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $Category = null;
 
@@ -151,12 +150,12 @@ class Product
     public function setProductDescription(?ProductDescription $productDescription): static
     {
         // unset the owning side of the relation if necessary
-        if ($productDescription === null && $this->productDescription !== null) {
+        if (null === $productDescription && null !== $this->productDescription) {
             $this->productDescription->setProduct(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($productDescription !== null && $productDescription->getProduct() !== $this) {
+        if (null !== $productDescription && $productDescription->getProduct() !== $this) {
             $productDescription->setProduct($this);
         }
 
@@ -173,12 +172,12 @@ class Product
     public function setProductCharacteristic(?ProductCharacteristic $productCharacteristic): static
     {
         // unset the owning side of the relation if necessary
-        if ($productCharacteristic === null && $this->productCharacteristic !== null) {
+        if (null === $productCharacteristic && null !== $this->productCharacteristic) {
             $this->productCharacteristic->setProduct(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($productCharacteristic !== null && $productCharacteristic->getProduct() !== $this) {
+        if (null !== $productCharacteristic && $productCharacteristic->getProduct() !== $this) {
             $productCharacteristic->setProduct($this);
         }
 
@@ -187,30 +186,32 @@ class Product
         return $this;
     }
 
-	public function toArray(): array {
-		$rtrnData = [
-			'id' => $this->getId(),
-			'Name' => $this->getName(),
-			'Category' => $this->getCategory()->getName(),
-			'price' => $this->getPrice(),
-			'created_at' => $this->getCreatedAt(),
-			'subCategory' => $this->getSubCategory()->getName(),
-		];
+    public function toArray(): array
+    {
+        $rtrnData = [
+            'id' => $this->getId(),
+            'Name' => $this->getName(),
+            'Category' => $this->getCategory()->getName(),
+            'price' => $this->getPrice(),
+            'created_at' => $this->getCreatedAt(),
+            'subCategory' => $this->getSubCategory()->getName(),
+        ];
 
-		if($this->getProductCharacteristic()) {
-			$rtrnData['productCharacteristic'] = [
-				'id'   => $this->getProductCharacteristic()->getId(),
-				'data' => $this->getProductCharacteristic()->getData(),
-				];
-		}
+        if ($this->getProductCharacteristic()) {
+            $rtrnData['productCharacteristic'] = [
+                'id' => $this->getProductCharacteristic()->getId(),
+                'data' => $this->getProductCharacteristic()->getData(),
+            ];
+        }
 
-		if($this->getProductDescription()) {
-			$rtrnData['productDescription'] = [
-				'id'   => $this->getProductDescription()->getId(),
-				'BriefDesc' => $this->getProductDescription()->getBriefDesc(),
-				'FullDescription' => $this->getProductDescription()->getFullDescription(),
-			];
-		}
-		return $rtrnData;
-	}
+        if ($this->getProductDescription()) {
+            $rtrnData['productDescription'] = [
+                'id' => $this->getProductDescription()->getId(),
+                'BriefDesc' => $this->getProductDescription()->getBriefDesc(),
+                'FullDescription' => $this->getProductDescription()->getFullDescription(),
+            ];
+        }
+
+        return $rtrnData;
+    }
 }

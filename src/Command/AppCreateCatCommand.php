@@ -7,7 +7,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -17,31 +16,31 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class AppCreateCatCommand extends Command
 {
-	private CategoryRepository $categoryRepository;
+    private CategoryRepository $categoryRepository;
 
-	public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(CategoryRepository $categoryRepository)
     {
         parent::__construct();
-		$this->categoryRepository = $categoryRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     protected function configure(): void
     {
-	    $this
-		    ->addArgument('Name', InputArgument::REQUIRED, 'Category name')
-		    ->addArgument('Descr', InputArgument::OPTIONAL, 'Category description')
-	    ;
+        $this
+            ->addArgument('Name', InputArgument::REQUIRED, 'Category name')
+            ->addArgument('Descr', InputArgument::OPTIONAL, 'Category description')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-		$data = [
-			'Name'=>$input->getArgument('Name'),
-			'Desc'=>$input->getArgument('Descr')
-		];
-		$this->categoryRepository->newCategory($data);
+        $data = [
+            'Name' => $input->getArgument('Name'),
+            'Desc' => $input->getArgument('Descr'),
+        ];
+        $this->categoryRepository->newCategory($data);
 
         $io->success('Category created successfully');
 

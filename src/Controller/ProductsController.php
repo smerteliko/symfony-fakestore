@@ -13,80 +13,83 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/products', name: 'app_products')]
 class ProductsController extends AbstractController
 {
-	private ProductImagesRepository      $productImagesRepository;
-	private ProductRepository            $productRepository;
-	public function __construct(
-		ProductRepository            $productRepository,
-		ProductImagesRepository      $productImagesRepository,
-		ProductDescriptionRepository $productDescriptionRepository) {
-		$this->productRepository = $productRepository;
-		$this->productImagesRepository = $productImagesRepository;
-	}
+    private ProductImagesRepository $productImagesRepository;
+    private ProductRepository $productRepository;
 
-    #[Route('/', name: 'app_products')]
-    public function index(): Response {
-	    return $this->render('base.html.twig', []);
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductImagesRepository $productImagesRepository,
+        ProductDescriptionRepository $productDescriptionRepository)
+    {
+        $this->productRepository = $productRepository;
+        $this->productImagesRepository = $productImagesRepository;
     }
 
-	#[Route('/{id}', name: 'app_product')]
-	public function product(): Response {
-		return $this->render('base.html.twig', []);
-	}
-	#[Route('/ajax/category/{id}', name: 'app_products_list_category', methods: ['GET'])]
-	 public function listByCategory(int $id): Response {
-		return new JsonResponse(
-			$this->productRepository->findProductBy([
-				'catID'=>$id,
-				'withImages'=>TRUE,
-				'withDescriptions'=> true,
-				'withAdditionalFields' => true
-			])
-		);
-	 }
+    #[Route('/', name: 'app_products')]
+    public function index(): Response
+    {
+        return $this->render('base.html.twig', []);
+    }
 
-	#[Route('/ajax/subcategory/{id}', name: 'app_products_list_subcategory', methods: ['GET'])]
-	 public function listBySubcategory(int $id): Response {
-		return new JsonResponse(
-			$this->productRepository->findProductBy([
-				'subID'=>$id,
-				'withImages'=>TRUE,
-				'withDescriptions'=> true,
-				'withAdditionalFields' => true
-			]
-			)
-		);
-	 }
+    #[Route('/{id}', name: 'app_product')]
+    public function product(): Response
+    {
+        return $this->render('base.html.twig', []);
+    }
 
-	#[Route('/ajax/list', name: 'app_products_list', methods: ['GET'])]
-	public function listProducts(): Response {
-		return new JsonResponse(
-			$this->productRepository->findProductBy([
-				'withImages'=>TRUE,
-				'withDescriptions'=> true,
-				'withAdditionalFields' => true
-		   ])
-		);
-	}
+    #[Route('/ajax/category/{id}', name: 'app_products_list_category', methods: ['GET'])]
+    public function listByCategory(int $id): Response
+    {
+        return new JsonResponse(
+            $this->productRepository->findProductBy([
+                'catID' => $id,
+                'withImages' => true,
+                'withDescriptions' => true,
+                'withAdditionalFields' => true,
+            ])
+        );
+    }
 
+    #[Route('/ajax/subcategory/{id}', name: 'app_products_list_subcategory', methods: ['GET'])]
+    public function listBySubcategory(int $id): Response
+    {
+        return new JsonResponse(
+            $this->productRepository->findProductBy([
+                'subID' => $id,
+                'withImages' => true,
+                'withDescriptions' => true,
+                'withAdditionalFields' => true,
+            ])
+        );
+    }
 
-	#[Route('/ajax/{id}', name: 'app_product_data', methods: [ 'GET'])]
-	public function ProductData(int $id): Response {
-		return new JsonResponse([
-			'productData'=>$this->productRepository->findProductBy(
-			[
-				'id'=>$id,
-				'withDescriptions'=> true
-			])[0]
-		]);
-	}
+    #[Route('/ajax/list', name: 'app_products_list', methods: ['GET'])]
+    public function listProducts(): Response
+    {
+        return new JsonResponse(
+            $this->productRepository->findProductBy([
+                'withImages' => true,
+                'withDescriptions' => true,
+                'withAdditionalFields' => true,
+            ])
+        );
+    }
 
+    #[Route('/ajax/{id}', name: 'app_product_data', methods: ['GET'])]
+    public function ProductData(int $id): Response
+    {
+        return new JsonResponse([
+            'productData' => $this->productRepository->find($id)->toArray(),
+        ]);
+    }
 
-	#[Route('/ajax/{id}/images/', name: 'app_product_images', methods: [ 'GET'])]
-	public function ProductImages(int $id): Response {
-		return new JsonResponse([
-			'productImages'=> $this->productImagesRepository->findProductImagesBy(
-				['prodId'=>$id]
-			)
-		]);
-	}
+    #[Route('/ajax/{id}/images/', name: 'app_product_images', methods: ['GET'])]
+    public function ProductImages(int $id): Response
+    {
+        return new JsonResponse([
+            'productImages' => $this->productImagesRepository->findProductImagesBy(
+                ['prodId' => $id]
+            ),
+        ]);
+    }
 }

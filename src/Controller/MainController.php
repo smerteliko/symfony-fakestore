@@ -10,10 +10,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_main')]
-    public function index(CategoryRepository $categoryRepository): Response {
+    public function index(CategoryRepository $categoryRepository): Response
+    {
         return $this->render('base.html.twig', [
             'category' => $categoryRepository->findAll(),
         ]);
     }
-
 }

@@ -9,8 +9,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/cart')]
 class CartController extends AbstractController
 {
-	#[Route('/', name: 'app_cart')]
-	public function index(): Response {
-		return $this->render('base.html.twig', []);
-	}
+    #[Route('/', name: 'app_cart')]
+    public function index(): Response
+    {
+        return $this->render('base.html.twig', []);
+    }
 }

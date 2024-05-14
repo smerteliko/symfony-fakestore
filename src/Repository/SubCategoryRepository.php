@@ -21,16 +21,17 @@ class SubCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, SubCategory::class);
     }
 
-	public function newSubCategory($data): void {
-		$subCategory = new SubCategory();
-		$subCategory->setName($data['Name']);
-		$subCategory->setCategory($data['Category']);
+    public function newSubCategory($data): void
+    {
+        $subCategory = new SubCategory();
+        $subCategory->setName($data['Name']);
+        $subCategory->setCategory($data['Category']);
 
-		$subCategory->setCreatedAt(new \DateTimeImmutable());
+        $subCategory->setCreatedAt(new \DateTimeImmutable());
 
-		$this->getEntityManager()->persist($subCategory);
-		$this->getEntityManager()->flush();
-	}
+        $this->getEntityManager()->persist($subCategory);
+        $this->getEntityManager()->flush();
+    }
 
     //    /**
     //     * @return SubCategory[] Returns an array of SubCategory objects

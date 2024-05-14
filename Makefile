@@ -115,8 +115,8 @@ cache_purge:
 stan:
 	@${SYMFONY} analyse -c configuration/phpstan.neon --memory-limit 1G
 
-php-cs-fixer:
-	${DOCKER_COMPOSE_PHP_FPM_EXEC} php-cs-fixer fix --allow-risky=yes --dry-run --diff --verbose
+#php-cs-fixer:
+#	${DOCKER_COMPOSE_PHP_FPM_EXEC} php-cs-fixer fix --allow-risky=yes --dry-run --diff --verbose
 
 php-cs-fixer-fix:
 	${DOCKER_COMPOSE_PHP_FPM_EXEC} php-cs-fixer fix --allow-risky=yes --verbose
@@ -138,3 +138,9 @@ composer-require-checker:
 
 lint-yaml:
 	${SYMFONY} lint:yaml config --parse-tags
+
+eslint-js:
+	npm run lint-js
+
+php-cs-fixer:
+	vendor/bin/php-cs-fixer fix src/  --allow-risky=yes --dry-run --diff --verbose

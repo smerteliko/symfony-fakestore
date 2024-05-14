@@ -21,7 +21,6 @@ class ProductDescriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductDescription::class);
     }
 
-
     //    /**
     //     * @return ProductDescription[] Returns an array of ProductDescription objects
     //     */

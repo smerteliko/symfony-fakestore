@@ -11,29 +11,28 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @method ProductImages|null find($id, $lockMode = null, $lockVersion = null)
  * @method ProductImages|null findOneBy(array $criteria, array $orderBy = null)
- * @method ProductImages[]	findAll()
- * @method ProductImages[]	findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ProductImages[]    findAll()
+ * @method ProductImages[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ProductImagesRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, ProductImages::class);
+    }
 
-	public function __construct(ManagerRegistry $registry)
-	{
-		parent::__construct($registry, ProductImages::class);
-	}
-	/**
-	 */
-	final public function findProductImagesBy(array $options): array {
-		$qb = $this->getEntityManager()
-		           ->createQueryBuilder()
-		           ->select('productImages')
-		           ->from(ProductImages::class, 'productImages');
+    final public function findProductImagesBy(array $options): array
+    {
+        $qb = $this->getEntityManager()
+                   ->createQueryBuilder()
+                   ->select('productImages')
+                   ->from(ProductImages::class, 'productImages');
 
-			if($options['prodId']) {
-				$qb ->where('productImages.Product = :id')
-					->setParameter('id', $options['prodId']);
-			}
-		return $qb->getQuery()->getArrayResult();
-	}
+        if ($options['prodId']) {
+            $qb->where('productImages.Product = :id')
+                ->setParameter('id', $options['prodId']);
+        }
 
+        return $qb->getQuery()->getArrayResult();
+    }
 }
