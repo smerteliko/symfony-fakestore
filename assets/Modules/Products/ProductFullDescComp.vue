@@ -1,7 +1,7 @@
 <template>
   <div
     id="description"
-    class="mt-4 container container-color"
+    class="mt-4 container"
   >
     <div class="row mb-4">
       <h3>Description </h3>

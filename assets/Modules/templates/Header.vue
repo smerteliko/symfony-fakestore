@@ -1,5 +1,5 @@
 <template>
-  <nav class=" container navbar  navbar-expand-lg navbar-light bg-light mt-5">
+  <nav class=" container navbar  navbar-expand-lg navbar-light bg-light mt-5 container-color">
     <div class="container-fluid">
       <div class="navbar-brand  align-content-start me-lg-5">
         <RouterLink

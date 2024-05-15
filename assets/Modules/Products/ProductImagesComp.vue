@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4 container container-color">
+  <div class="mt-4 container ">
     <div class="row">
       <div class="col-3">
         <div
@@ -70,7 +70,7 @@ export default {
 }
 
 .button-selected {
-    border: 1px solid black;
+    border: 2px solid rgba(13,13,213,1);
     border-radius: 10px;
 }
 

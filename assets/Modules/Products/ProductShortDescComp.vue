@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4 container container-color">
+  <div class="mt-4 container">
     <div class="row">
       <h4
         class="product-description"

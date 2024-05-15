@@ -1,6 +1,6 @@
 <template>
-  <div class="component  container bg-light component-flex">
-    <div class="row mb-2 mt-2  ">
+  <div class="component  container bg-light component-flex container-color">
+    <div class="row mb-2 mt-2">
       <div class="col-5">
         <ProductImagesComp />
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="component container bg-light ">
+  <div class="component container bg-light container-color">
     <div class="container">
       <div class="row">
         <h1>{{ catData.Name }}</h1>

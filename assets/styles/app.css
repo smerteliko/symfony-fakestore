@@ -22,7 +22,7 @@ body {
 
 .active {
     z-index: 2 !important;
-    color: var(--bs-list-group-active-color)!important;
+    color: #f0f4f7!important;
     background-color: rgba(13,13,213,1)!important;
     border-color: rgba(13,13,213,1)!important;
 }
@@ -59,4 +59,11 @@ body {
 
 .icon-color {
     color: rgba(13,13,213,1) !important;
+}
+
+.hr {
+
+    height: 3px!important;
+    width: 100% !important;
+    background-color: rgba(13,13,213,1)!important;
 }

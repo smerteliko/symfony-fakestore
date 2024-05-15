@@ -1,5 +1,5 @@
 <template>
-  <div class="component container bg-light vh-auto">
+  <div class="component container bg-light vh-auto container-color">
     <div class="container">
       <div class="row">
         <div class="col-5 d-flex justify-content-between align-items-center">
@@ -66,8 +66,9 @@ export default {
     },
     beforeMount() {
         this.$store.dispatch('updateCartListFromLS');
-        this.$store.commit('SET_ALL_CART_UNSELECTED', false);
         this.cartItemsList = this.$store.getters.getCartItems;
+        this.$store.commit('SET_ALL_CART_UNSELECTED', false);
+
     },
 
     methods:{

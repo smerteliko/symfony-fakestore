@@ -18,7 +18,7 @@
           {{ this.cartItem.Name }}
         </h6>
         <div class="product-description">
-          <small class="text-secondary"> {{ this.cartItem.Description }}</small>
+          <small class="text-secondary"> {{ this.desc }}</small>
         </div>
       </RouterLink>
     </td>
@@ -31,8 +31,8 @@
         >
           <i
             :class="{
-              'fa-solid fa-minus' : quantity !== 1,
-              'fa-regular fa-trash-can' : quantity === 1}"
+              'fa-solid fa-minus' : this.quantity !== 1,
+              'fa-regular fa-trash-can' : this.quantity === 1}"
           />
         </button>
         <input
@@ -98,7 +98,7 @@ export default {
             favourite: false,
             quantity: this.cartItem.quantity,
             image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
-            //desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : ''
+            desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : ''
         }
     },
     computed:{

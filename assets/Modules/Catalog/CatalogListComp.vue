@@ -1,6 +1,6 @@
 
 <template>
-  <div class="component container bg-light component-flex">
+  <div class="component container bg-light component-flex container-color">
     <div class="row mb-2  justify-content-center">
       <div
         v-for="categ in getShuffledArray(getCategoryList)"
