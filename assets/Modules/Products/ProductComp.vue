@@ -11,9 +11,11 @@
         <ProductImagesComp />
       </div>
     </div>
-    <div class="hr mt-2 mb-2" />
-    <div class="row mt-2 mb-2">
+    <div class="row mt-2 mb-2 w-100">
       <ProductFullDescComp :product-desc="product.productDescription" />
+    </div>
+    <div class="row mt-2 mb-2 w-100">
+      <ProductCharacteristicComp :product-characteristic="product.productCharacteristic" />
     </div>
   </div>
 </template>
@@ -23,10 +25,11 @@ import ProductImagesComp from "./ProductImagesComp.vue";
 import {mapGetters} from "vuex";
 import ProductShortDescComp from "./ProductShortDescComp.vue";
 import ProductFullDescComp from "./ProductFullDescComp.vue";
+import ProductCharacteristicComp from "./ProductCharacteristicComp.vue";
 
 export default {
     name: "ProductComp",
-    components: {ProductShortDescComp, ProductImagesComp,ProductFullDescComp},
+    components: {ProductShortDescComp, ProductImagesComp,ProductFullDescComp, ProductCharacteristicComp},
     data() {
         return {
             product:[],
@@ -48,10 +51,4 @@ export default {
 </script>
 
 <style scoped>
-.hr {
-
-    height: 3px!important;
-    width: 100% !important;
-    background-color: rgba(13,13,213,1)!important;
-}
 </style>

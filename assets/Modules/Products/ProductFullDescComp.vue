@@ -1,5 +1,10 @@
 <template>
+  <div 
+    v-show="this.descText" 
+    class="hr mt-2 mb-2"
+  />
   <div
+    v-show="this.descText"
     id="description"
     class="mt-4 container"
   >
@@ -8,7 +13,7 @@
     </div>
     <div class="row">
       <div class="col-10">
-        <small><span v-text="descrText" /></small>
+        <small><span v-text="this.descText" /></small>
       </div>
     </div>
   </div>
@@ -17,20 +22,19 @@
 export default {
     name: "ProductFullDescComp",
     props:{
-      productDesc: Text
+      productDesc: Text,
+
     },
     data(){
         return {
-            descrText:  '',
+
         }
     },
-    watch: {
-        'productDesc': {
-            handler(value) {
-                this.descrText = value.FullDescription
-            }
-        }
-    },
+    computed:{
+      descText() {
+        return this.productDesc ? this.productDesc.FullDescription:''
+      }
+    }
 }
 </script>
 
