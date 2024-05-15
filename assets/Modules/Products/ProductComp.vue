@@ -8,7 +8,7 @@
         <ProductShortDescComp :product="product" />
       </div>
       <div class="col-3">
-        <ProductImagesComp />
+        <ProductOrderComp :product="product" />
       </div>
     </div>
     <div class="row mt-2 mb-2 w-100">
@@ -26,10 +26,17 @@ import {mapGetters} from "vuex";
 import ProductShortDescComp from "./ProductShortDescComp.vue";
 import ProductFullDescComp from "./ProductFullDescComp.vue";
 import ProductCharacteristicComp from "./ProductCharacteristicComp.vue";
+import ProductOrderComp from "./ProductOrderComp.vue";
 
 export default {
     name: "ProductComp",
-    components: {ProductShortDescComp, ProductImagesComp,ProductFullDescComp, ProductCharacteristicComp},
+    components: {
+      ProductShortDescComp,
+      ProductImagesComp,
+      ProductFullDescComp,
+      ProductCharacteristicComp,
+      ProductOrderComp
+    },
     data() {
         return {
             product:[],
