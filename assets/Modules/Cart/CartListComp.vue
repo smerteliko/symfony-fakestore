@@ -49,10 +49,4 @@ export default {
     border-spacing:0 20px;
 }
 
-.table-width {
-    width: 55% !important;
-}
-.rounded-container {
-    border-radius: 20px !important;
-}
 </style>

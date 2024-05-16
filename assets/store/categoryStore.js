@@ -1,40 +1,39 @@
 import axios from "axios";
+import {defineStore} from "pinia";
 
-export default {
-	state: {
-		categoryList: [],
-		categoryData: []
-	},
-	mutations: {
-		SET_CATEGORY_LIST(state, value) {
-			state.categoryList = value;
-		},
-		SET_CATEGORY_DATA(state, value) {
-			state.categoryData = value;
-		},
-	},
-	getters: {
-		getCategoryList: (state) => { return state.categoryList; },
-		getCategoryData: (state) => { return state.categoryData; }
+
+export const useCategoryStore = defineStore('category', {
+	state: () => {
+		return {
+			categoryList: [],
+			categoryData: []
+		};
 	},
 	actions: {
-		async fetchCatList({commit}) {
+		async fetchCatList() {
 			await axios.get('/catalog/ajax/list')
-
 					.then((response )=> {
-						commit("SET_CATEGORY_LIST",response.data.list)
+						this.categoryList = response.data.list
 					}).catch((reason)=>{
 						console.warn(reason)
 					})
 		},
 
-		async fetchCategoryData({commit}, id ) {
+		async fetchCategoryData(id ) {
 			await axios.get('/catalog/ajax/category/'+id)
 					.then((response )=> {
-						commit("SET_CATEGORY_DATA",response.data.list)
+						this.categoryData = response.data.list;
 					}).catch((reason)=>{
 						console.warn(reason)
 					})
 		}
 	},
-}
+	getters: {
+		getCategoryList() {
+			return this.categoryList;
+		},
+		getCategoryData() {
+			return this.categoryData;
+		}
+	},
+});

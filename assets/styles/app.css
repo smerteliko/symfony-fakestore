@@ -67,3 +67,21 @@ body {
     width: 100% !important;
     background-color: rgba(13,13,213,1)!important;
 }
+
+.product-description {
+    display: -webkit-box !important ;
+    -webkit-line-clamp: 2 !important ;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    cursor: pointer !important;
+}
+
+.border-radius,
+.rounded-container{
+    border-radius: 20px;
+}
+
+.border-1-solid-white {
+    border: 1px solid #e3e8ef;
+}

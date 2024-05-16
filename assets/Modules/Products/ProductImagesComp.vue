@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-3">
         <div
-          v-for="(value, index) in images"
+          v-for="(value, index) in productImages"
           :key="`image-`+index"
           class="row mb-2"
         >
@@ -13,7 +13,7 @@
           >
             <img
               :src="setCurrentImage(index)"
-              class="img-fluid border-product-foto img-thumbnail"
+              class="img-fluid border-1-solid-white border-product-foto img-thumbnail"
               :class="index === currentSlideIndex ? 'button-selected':'' "
               alt="No image"
             >
@@ -33,28 +33,35 @@
   </div>
 </template>
 <script>
-import {mapGetters} from "vuex";
+
 
 export default {
     name: "ProductImagesComp",
-    props: [],
+    props:{
+        productImages: {
+          type: Object,
+          default() {
+            return {}
+          }
+      }
+    },
     data(){
         return {
             currentSlideIndex: 0
         }
     },
     computed: {
-        ...mapGetters({
-            images: 'getProductImages'
-        }),
+        // ...mapGetters({
+        //     images: 'getProductImages'
+        // }),
     },
     methods: {
         setCurrentMain() {
-            let image = this.images[this.currentSlideIndex];
-            return  image ? require (`../../img/` +this.images[this.currentSlideIndex].FileNameBase):'';
+            let image = this.productImages[this.currentSlideIndex];
+            return  image ? require (`../../img/` +this.productImages[this.currentSlideIndex].FileNameBase):'';
         },
         setCurrentImage(index) {
-            return require (`../../img/` +this.images[index].FileNameBase);
+            return require (`../../img/` +this.productImages[index].FileNameBase);
         },
         setNewSlideIndex(index) {
            this.currentSlideIndex = index;
@@ -65,7 +72,6 @@ export default {
 
 <style scoped>
 .border-product-foto {
-    border: 1px solid #e3e8ef;
     border-radius: 10px;
 }
 

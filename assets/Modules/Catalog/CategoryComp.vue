@@ -10,7 +10,7 @@
         <ul
           v-for="subCat in catData.subCategories"
           :key="subCat.Name"
-          class="list-group list-group-flush border-left-panel mb-2 mt-2"
+          class="list-group list-group-flush border-1-solid-white border-left-panel mb-2 mt-2"
         >
           <button
             class="list-group-item
@@ -54,8 +54,11 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+
 import ProductListComp from "../Products/ProductsListComp.vue"
+import {mapActions, mapStores} from "pinia";
+import {useCategoryStore} from "../../store/categoryStore";
+import {useProductStore} from "../../store/productsStore";
 
 export default {
     name: "CategoryComp",
@@ -73,21 +76,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters([
-            'getCategoryData' ,
-            'getProductListByCat',
-            'getProductListBySubCat'
-        ]),
+      ...mapStores(useCategoryStore, useProductStore),
     },
     beforeMount() {
         this.setInitialData(this.$route.params);
     },
     methods: {
+      ...mapActions(useProductStore, ['fetchProductListBySubCat','fetchProductListByCat']),
+      ...mapActions(useCategoryStore, ['fetchCategoryData']),
+
         async changeSubCat(subID) {
             this.loading = true;
 
-            await this.$store.dispatch('fetchProductListBySubCat', subID);
-            this.productsList = this.$store.getters.getProductListBySubCat;
+            await this.productStore.fetchProductListBySubCat(subID)
+            this.productsList = this.productStore.getProductListBySubCat;
             this.active = parseInt(subID);
             this.total = this.productsList.length;
 
@@ -96,18 +98,18 @@ export default {
 
         async setInitialData(params){
             this.loading = true
-            await this.$store.dispatch('fetchCategoryData', params.catID);
-            await this.$store.dispatch('fetchProductListByCat', params.catID);
-            this.productsList = this.$store.getters.getProductListByCat;
+            await this.productStore.fetchProductListByCat( params.catID)
+            await this.categoryStore.fetchCategoryData( params.catID)
+            this.productsList = this.productStore.getProductListByCat;
 
             if(params.subID) {
-                await this.$store.dispatch('fetchProductListBySubCat', params.subID);
-                this.productsList = this.$store.getters.getProductListBySubCat;
-                this.active = parseInt(params.subID);
+              await this.productStore.fetchProductListBySubCat(params.subID)
+              this.productsList = this.productStore.getProductListBySubCat;
+              this.active = parseInt(params.subID);
             }
 
 
-            this.catData = this.$store.getters.getCategoryData;
+            this.catData = this.categoryStore.getCategoryData;
 
             this.total = this.productsList.length;
             this.loading = false;
@@ -119,7 +121,6 @@ export default {
 
 <style scoped>
 .border-left-panel{
-    border: 1px solid #e3e8ef;
     border-radius: 8px;
 }
 </style>

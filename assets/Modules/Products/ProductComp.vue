@@ -2,7 +2,7 @@
   <div class="component  container bg-light component-flex container-color">
     <div class="row mb-2 mt-2">
       <div class="col-5">
-        <ProductImagesComp />
+        <ProductImagesComp :product-images="this.productImages" />
       </div>
       <div class="col-4">
         <ProductShortDescComp :product="product" />
@@ -22,11 +22,13 @@
 
 <script>
 import ProductImagesComp from "./ProductImagesComp.vue";
-import {mapGetters} from "vuex";
+
 import ProductShortDescComp from "./ProductShortDescComp.vue";
 import ProductFullDescComp from "./ProductFullDescComp.vue";
 import ProductCharacteristicComp from "./ProductCharacteristicComp.vue";
 import ProductOrderComp from "./ProductOrderComp.vue";
+import {mapActions, mapStores} from "pinia";
+import {useProductStore} from "../../store/productsStore";
 
 export default {
     name: "ProductComp",
@@ -40,19 +42,27 @@ export default {
     data() {
         return {
             product:[],
-            productID: this.$router.currentRoute.value.params.id
+            productID: this.$router.currentRoute.value.params.id,
+            productImages: []
         };
     },
     computed: {
-        ...mapGetters([
-            'getProductData'
-        ]),
+      ...mapStores(useProductStore),
     },
    async  beforeMount() {
-        await this.$store.dispatch('fetchProductData', this.productID);
-        await this.$store.dispatch('fetchProductImages', this.productID);
+       await this.productStore.fetchProductData(this.productID);
+       await this.productStore.fetchProductImages(this.productID);
 
-        this.product = this.getProductData;
+        this.product = this.productStore.getProductData;
+        this.productImages = this.productStore.getProductImages;
+    },
+    methods:{
+        ...mapActions(useProductStore,[
+          'fetchProductData',
+          'fetchProductImages',
+          'getProductData',
+          'getProductImages'
+        ]),
     },
 }
 </script>

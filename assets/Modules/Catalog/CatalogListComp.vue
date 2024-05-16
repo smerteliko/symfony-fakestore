@@ -3,7 +3,7 @@
   <div class="component container bg-light component-flex container-color">
     <div class="row mb-2  justify-content-center">
       <div
-        v-for="categ in getShuffledArray(getCategoryList)"
+        v-for="categ in getShuffledArray(this.categoryStore.getCategoryList)"
         :key="`categ-`+categ.Name"
         class="col-3 mt-5"
       >
@@ -51,16 +51,17 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+
+
+import {mapStores} from "pinia";
+import {useCategoryStore} from "../../store/categoryStore";
 
 export default {
     name: 'CatalogListComp',
     computed: {
-        ...mapGetters([
-            'getCategoryList'
-        ]),
+        ...mapStores(useCategoryStore)
     },
-    methods: {
+  methods: {
         getShuffledArray(array) {
             return array.map(value => ({ value, sort: Math.random() }))
                         .sort((a, b) => a.sort - b.sort)

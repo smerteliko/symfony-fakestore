@@ -1,89 +1,75 @@
 import axios from "axios";
+import {defineStore} from "pinia";
 
-export default {
-	state: {
-		productsList: [],
-		productsListByCat:[],
-		productsListBySubCat:[],
-		productData:[],
-		productImages: []
-	},
-	mutations: {
-		SET_PRODUCTS_LIST(state, value) {
-			state.productsList = value;
-		},
-		SET_PRODUCTS_LIST_BY_CAT(state, value) {
-			state.productsListByCat = value;
-		},
-		SET_PRODUCTS_LIST_BY_SUB_CAT(state, value) {
-			state.productsListBySubCat = value;
-		},
-		SET_PRODUCT_DATA(state, value) {
-			state.productData = value;
-		},
-		SET_PRODUCT_IMAGES(state, value) {
-			state.productImages = value;
+export const useProductStore = defineStore('product', {
+	state: () =>{
+		return {
+			productsList: [],
+			productsListByCat: [],
+			productsListBySubCat: [],
+			productData: [],
+			productImages: []
 		}
 	},
+	getters: {
+		getProductList() {
+			return this.productsList;
+		},
+		getProductListByCat () {
+			return this.productsListByCat;
+		},
+		getProductListBySubCat () {
+			return this.productsListBySubCat;
+		},
+		getProductData() {
+			return this.productData;
+		},
+		getProductImages() {
+			return this.productImages;
+		},
+	},
 	actions: {
-		async fetchProductList({commit}) {
+		async fetchProductList() {
 			await axios.get('/products/ajax/list')
 					.then((response )=> {
-						commit("SET_PRODUCTS_LIST",response.data);
+						this.productsList = response.data;
 					}).catch((reason)=>{
 						console.warn(reason)
 					});
 		},
-		async fetchProductListByCat({commit}, id) {
+		async fetchProductListByCat(id) {
 			await axios.get('/products/ajax/category/'+id)
 					.then((response )=> {
-						commit("SET_PRODUCTS_LIST_BY_CAT",response.data);
+						this.productsListByCat = response.data;
 					}).catch((reason)=>{
 						console.warn(reason);
 					});
 		},
 
-		async fetchProductListBySubCat({commit}, id) {
+		async fetchProductListBySubCat(id) {
 			await axios.get('/products/ajax/subcategory/'+id)
 					.then((response )=> {
-						commit("SET_PRODUCTS_LIST_BY_SUB_CAT",response.data);
+						this.productsListBySubCat = response.data;
 					}).catch((reason)=>{
 						console.warn(reason);
 					});
 		},
 
-		async fetchProductData({commit}, id) {
+		async fetchProductData(id) {
 			await axios.get('/products/ajax/'+id)
 					.then((response )=> {
-						commit("SET_PRODUCT_DATA",response.data.productData);
+						this.productData = response.data.productData;
 					}).catch((reason)=>{
 						console.warn(reason);
 					});
 		},
-		async fetchProductImages({commit}, id) {
+		async fetchProductImages(id) {
 			await axios.get('/products/ajax/'+id+'/images/')
 					.then((response )=> {
-						commit("SET_PRODUCT_IMAGES",response.data.productImages);
+						this.productImages = response.data.productImages;
 					}).catch((reason)=>{
 						console.warn(reason);
 					});
 		},
 	},
-	getters: {
-		getProductList: (state) => {
-			return state.productsList;
-		},
-		getProductListByCat: (state) => {
-			return state.productsListByCat;
-		},
-		getProductListBySubCat: (state) => {
-			return state.productsListBySubCat;
-		},
-		getProductData: (state) => {
-			return state.productData;
-		},
-		getProductImages:(state) => {
-			return state.productImages;
-		},
-	},
-}
+});

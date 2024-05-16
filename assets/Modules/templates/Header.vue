@@ -44,7 +44,7 @@
             aria-labelledby="navbarDropdownMenuLink"
           >
             <div
-              v-for="categ in getCategoryList"
+              v-for="categ in this.categoryStore.getCategoryList"
               :key="categ.id"
               class="dropend dropdown-item"
             >
@@ -94,7 +94,7 @@
             </p>
             <span
               class="position-absolute badge-fs top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              v-text="getCartTotalItems"
+              v-text="this.cartStore.getCartTotalItems"
             />
           </RouterLink>
           <!--                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">-->
@@ -110,7 +110,10 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+
+import {mapActions, mapStores,} from "pinia";
+import {useCategoryStore} from "../../store/categoryStore";
+import {useCartStore} from "../../store/cartStore";
 
 export default {
     name: 'FakestoreHeader',
@@ -120,19 +123,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters([
-            'getCategoryList',
-            'getCartItems',
-            'getCartTotal',
-            'getCartTotalItems'
-        ]),
+      ...mapStores(useCategoryStore, useCartStore)
     },
-    async beforeCreate() {
-        await this.$store.dispatch("fetchCatList");
-        this.$store.dispatch('updateCartListFromLS');
-        this.cartList = this.$store.getters.getCartItems;
+    beforeMount() {
+      this.fetchCatList();
+      console.log(this.cartStore)
+      this.updateCartListFromLS();
+        // this.$store.dispatch('updateCartListFromLS');
+        // this.cartList = this.$store.getters.getCartItems;
     },
     methods: {
+      ...mapActions(useCategoryStore,["fetchCatList"]),
+      ...mapActions(useCartStore,["updateCartListFromLS"]),
+
+
         getIcon(id) {
             if(id === 1) {
                 return 'fa-solid fa-shirt'

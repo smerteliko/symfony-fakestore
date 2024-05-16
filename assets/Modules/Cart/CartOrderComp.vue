@@ -116,9 +116,7 @@ export default {
 </script>
 
 <style scoped>
-.rounded-container {
-    border-radius: 20px !important;
-}
+
 .container-danger {
     border: 1px solid darkred !important;
 }

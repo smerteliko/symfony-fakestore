@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-light  border-product-foto w-18rem">
+  <div class="card bg-light border-1-solid-white border-product-foto w-18rem">
     <div class="card-header">
       <RouterLink
         :to="{name: 'ProductComp', params:{id: product.id}}"
@@ -18,7 +18,7 @@
         alt="No image"
       >
 
-      <span> {{ desc }}</span>
+      <span class="product-description "> {{ desc }}</span>
     </div>
     <div class="card-footer">
       <div class="d-flex  justify-content-between">
@@ -40,6 +40,9 @@
 </template>
 
 <script>
+import {mapActions, mapStores} from "pinia";
+import {useCartStore} from "../../store/cartStore";
+
 export default {
     name: "ProductCardComp",
     props: {
@@ -58,12 +61,18 @@ export default {
 
         }
     },
+    computed:{
+        ...mapStores(useCartStore)
+    },
 
     methods: {
+        ...mapActions(useCartStore, ['addToCart']),
+
         addItem() {
-            this.$store.dispatch('addToCart', this.product);
+          this.cartStore.addToCart(this.product)
             this.quantity++;
         },
+
         checkImg() {
             if (this.product && this.product.productImages.length > 0) {
                 return this.product.productImages.find(
@@ -83,7 +92,6 @@ export default {
     width: 18rem;
 }
 .border-product-foto {
-    border: 1px solid #e3e8ef;
     border-radius: 10px;
 }
 
@@ -115,13 +123,9 @@ input:disabled{
     border-image: linear-gradient(90deg, rgba(220,53,69,1) 0%, rgba(25,135,84,1) 100%) 1 !important;
 }
 
-.border-radius {
-    border-radius: 20px
-}
 
 .input-width {
     width: 50% !important;
 }
-
 
 </style>

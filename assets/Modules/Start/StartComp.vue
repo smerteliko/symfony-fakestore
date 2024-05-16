@@ -1,27 +1,29 @@
 <template>
   <div class="container component component-flex bg-light ">
     <div class="container container-color">
-      <ProductListComp :product-list="getProductList" />
+      <ProductListComp :product-list="this.productStore.getProductList" />
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
 import ProductListComp from "../Products/ProductsListComp.vue"
+import {useProductStore} from "../../store/productsStore";
+import {mapActions, mapStores} from 'pinia'
 
 export default {
     name: 'StartComp',
     components: { ProductListComp},
     computed:{
-        ...mapGetters([
-            'getProductList'
-        ])
+      ...mapStores(useProductStore),
     },
     beforeMount() {
-        this.$store.dispatch('fetchProductList');
+      this.fetchProductList();
 
-    }
+    },
+  methods: {
+    ...mapActions(useProductStore, ["fetchProductList"]),
+  }
 }
 </script>
 

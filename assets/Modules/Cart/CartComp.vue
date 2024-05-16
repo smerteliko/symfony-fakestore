@@ -31,7 +31,7 @@
         <CartListComp :cart-list="this.cartItemsList" />
       </div>
       <div class="container col-4">
-        <CartOrderComp :selected-items="this.getCheckedCartItems" />
+        <CartOrderComp :selected-items="this.cartStore.getCheckedCartItems" />
       </div>
     </div>
   </div>
@@ -39,8 +39,10 @@
 
 <script>
 import CartListComp from "./CartListComp.vue";
-import {mapGetters} from "vuex";
+
 import CartOrderComp from "./CartOrderComp.vue";
+import {mapActions, mapStores} from "pinia";
+import {useCartStore} from "../../store/cartStore";
 
 export default {
     name: 'CartComp',
@@ -52,26 +54,31 @@ export default {
         }
     },
     computed: {
-        ...mapGetters([
-            'getCartItems',
-            'getCheckedCartItems'
-        ]),
+        ...mapStores(useCartStore),
     },
     watch: {
         checkedAll: {
              handler(newVal) {
-                 this.$store.commit('SET_ALL_CART_SELECTED', newVal)
+               this.cartStore.updateCartItemsSelection(newVal)
             }
         }
     },
     beforeMount() {
-        this.$store.dispatch('updateCartListFromLS');
-        this.cartItemsList = this.$store.getters.getCartItems;
-        this.$store.commit('SET_ALL_CART_UNSELECTED', false);
+        this.cartStore.updateCartListFromLS();
+        this.cartItemsList = this.cartStore.getCartItems;
+        this.cartStore.updateCartItemsSelection(false)
 
     },
 
     methods:{
+      ...mapActions(useCartStore,[
+        'getCartItems',
+        'getCheckedCartItems',
+        'removeSelectedCartItems',
+        'updateCartListFromLS',
+        'updateCartItemsSelection'
+      ]),
+
         removeFromCart() {
             let indexes = [];
             this.cartItemsList.forEach((value, key)=>{
@@ -80,7 +87,7 @@ export default {
                 }
 
             });
-           this.$store.dispatch('removeSelectedCartItems',indexes)
+          this.cartStore.removeSelectedCartItems(indexes)
         }
     },
 }

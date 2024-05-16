@@ -89,6 +89,9 @@
 </template>
 
 <script>
+import {mapActions, mapStores} from "pinia";
+import {useCartStore} from "../../store/cartStore";
+
 export default {
     name: "CartListItem",
     props:["cartItem"],
@@ -102,29 +105,38 @@ export default {
         }
     },
     computed:{
+      ...mapStores(useCartStore)
     },
 
     watch:{
         checked: {
             handler(newVal) {
-                this.$store.dispatch('updateCartItemSelection', {item:this.cartItem,checked:newVal});
+                this.cartStore.updateCartItemSelection(this.cartItem,newVal)
                 this.checked = this.cartItem.checked;
 
             },
         },
         'cartItem.checked': {
             handler(newVal) {
-                this.$store.dispatch('updateCartItemSelection', {item:this.cartItem,checked:newVal});
+                this.cartStore.updateCartItemSelection(this.cartItem,newVal)
                 this.checked = newVal
             },
         },
     },
     beforeMount() {
-        this.$store.commit('SET_CART_ITEM_TOTAL', this.cartItem);
-        this.$store.commit('SET_ALL_CART_UNSELECTED', false);
-        this.checked = this.cartItem.checked;
+      this.cartStore.setCartItemsTotal(this.cartItem);
+      this.cartStore.updateCartItemsSelection(false)
+      this.checked = this.cartItem.checked;
     },
     methods: {
+      ...mapActions(useCartStore, [
+        'setCartItemsTotal',
+        'updateCartItemSelection',
+        "updateCartItemsSelection",
+        'addCartItemQuantity',
+        "removeCartItemQuantity",
+        "removeItemFromCart"
+      ]),
 
         checkImg() {
             if (this.cartItem && this.cartItem.productImages.length > 0) {
@@ -134,15 +146,15 @@ export default {
         },
 
         addQuantity() {
-            this.$store.dispatch('addCartItemQuantity', this.cartItem);
-            this.$store.commit('SET_CART_ITEM_TOTAL', this.cartItem);
+            this.cartStore.setCartItemsTotal(this.cartItem);
+            this.cartStore.addCartItemQuantity(this.cartItem);
 
         },
         removeQuantity() {
-            this.$store.dispatch('removeCartItemQuantity', this.cartItem);
-            this.$store.commit('SET_CART_ITEM_TOTAL', this.cartItem);
+          this.cartStore.setCartItemsTotal(this.cartItem);
+          this.cartStore.removeCartItemQuantity(this.cartItem);
             if(this.cartItem.quantity === 0) {
-                this.$store.dispatch('removeItemFromCart', this.cartItem);
+              this.cartStore.removeItemFromCart(this.cartItem);
 
             }
             this.$forceUpdate();
@@ -186,14 +198,6 @@ input[type=checkbox]
     height: 120px;
 }
 
-.product-description {
-    display: -webkit-box !important ;
-    -webkit-line-clamp: 2 !important ;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    cursor: pointer !important;
-}
 
 .border-input {
     border-style: solid !important;
@@ -201,7 +205,7 @@ input[type=checkbox]
 }
 
 .border-radius {
-    border-radius: 20px
+    border-radius: 20px;
 }
 
 .fancy-checkbox input[type="checkbox"],

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4 container border-product-order shadow">
+  <div class="mt-4 container border-1-solid-white border-product-order shadow">
     <div class="d-flex flex-column mt-3 mb-3">
       <div class="row">
         <h4>
@@ -119,7 +119,6 @@ export default {
 }
 
 .border-product-order {
-  border: 1px solid #e3e8ef;
   border-radius: 20px;
 }
 
