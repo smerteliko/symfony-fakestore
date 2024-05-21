@@ -97,12 +97,23 @@
               v-text="this.cartStore.getCartTotalItems"
             />
           </RouterLink>
-          <!--                      <RouterLink class="nav-link link-primary ms-lg-3" to="/cart">-->
-          <!--                          <h3 class="text-lg-center mb-0">-->
-          <!--                              <i class="fa-solid fa-house-user"></i>-->
-          <!--                          </h3>-->
-          <!--                          <p class="mb-0"><small>User</small></p>-->
-          <!--                      </RouterLink>-->
+          <RouterLink
+            v-if="this.userStore.isAuthed === true"
+            class="nav-link link-primary ms-lg-3"
+            to="/user/profile"
+          >
+            <h3 class="text-lg-center mb-0">
+              <i class="fa-solid fa-house-user" />
+            </h3>
+            <p class="mb-0">
+              <small>Profile</small>
+            </p>
+          </RouterLink>
+          <UserLoginComp
+            v-else
+          >
+
+          </UserLoginComp>
         </div>
       </div>
     </div>
@@ -114,25 +125,26 @@
 import {mapActions, mapStores,} from "pinia";
 import {useCategoryStore} from "../../store/categoryStore";
 import {useCartStore} from "../../store/cartStore";
+import {useUserStore} from "../../store/userStore";
+import UserLoginComp from "../User/UserLoginComp.vue";
 
 export default {
     name: 'FakestoreHeader',
+    components:{UserLoginComp},
     data() {
         return {
-            cartList: {}
         }
     },
     computed: {
-      ...mapStores(useCategoryStore, useCartStore)
+      ...mapStores(useCategoryStore, useCartStore, useUserStore)
     },
     beforeMount() {
       this.fetchCatList();
-      console.log(this.cartStore)
       this.updateCartListFromLS();
-        // this.$store.dispatch('updateCartListFromLS');
-        // this.cartList = this.$store.getters.getCartItems;
+      this.userStore.isAuthorized()
     },
     methods: {
+      ...mapActions(useUserStore,['isAuthorized']),
       ...mapActions(useCategoryStore,["fetchCatList"]),
       ...mapActions(useCartStore,["updateCartListFromLS"]),
 

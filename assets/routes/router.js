@@ -3,6 +3,7 @@ import startRoute from "./startRoute";
 import catalog from "./catalogRoute.js";
 import cartRoute from "./cartRoute";
 import productRoute from "./productRoute";
+import userRoute from "./userRoute";
 
 
 let router =  createRouter({
@@ -11,8 +12,13 @@ let router =  createRouter({
 			startRoute,
 			catalog,
 			cartRoute,
-			productRoute
+			productRoute,
+			userRoute
 	),
 });
+// router.beforeEach((to) => {
+// 	const store = useUserStore()
+// 	if (to.meta.requiresAuth && !store.isAuthed) return '/'
+// })
 
 export default router;

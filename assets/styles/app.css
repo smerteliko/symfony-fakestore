@@ -19,6 +19,9 @@ body {
     display: flex !important;
     flex-wrap: wrap !important;
 }
+.color-main {
+    color: rgba(13,13,213,1)!important
+}
 
 .active {
     z-index: 2 !important;
