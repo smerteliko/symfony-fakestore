@@ -11,7 +11,7 @@ export const useCategoryStore = defineStore('category', {
 	},
 	actions: {
 		async fetchCatList() {
-			await axios.get('/catalog/ajax/list')
+			await axios.get('/json/catalogs')
 					.then((response )=> {
 						this.categoryList = response.data.list
 					}).catch((reason)=>{

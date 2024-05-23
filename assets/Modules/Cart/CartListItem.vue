@@ -94,13 +94,20 @@ import {useCartStore} from "../../store/cartStore";
 
 export default {
     name: "CartListItem",
-    props:["cartItem"],
+    props:{
+      cartItem:{
+        type:Object,
+        default() {
+          return {  }
+        }
+      }
+    },
     data() {
         return {
             checked: this.cartItem.checked,
             favourite: false,
             quantity: this.cartItem.quantity,
-            image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
+            image: this.checkImg() ? require(`../../img/products/` + this.checkImg()) : '',
             desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : ''
         }
     },

@@ -25,19 +25,19 @@ class ProductsController extends AbstractController
         $this->productImagesRepository = $productImagesRepository;
     }
 
-    #[Route('/', name: 'app_products')]
+    #[Route('/', name: '_list')]
     public function index(): Response
     {
         return $this->render('base.html.twig', []);
     }
 
-    #[Route('/{id}', name: 'app_product')]
+    #[Route('/{id}', name: '_item')]
     public function product(): Response
     {
         return $this->render('base.html.twig', []);
     }
 
-    #[Route('/ajax/category/{id}', name: 'app_products_list_category', methods: ['GET'])]
+    #[Route('/ajax/category/{id}', name: '_list_category', methods: ['GET'])]
     public function listByCategory(int $id): Response
     {
         return new JsonResponse(
@@ -50,7 +50,7 @@ class ProductsController extends AbstractController
         );
     }
 
-    #[Route('/ajax/subcategory/{id}', name: 'app_products_list_subcategory', methods: ['GET'])]
+    #[Route('/ajax/subcategory/{id}', name: '_list_subcategory', methods: ['GET'])]
     public function listBySubcategory(int $id): Response
     {
         return new JsonResponse(
@@ -63,7 +63,7 @@ class ProductsController extends AbstractController
         );
     }
 
-    #[Route('/ajax/list', name: 'app_products_list', methods: ['GET'])]
+    #[Route('/ajax/list', name: '_list_ajax', methods: ['GET'])]
     public function listProducts(): Response
     {
         return new JsonResponse(
@@ -75,7 +75,7 @@ class ProductsController extends AbstractController
         );
     }
 
-    #[Route('/ajax/{id}', name: 'app_product_data', methods: ['GET'])]
+    #[Route('/ajax/{id}', name: '_item_ajax', methods: ['GET'])]
     public function ProductData(int $id): Response
     {
         return new JsonResponse([
@@ -83,7 +83,7 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/ajax/{id}/images/', name: 'app_product_images', methods: ['GET'])]
+    #[Route('/ajax/{id}/images/', name: '_images', methods: ['GET'])]
     public function ProductImages(int $id): Response
     {
         return new JsonResponse([

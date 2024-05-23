@@ -13,8 +13,7 @@
           class="list-group list-group-flush border-1-solid-white border-left-panel mb-2 mt-2"
         >
           <button
-            class="list-group-item
-                               list-group-item-action btn"
+            class="list-group-item list-group-item-action btn"
             :class="{'active' : subCat.id === active}"
             @click="changeSubCat(subCat.id)"
           >
@@ -37,7 +36,7 @@
                 class="spinner-border"
                 role="status"
               >
-                <span class="visually-hidden">Загрузка...</span>
+                <span class="visually-hidden">Loading...</span>
               </div>
             </div>
           </div>

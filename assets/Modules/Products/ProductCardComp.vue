@@ -55,7 +55,7 @@ export default {
     },
     data() {
         return {
-            image: this.checkImg() ? require(`../../img/` + this.checkImg()) : '',
+            image: this.checkImg() ? require(`../../img/products/` + this.checkImg()) : '',
             quantity: this.product.quantity,
             desc: this.product.productDescription ? this.product.productDescription.BriefDesc : ''
 

@@ -51,17 +51,14 @@ export default {
         }
     },
     computed: {
-        // ...mapGetters({
-        //     images: 'getProductImages'
-        // }),
     },
     methods: {
         setCurrentMain() {
             let image = this.productImages[this.currentSlideIndex];
-            return  image ? require (`../../img/` +this.productImages[this.currentSlideIndex].FileNameBase):'';
+            return  image ? require (`../../img/products/` +this.productImages[this.currentSlideIndex].FileNameBase):'';
         },
         setCurrentImage(index) {
-            return require (`../../img/` +this.productImages[index].FileNameBase);
+            return require (`../../img/products/` +this.productImages[index].FileNameBase);
         },
         setNewSlideIndex(index) {
            this.currentSlideIndex = index;

@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Repository\CategoryRepository;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 
 #[Route('/catalog')]
 class CatalogController extends AbstractController
@@ -45,18 +43,6 @@ class CatalogController extends AbstractController
     {
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
-    #[Route('/ajax/list', name: 'app_catalog_list', methods: ['GET'])]
-    public function catalogList(CacheInterface $cache): JsonResponse
-    {
-        return new JsonResponse(
-            [
-                'list' => $this->categoryRepository->getAllCategoriesCached(),
-            ],
-            Response::HTTP_OK);
-    }
 
     #[Route('/ajax/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
     public function ajaxCategory(int $id): JsonResponse
