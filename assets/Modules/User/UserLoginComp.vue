@@ -1,19 +1,4 @@
 <template>
-  <a
-    role="button"
-    type="button"
-    class=" nav-link link-primary text-decoration-none position-relative"
-    data-bs-toggle="modal"
-    data-bs-target="#loginModal"
-  >
-    <h3 class="text-lg-center mb-0">
-      <i class="fa-solid fa-house-user" />
-    </h3>
-    <p class="mb-0">
-      <small>User</small>
-    </p>
-  </a>
-
   <form @submit.prevent="submitLogin">
     <div
       id="loginModal"
@@ -91,20 +76,6 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-              @click="this.toggleCloseModal"
-            >
-              Close
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-            >
-              Save changes
-            </button>
           </div>
         </div>
       </div>
@@ -115,7 +86,7 @@
       class="modal fade"
       role="dialog"
       aria-hidden="false"
-      tabindex="-2"
+      tabindex="-1"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
     >
@@ -206,11 +177,9 @@
 <script>
 import {mapActions, mapStores, mapWritableState} from "pinia";
 import {useUserStore} from "../../store/userStore";
-import UserLoginPassword from './UserLoginPassword.vue'
 
 export default {
   name: "UserLoginComp",
-  components: {UserLoginPassword},
   data(){
     return {
       errors: {
@@ -232,6 +201,7 @@ export default {
     async submitLogin() {
       await this.userStore.logIn()
       this.$router.push({path: '/', replace: true});
+      document.querySelector('[data-bs-target="#loginModal"]').modal('dispose');
     },
 
     toggleCloseModal() {

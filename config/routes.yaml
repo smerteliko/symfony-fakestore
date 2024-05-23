@@ -4,7 +4,7 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-login:
+app_user_login:
     path: /user/login
     methods: ['POST']
     defaults:

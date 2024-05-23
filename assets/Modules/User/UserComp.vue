@@ -1,10 +1,28 @@
 <template>
-  <div />
+  <div class="component  container bg-light  container-color">
+    <div class="row mb-2 mt-2">
+      <div class="col-3 container-color pt-4">
+        <UserMenuProfileMenu :user-store="this.userStore" />
+      </div>
+      <div class="col-9 container-color pt-4">
+        <router-view />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+
+import UserMenuProfileMenu from "./UserProfileMenuComp.vue";
+import {mapStores} from "pinia";
+import {useUserStore} from "../../store/userStore";
+
 export default {
-  name: "UserComp"
+  name: "UserComp",
+  components: {UserMenuProfileMenu},
+  computed:{
+    ...mapStores(useUserStore)
+  }
 }
 </script>
 

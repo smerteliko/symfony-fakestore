@@ -20,5 +20,14 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    security.event.jwt_notfound_listener:
+        class: App\EventListener\JWTNotFoundListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+
+    security.hash.password.listener:
+        class: App\Security\HashPasswordSubscriber
+        tags:
+            - { name: doctrine.event_subscriber }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

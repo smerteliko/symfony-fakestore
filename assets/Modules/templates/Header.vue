@@ -109,11 +109,23 @@
               <small>Profile</small>
             </p>
           </RouterLink>
-          <UserLoginComp
-            v-else
-          >
-
-          </UserLoginComp>
+          <div v-else>
+            <a
+              role="button"
+              type="button"
+              class=" nav-link link-primary text-decoration-none position-relative"
+              data-bs-toggle="modal"
+              data-bs-target="#loginModal"
+            >
+              <h3 class="text-lg-center mb-0">
+                <i class="fa-solid fa-house-user" />
+              </h3>
+              <p class="mb-0">
+                <small>User</small>
+              </p>
+            </a>
+            <UserLoginComp />
+          </div>
         </div>
       </div>
     </div>

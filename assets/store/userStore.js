@@ -24,6 +24,9 @@ export const useUserStore = defineStore('user', {
 			await axios.get('/user/is_authorized', { headers: { Authorization: `Bearer ${this.token}` } })
 					.then((response)=>{
 						this.isAuthed = response.data.is_authenticated;
+						this.user = JSON.parse(response.data.user);
+						this.email = this.user.email;
+						this.id = this.user.id
 						this.loading = false;
 
 					})
@@ -52,9 +55,18 @@ export const useUserStore = defineStore('user', {
 				return;
 			}
 			let response2 = await this.isAuthorized();
+			window.location.reload();
+		},
 
-			//his.user = JSON.parse(response2.data)
-			//emit('user-authenticated', userIri);
+		async logout() {
+			this.loading = true;
+			await axios.post('/user/logout');
+			localStorage.removeItem('token');
+
+			this.$reset();
+			window.history.pushState({},"",'/')
+			window.location.reload();
+
 		}
 	},
 	getters: {

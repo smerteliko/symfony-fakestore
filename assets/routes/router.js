@@ -4,6 +4,7 @@ import catalog from "./catalogRoute.js";
 import cartRoute from "./cartRoute";
 import productRoute from "./productRoute";
 import userRoute from "./userRoute";
+import {useUserStore} from "../store/userStore";
 
 
 let router =  createRouter({
@@ -16,9 +17,10 @@ let router =  createRouter({
 			userRoute
 	),
 });
-// router.beforeEach((to) => {
-// 	const store = useUserStore()
-// 	if (to.meta.requiresAuth && !store.isAuthed) return '/'
-// })
+router.beforeEach(async (to) => {
+	const store = useUserStore();
+	await store.isAuthorized();
+	if (to.meta.requiresAuth && !store.isAuthed) return '/'
+});
 
 export default router;

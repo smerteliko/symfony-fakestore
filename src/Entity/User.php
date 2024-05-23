@@ -51,6 +51,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $FirstName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $LastName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Language = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Currency $Currency = null;
+
     public function __construct()
     {
         $this->userCarts = new ArrayCollection();
@@ -149,12 +164,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 	#[ORM\PreFlush]
-    public function setUpdatedAt(): static
-    {
-        $this->updated_at = new \DateTimeImmutable();
-
-        return $this;
-    }
+                                                 public function setUpdatedAt(): static
+                                                 {
+                                                     $this->updated_at = new \DateTimeImmutable();
+                                             
+                                                     return $this;
+                                                 }
 
     /**
      * @return Collection<int, UserCart>
@@ -194,6 +209,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->FirstName;
+    }
+
+    public function setFirstName(?string $FirstName): static
+    {
+        $this->FirstName = $FirstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->LastName;
+    }
+
+    public function setLastName(?string $LastName): static
+    {
+        $this->LastName = $LastName;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->Phone;
+    }
+
+    public function setPhone(?string $Phone): static
+    {
+        $this->Phone = $Phone;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->Language;
+    }
+
+    public function setLanguage(?string $Language): static
+    {
+        $this->Language = $Language;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->Currency;
+    }
+
+    public function setCurrency(?Currency $Currency): static
+    {
+        $this->Currency = $Currency;
 
         return $this;
     }
