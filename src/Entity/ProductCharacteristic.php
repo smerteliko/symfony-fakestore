@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ProductCharacteristic
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy:'AUTO')]
     #[ORM\Column]
     private ?int $id = null;
 
