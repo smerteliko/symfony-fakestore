@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -66,6 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Currency $Currency = null;
 
+    #[ORM\OneToOne(mappedBy: 'ImageUser', cascade: ['persist', 'remove'])]
+    private ?UserImages $userImages = null;
+
     public function __construct()
     {
         $this->userCarts = new ArrayCollection();
@@ -95,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -151,9 +155,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(): static
     {
-        $this->created_at = $created_at;
+        $this->created_at = new \DateTimeImmutable();
 
         return $this;
     }
@@ -163,13 +167,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->updated_at;
     }
 
-	#[ORM\PreFlush]
-                                                 public function setUpdatedAt(): static
-                                                 {
-                                                     $this->updated_at = new \DateTimeImmutable();
+    #[ORM\PreFlush]
+    public function setUpdatedAt(): static
+    {
+        $this->updated_at = new \DateTimeImmutable();
                                              
-                                                     return $this;
-                                                 }
+        return $this;
+    }
 
     /**
      * @return Collection<int, UserCart>
@@ -271,5 +275,68 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->Currency = $Currency;
 
         return $this;
+    }
+
+    public function getUserImages(): ?UserImages
+    {
+        return $this->userImages;
+    }
+
+    public function setUserImages(?UserImages $userImages): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($userImages === null && $this->userImages !== null) {
+            $this->userImages->setImageUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($userImages !== null && $userImages->getImageUser() !== $this) {
+            $userImages->setImageUser($this);
+        }
+
+        $this->userImages = $userImages;
+
+        return $this;
+    }
+
+    public function toArray(): array {
+        $rtrnArray = [
+            'id' => $this->id,
+            'uuid' => $this->uuid,
+            'email' => $this->email,
+            'FirstName' => $this->FirstName,
+            'LastName' => $this->LastName,
+            'phone' => $this->Phone,
+            'language' => $this->Language,
+
+
+        ];
+
+        if($this->Currency) {
+            $rtrnArray['currency'] =[
+                'id' => $this->Currency->getId(),
+                'name' => $this->Currency->getName(),
+                'symbol' => $this->Currency->getSymbol(),
+            ];
+        }
+
+
+        if($this->userImages) {
+            $rtrnArray['Images'] = [
+                'id' => $this->userImages->getId(),
+                'updatedAt' => $this->userImages->getUpdatedAt(),
+                'createdAt' => $this->userImages->getCreatedAt(),
+            ];
+            if( $this->userImages->getImageFile()) {
+                $rtrnArray['Images']['file'] = [
+                    'id' => $this->userImages->getImageFile()->getId(),
+                    'FileName' => $this->userImages->getImageFile()->getFilename(),
+                    'Type' => $this->userImages->getImageFile()->getType(),
+                    'Size' => $this->userImages->getImageFile()->getSize(),
+                ];
+
+            }
+        }
+        return $rtrnArray;
     }
 }

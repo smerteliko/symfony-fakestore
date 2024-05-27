@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\Files;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @extends ServiceEntityRepository<Files>
@@ -19,6 +21,29 @@ class FilesRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Files::class);
+    }
+
+    public function save(Files $files): void {
+        $this->getEntityManager()->persist($files);
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(Files $files): void {
+        $this->getEntityManager()->remove($files);
+        $this->getEntityManager()->flush();
+    }
+
+    public function saveNewFile(UploadedFile $file, string $fileName): Files {
+        $fileEnt = new Files();
+        $fileEnt->setOriginalName($file->getClientOriginalName());
+        $fileEnt->setFileName($fileName);
+        $fileEnt->setType($file->getMimeType());
+        $fileEnt->setSize($file->getSize());
+        $fileEnt->setExt($file->getClientOriginalExtension());
+        $fileEnt->setCreatedAt();
+
+        $this->save($fileEnt);
+        return $fileEnt;
     }
 
     //    /**

@@ -38,7 +38,7 @@ security:
     access_control:
         - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/user/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/user/profile/^, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

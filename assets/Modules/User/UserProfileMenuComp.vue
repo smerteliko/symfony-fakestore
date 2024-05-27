@@ -29,7 +29,7 @@
        list-group-item list-group-item-action
        btn rounded-container rounded-pill"
     >
-      <b><i class="fa-solid fa-money-bill-wave"></i>  Currency  </b>
+      <b><i class="fa-solid fa-money-bill-wave" />  Currency  </b>
     </button>
     <button
       type="button"
@@ -38,7 +38,7 @@
        btn rounded-container rounded-pill"
       @click="this.userStore.logout"
     >
-      <b><i class="fa-solid fa-right-from-bracket"></i> Logout </b>
+      <b><i class="fa-solid fa-right-from-bracket" /> Logout </b>
     </button>
   </ul>
 </template>

@@ -17,7 +17,7 @@ let router =  createRouter({
 			userRoute
 	),
 });
-router.beforeEach(async (to) => {
+router.beforeEach( async (to) => {
 	const store = useUserStore();
 	await store.isAuthorized();
 	if (to.meta.requiresAuth && !store.isAuthed) return '/'

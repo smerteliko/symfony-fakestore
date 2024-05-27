@@ -75,8 +75,7 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-          </div>
+          <div class="modal-footer" />
         </div>
       </div>
     </div>
@@ -214,7 +213,7 @@ export default {
     },
 
     validateEmail() {
-      if (this.email && !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))) {
+      if (this.email && !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.email))) {
         this.errors.email = 'Please enter a valid email address';
         return false;
       } else {

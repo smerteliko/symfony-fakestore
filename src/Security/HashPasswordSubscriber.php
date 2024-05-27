@@ -11,7 +11,6 @@ use App\Entity\User;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use function get_class;
 
 final class HashPasswordSubscriber implements EventSubscriber{
 	private $passwordHasher;
@@ -31,25 +30,11 @@ final class HashPasswordSubscriber implements EventSubscriber{
 		$this->encodePassword($entity);
 	}
 
-	public function preUpdate(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getObject();
-		if (! $entity instanceof User) {
-			return;
-		}
-
-		$this->encodePassword($entity);
-		// necessary to force the update to see the change
-		$em = $args->getObjectManager();
-		$meta = $em->getClassMetadata(get_class($entity));
-		$em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $entity);
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */
 	public function getSubscribedEvents(): array {
-		return ['prePersist', 'preUpdate'];
+		return ['prePersist'];
 	}
 
 	private function encodePassword(User $entity): void

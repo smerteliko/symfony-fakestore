@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +18,8 @@ class UserController extends AbstractController
 {
 
     public function __construct(
-		private readonly SerializerInterface $serializer,
-		private readonly TokenStorageInterface $tokenStorage) { }
+        private readonly SerializerInterface $serializer,
+        private readonly TokenStorageInterface $tokenStorage) { }
 
     #[Route('/login', name: '_login', methods: ['POST'])]
     public function login(#[CurrentUser] ?User $user): JsonResponse {
@@ -27,37 +29,37 @@ class UserController extends AbstractController
 
      #[Route('/logout', name: '_logout', methods: ['POST'])]
      public function logout(#[CurrentUser] ?User $user): JsonResponse {
-	     $this->tokenStorage->setToken(null);
-		 return new JsonResponse([],200);
+         $this->tokenStorage->setToken(null);
+         return new JsonResponse([],200);
      }
 
     #[Route('/profile', name: '_profile', methods: ['GET'])]
     #[Route('/profile/{vue}',
-	    name: '_vue_profile',
-	    requirements: [ 'vue' =>'^(?!.*api|_wdt|_profiler).+'],
-	    methods: [ 'GET'] )
+        name: '_vue_profile',
+        requirements: [ 'vue' =>'^(?!.*api|_wdt|_profiler).+'],
+        methods: [ 'GET'] )
     ]
     public function profile() : Response
     {
-	    return $this->render('base.html.twig', []);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        return $this->render('base.html.twig', []);
     }
 
 
      #[Route('/is_authorized', name: '_is_authorized', methods: ['GET'])]
-     public function isAuthorized(): JsonResponse
+     public function isAuthorized(UserRepository $userRepository): JsonResponse
      {
          $currentUser = $this->getUser();
+
+         $userArray = [];
         if($currentUser) {
-            $userArray = [
-                 'id' => $currentUser->getId(),
-                 'email' => $currentUser->getUserIdentifier(),
-                 'roles' => $currentUser->getRoles(),
-            ] ;
+            $userArray = $userRepository->findOneBy(['email'=>$currentUser->getUserIdentifier()]);
+            $userArray = $userArray->toArray();
         }
 
         $user = $this->serializer->serialize($userArray, 'json');
 
-        $isAuth = filter_var($user !== NULL, FILTER_VALIDATE_BOOL);
+        $isAuth = filter_var($userArray !== NULL, FILTER_VALIDATE_BOOL);
 
         if ($isAuth) {
             return  new JsonResponse(

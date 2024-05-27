@@ -41,11 +41,15 @@ export const useUserStore = defineStore('user', {
 					{
 						username: this.email,
 						password: this.password
+					},
+					{
+						headers: {
+							"Content-Type":'application/json'
+						}
 					})
 					.catch((e)=> {
 						this.errors = e;
 					});
-
 			if(response.data.token){
 				this.token = response.data.token;
 				localStorage.setItem('token', this.token);
@@ -54,7 +58,7 @@ export const useUserStore = defineStore('user', {
 			if(!this.token){
 				return;
 			}
-			let response2 = await this.isAuthorized();
+			await this.isAuthorized();
 			window.location.reload();
 		},
 
