@@ -47,7 +47,7 @@ class CategoryRepository extends ServiceEntityRepository
      */
     public function getAllCategoriesCached(): mixed
     {
-        return $this->cache->get('categoriesList', function (ItemInterface $item) {
+        return $this->cache->get('CategoriesList', function (ItemInterface $item) {
             return $this->getEntityManager()
                         ->createQueryBuilder()
                         ->select('category', 'sub')

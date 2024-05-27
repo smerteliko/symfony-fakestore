@@ -138,6 +138,7 @@ import {mapActions, mapStores,} from "pinia";
 import {useCategoryStore} from "../../store/categoryStore";
 import {useCartStore} from "../../store/cartStore";
 import {useUserStore} from "../../store/userStore";
+import {useJSONStore} from "../../store/jsonStore";
 import UserLoginComp from "../User/UserLoginComp.vue";
 
 export default {
@@ -148,9 +149,15 @@ export default {
         }
     },
     computed: {
-      ...mapStores(useCategoryStore, useCartStore, useUserStore)
+      ...mapStores(
+        useCategoryStore,
+        useCartStore,
+        useUserStore,
+        useJSONStore
+      )
     },
     beforeMount() {
+      this.fetchCurrencyList();
       this.fetchCatList();
       this.updateCartListFromLS();
       this.userStore.isAuthorized()
@@ -159,6 +166,7 @@ export default {
       ...mapActions(useUserStore,['isAuthorized']),
       ...mapActions(useCategoryStore,["fetchCatList"]),
       ...mapActions(useCartStore,["updateCartListFromLS"]),
+      ...mapActions(useJSONStore,["fetchCurrencyList"]),
 
 
         getIcon(id) {

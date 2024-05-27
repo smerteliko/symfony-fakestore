@@ -13,7 +13,7 @@ export const useCategoryStore = defineStore('category', {
 		async fetchCatList() {
 			await axios.get('/json/catalogs')
 					.then((response )=> {
-						this.categoryList = response.data.list
+						this.categoryList = response.data.categories
 					}).catch((reason)=>{
 						console.warn(reason)
 					})
