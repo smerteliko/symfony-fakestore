@@ -2,8 +2,10 @@
 /**
  * User: smerteliko
  * Date: 23.05.2024
- * Time: 10:38
+ * Time: 10:38.
  */
+
+declare(strict_types=1);
 
 namespace App\Security;
 
@@ -12,43 +14,42 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final class HashPasswordSubscriber implements EventSubscriber{
-	private $passwordHasher;
+final class HashPasswordSubscriber implements EventSubscriber
+{
+    private $passwordHasher;
 
-	public function __construct(UserPasswordHasherInterface $passwordHasher)
-	{
-		$this->passwordHasher = $passwordHasher;
-	}
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
 
-	public function prePersist(LifecycleEventArgs $args): void
-	{
-		$entity = $args->getObject();
-		if (! $entity instanceof User) {
-			return;
-		}
+    public function prePersist(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getObject();
+        if (!$entity instanceof User) {
+            return;
+        }
 
-		$this->encodePassword($entity);
-	}
+        $this->encodePassword($entity);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getSubscribedEvents(): array {
-		return ['prePersist'];
-	}
+    public function getSubscribedEvents(): array
+    {
+        return ['prePersist'];
+    }
 
-	private function encodePassword(User $entity): void
-	{
-		$plainPassword = $entity->getPassword();
-		if ($plainPassword === null) {
-			return;
-		}
+    private function encodePassword(User $entity): void
+    {
+        $plainPassword = $entity->getPassword();
+        if (null === $plainPassword) {
+            return;
+        }
 
-		$encoded = $this->passwordHasher->hashPassword(
-			$entity,
-			$plainPassword
-		);
+        $encoded = $this->passwordHasher->hashPassword(
+            $entity,
+            $plainPassword
+        );
 
-		$entity->setPassword($encoded);
-	}
+        $entity->setPassword($encoded);
+    }
 }

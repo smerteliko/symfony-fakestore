@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repository;
@@ -23,17 +24,20 @@ class FilesRepository extends ServiceEntityRepository
         parent::__construct($registry, Files::class);
     }
 
-    public function save(Files $files): void {
+    public function save(Files $files): void
+    {
         $this->getEntityManager()->persist($files);
         $this->getEntityManager()->flush();
     }
 
-    public function remove(Files $files): void {
+    public function remove(Files $files): void
+    {
         $this->getEntityManager()->remove($files);
         $this->getEntityManager()->flush();
     }
 
-    public function saveNewFile(UploadedFile $file, string $fileName): Files {
+    public function saveNewFile(UploadedFile $file, string $fileName): Files
+    {
         $fileEnt = new Files();
         $fileEnt->setOriginalName($file->getClientOriginalName());
         $fileEnt->setFileName($fileName);
@@ -43,6 +47,7 @@ class FilesRepository extends ServiceEntityRepository
         $fileEnt->setCreatedAt();
 
         $this->save($fileEnt);
+
         return $fileEnt;
     }
 

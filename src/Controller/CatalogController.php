@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\CategoryRepository;
@@ -42,7 +44,6 @@ class CatalogController extends AbstractController
     public function newCatalog(CategoryRepository $categoryRepository): void
     {
     }
-
 
     #[Route('/ajax/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
     public function ajaxCategory(int $id): JsonResponse

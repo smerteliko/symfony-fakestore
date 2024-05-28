@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CurrencyRepository;
@@ -9,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Currency
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy:'AUTO')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column]
     private ?int $id = null;
 

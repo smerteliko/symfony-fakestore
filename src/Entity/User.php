@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy:'AUTO')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column]
     private ?int $id = null;
 
@@ -171,7 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(): static
     {
         $this->updated_at = new \DateTimeImmutable();
-                                             
+
         return $this;
     }
 
@@ -285,12 +286,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserImages(?UserImages $userImages): static
     {
         // unset the owning side of the relation if necessary
-        if ($userImages === null && $this->userImages !== null) {
+        if (null === $userImages && null !== $this->userImages) {
             $this->userImages->setImageUser(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($userImages !== null && $userImages->getImageUser() !== $this) {
+        if (null !== $userImages && $userImages->getImageUser() !== $this) {
             $userImages->setImageUser($this);
         }
 
@@ -299,7 +300,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         $rtrnArray = [
             'id' => $this->id,
             'uuid' => $this->uuid,
@@ -308,35 +310,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'LastName' => $this->LastName,
             'phone' => $this->Phone,
             'language' => $this->Language,
-
-
         ];
 
-        if($this->Currency) {
-            $rtrnArray['currency'] =[
+        if ($this->Currency) {
+            $rtrnArray['currency'] = [
                 'id' => $this->Currency->getId(),
                 'name' => $this->Currency->getName(),
                 'symbol' => $this->Currency->getSymbol(),
             ];
         }
 
-
-        if($this->userImages) {
+        if ($this->userImages) {
             $rtrnArray['Images'] = [
                 'id' => $this->userImages->getId(),
                 'updatedAt' => $this->userImages->getUpdatedAt(),
                 'createdAt' => $this->userImages->getCreatedAt(),
             ];
-            if( $this->userImages->getImageFile()) {
+            if ($this->userImages->getImageFile()) {
                 $rtrnArray['Images']['file'] = [
                     'id' => $this->userImages->getImageFile()->getId(),
                     'FileName' => $this->userImages->getImageFile()->getFilename(),
                     'Type' => $this->userImages->getImageFile()->getType(),
                     'Size' => $this->userImages->getImageFile()->getSize(),
                 ];
-
             }
         }
+
         return $rtrnArray;
     }
 }

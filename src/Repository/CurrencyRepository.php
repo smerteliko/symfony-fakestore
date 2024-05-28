@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Currency;
@@ -19,29 +21,30 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class CurrencyRepository extends ServiceEntityRepository
 {
-	private CacheInterface $cache;
+    private CacheInterface $cache;
 
-	public function __construct(ManagerRegistry $registry, CacheInterface $cache)
+    public function __construct(ManagerRegistry $registry, CacheInterface $cache)
     {
         parent::__construct($registry, Currency::class);
-		$this->cache = $cache;
+        $this->cache = $cache;
     }
 
-	/**
-	 * @throws InvalidArgumentException
-	 */
-	public function getCurrencyListCached() {
-		return $this->cache->get('CurrencyList', function (ItemInterface $item) {
-			return $this->getEntityManager()
-			            ->createQueryBuilder()
-			            ->select('CUR')
-			            ->from(Currency::class, 'CUR')
-			            ->orderBy('CUR.id', 'ASC')
-			            ->getQuery()
-			            ->getArrayResult()
-				;
-		});
-	}
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function getCurrencyListCached()
+    {
+        return $this->cache->get('CurrencyList', function (ItemInterface $item) {
+            return $this->getEntityManager()
+                        ->createQueryBuilder()
+                        ->select('CUR')
+                        ->from(Currency::class, 'CUR')
+                        ->orderBy('CUR.id', 'ASC')
+                        ->getQuery()
+                        ->getArrayResult()
+            ;
+        });
+    }
     //    /**
     //     * @return Currency[] Returns an array of Currency objects
     //     */
