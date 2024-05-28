@@ -8,80 +8,44 @@
       <div class="col-8">
         <div class="row">
           <div class="col ps-0">
-            <div class="input-group ">
-              <div class="form-floating ">
-                <input
-                  id="floatingFirstName"
-                  v-model="this.userStore.user.FirstName"
-                  class="form-control border border-right-50rem border-left-50rem border-color"
-                  type="text"
-                >
-                <label
-                  for="floatingFirstName"
-                  class="text-black"
-                >
-                  First name
-                </label>
-              </div>
-            </div>
+            <InputComp
+              :id="`userProfileFirstName`"
+              :model="this.userStore.user.FirstName"
+              :label="`First name`"
+              :type="`text`"
+              @input-value="this.userStore.user.FirstName = $event"
+            />
           </div>
           <div class="col pe-3 ">
-            <div class="input-group ">
-              <div class="form-floating ">
-                <input
-                  id="floatingLastName"
-                  v-model="this.userStore.user.LastName"
-                  class="form-control border border-right-50rem border-left-50rem border-color"
-                  type="text"
-                >
-                <label
-                  for="floatingLastName"
-                  class="text-black"
-                >
-                  Last name
-                </label>
-              </div>
-            </div>
+            <InputComp
+              :id="`userProfileLastName`"
+              :model="this.userStore.user.LastName"
+              :label="`Last name`"
+              :type="`text`"
+              @input-value="this.userStore.user.LastName = $event"
+            />
           </div>
         </div>
         <div class="row pt-4">
           <div class="pe-3 ps-0">
-            <div class="input-group">
-              <div class="form-floating ">
-                <input
-                  id="floatingPhone"
-                  v-model="this.userStore.user.Phone"
-                  class="form-control border border-right-50rem border-left-50rem border-color"
-                  type="text"
-                >
-                <label
-                  for="floatingPhone"
-                  class="text-black"
-                >
-                  Phone
-                </label>
-              </div>
-            </div>
+            <InputComp
+              :id="`userProfilePhone`"
+              :model="this.userStore.user.phone"
+              :label="`Phone`"
+              :type="`tel`"
+              @input-value="this.userStore.user.phone = $event"
+            />
           </div>
         </div>
         <div class="row pt-4">
           <div class="col pe-3 ps-0">
-            <div class="input-group">
-              <div class="form-floating ">
-                <input
-                  id="floatingEmail"
-                  v-model="this.userStore.user.email"
-                  class="form-control border border-right-50rem border-left-50rem border-color"
-                  type="text"
-                >
-                <label
-                  for="floatingEmail"
-                  class="text-black"
-                >
-                  Email
-                </label>
-              </div>
-            </div>
+            <InputComp
+              :id="`userProfileEmail`"
+              :model="this.userStore.user.email"
+              :label="`Email`"
+              :type="`email`"
+              @input-value="this.userStore.user.email = $event"
+            />
           </div>
         </div>
       </div>
@@ -89,7 +53,6 @@
         <FileUploader
           class=""
           :upload-to="`new_user_avatar`"
-          :from-entity-id="this.userStore.user.id"
           :entity="this.userStore.user"
         />
       </div>
@@ -100,15 +63,31 @@
 import {mapStores} from "pinia";
 import {useUserStore} from "../../store/userStore";
 import FileUploader from "../Components/FileUploader.vue";
+import InputComp from "../Components/InputComp.vue";
 
 export default {
   name: "UserPersonalInfo",
-  components:{FileUploader},
+  components:{InputComp, FileUploader},
   props: {
 
   },
   computed:{
     ...mapStores(useUserStore)
+  },
+  mounted() {
+    console.log(this)
+  },
+  methods:{
+     formatPhoneNumber(phoneNumberString) {
+        let cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+       let match = cleaned.match(/^(\d|)?(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+          let intlCode = (match[1] ? match[1]  : '');
+          return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+        }
+        return null;
+    },
+
   }
 }
 </script>
