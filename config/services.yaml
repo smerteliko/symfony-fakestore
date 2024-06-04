@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app_locales: en|ru
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -31,5 +32,28 @@ services:
         class: App\Security\HashPasswordSubscriber
         tags:
             - { name: doctrine.event_subscriber }
+
+    app.custom_redis_provider:
+        class: Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(resolve:REDIS_URL)%'
+            - { retry_interval: 2, timeout: 60 }
+
+    cache.app.redis_tag_aware:
+        class: Symfony\Component\Cache\Adapter\RedisTagAwareAdapter
+        arguments:
+            - '@app.custom_redis_provider'
+            - ''
+            - '0'
+            - '@?cache.default_marshaller'
+        calls:
+            - ['setLogger', ['@?logger']]
+        tags:
+            - { name: cache.pool, provider:  app.custom_redis_provider, clearer: cache.default_clearer, reset: reset }
+            - { name: monolog.logger, channel: cache }
+
+    currency.rates:
+        class: App\Service\Currency\CurrencyLoaders\CurrencyRatesLoader
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
