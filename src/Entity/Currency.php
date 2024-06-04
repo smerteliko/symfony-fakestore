@@ -10,26 +10,34 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 class Currency
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\Column(nullable: true)]
+    private int $id;
 
     #[ORM\Column(length: 128)]
     private ?string $Name = null;
 
-    #[ORM\Column(length: 5)]
-    private ?string $Code = null;
-
     #[ORM\Column(length: 5, nullable: true)]
-    private ?string $Symbol = null;
+    private ?string $ISOCharCode = null;
 
-    public function getId(): ?int
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $Symbol = null;
+	#[ORM\OneToOne(targetEntity: CurRates::class,mappedBy: 'Currency')]
+	private ?CurRates $rates;
+
+	#[ORM\Column(name: 'IsoCode',length: 5)]
+	#[ORM\Id]
+    private string $IsoCode;
+
+
+
+	public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+
+	public function getName(): ?string
     {
         return $this->Name;
     }
@@ -41,17 +49,6 @@ class Currency
         return $this;
     }
 
-    public function getCode(): ?string
-    {
-        return $this->Code;
-    }
-
-    public function setCode(string $Code): static
-    {
-        $this->Code = $Code;
-
-        return $this;
-    }
 
     public function getSymbol(): ?string
     {
@@ -64,4 +61,22 @@ class Currency
 
         return $this;
     }
+
+
+	public function setIsoNumCode(string $IsoNumCode): void {
+		$this->IsoCode = $IsoNumCode;
+	}
+
+	public function getIsoNumCode(): string {
+		return $this->IsoCode;
+	}
+
+	public function setISOCharCode(?string $ISOCharCode): void {
+		$this->ISOCharCode = $ISOCharCode;
+	}
+
+	public function getISOCharCode(): ?string {
+		return $this->ISOCharCode;
+	}
+
 }

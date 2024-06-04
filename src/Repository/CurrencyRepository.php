@@ -29,12 +29,19 @@ class CurrencyRepository extends ServiceEntityRepository
         $this->cache = $cache;
     }
 
+	public function save( Currency $currencyEntity): void {
+		$this->getEntityManager()->persist($currencyEntity);
+		$this->getEntityManager()->flush();
+	}
+
     /**
      * @throws InvalidArgumentException
      */
     public function getCurrencyListCached()
     {
         return $this->cache->get('CurrencyList', function (ItemInterface $item) {
+			d(1);
+	        $item->tag('Currencies');
             return $this->getEntityManager()
                         ->createQueryBuilder()
                         ->select('CUR')
@@ -45,6 +52,15 @@ class CurrencyRepository extends ServiceEntityRepository
             ;
         });
     }
+
+	public function setCurrencyEntity(array $currency): void {
+		$currencyEntity = new Currency();
+		$currencyEntity->setName($currency['Name']);
+		$currencyEntity->setISOCharCode($currency['ISOCharCode']);
+		$currencyEntity->setIsoNumCode($currency['ISOCode']);
+		$this->save($currencyEntity);
+	}
+
     //    /**
     //     * @return Currency[] Returns an array of Currency objects
     //     */
