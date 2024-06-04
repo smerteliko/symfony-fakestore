@@ -3,7 +3,6 @@
     <div class="row">
       <h1>Personal info </h1>
     </div>
-
     <div class="d-flex pt-5">
       <div class="col-8">
         <div class="row">
@@ -63,29 +62,25 @@
 import {mapStores} from "pinia";
 import {useUserStore} from "../../store/userStore";
 import FileUploader from "../Components/FileUploader.vue";
-import InputComp from "../Components/InputComp.vue";
 
 export default {
   name: "UserPersonalInfo",
-  components:{InputComp, FileUploader},
-  props: {
-
-  },
+  components:{FileUploader},
   computed:{
     ...mapStores(useUserStore)
   },
   mounted() {
-    console.log(this)
+    this.userStore.user.phone = this.formatPhoneNumber(this.userStore.user.phone)
   },
   methods:{
      formatPhoneNumber(phoneNumberString) {
         let cleaned = ('' + phoneNumberString).replace(/\D/g, '');
-       let match = cleaned.match(/^(\d|)?(\d{3})(\d{3})(\d{4})$/);
+        let match = cleaned.match(/^(\d|)?(\d{3})(\d{3})(\d{4})$/);
         if (match) {
-          let intlCode = (match[1] ? match[1]  : '');
-          return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+          let intlCode = (match[1] ? +match[1]  : '');
+          return [intlCode, ' (', match[2], ') ', match[3], '-', match[4]].join('');
         }
-        return null;
+        return '';
     },
 
   }

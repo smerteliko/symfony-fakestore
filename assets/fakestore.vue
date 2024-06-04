@@ -1,7 +1,7 @@
 <template>
   <div>
     <FakestoreHeader />
-    <RouterView />
+    <RouterView class="vh-100 mh-100"/>
   </div>
 </template>
 

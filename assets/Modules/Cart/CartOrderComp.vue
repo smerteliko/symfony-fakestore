@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container container-color rounded-container "
+    class="container container-color rounded-container mt-4"
     :class="selectedItems.length === 0 ? 'container-danger' : 'container-success'"
   >
     <div

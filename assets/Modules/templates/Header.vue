@@ -83,6 +83,7 @@
         </div>
         <div class="nav-item align-content-lg-center  d-lg-flex m-auto me-2">
           <RouterLink
+            type="button"
             class="nav-link link-primary me-lg-3 position-relative"
             to="/cart"
           >
@@ -100,14 +101,22 @@
           <RouterLink
             v-if="this.userStore.isAuthed === true"
             class="nav-link link-primary ms-lg-3"
-            to="/user/profile"
+            to="/user/profile/personal_info"
           >
-            <h3 class="text-lg-center mb-0">
-              <i class="fa-solid fa-house-user" />
-            </h3>
-            <p class="mb-0">
-              <small>Profile</small>
-            </p>
+            <div v-if="!this.userStore.user.Images">
+              <h3 class="text-lg-center mb-0">
+                <i class="fa-solid fa-house-user" />
+              </h3>
+              <p class="mb-0">
+                <small>Profile</small>
+              </p>
+            </div>
+            <div v-else>
+              <img
+                class=" border-color img-size rounded-container obj-fit"
+                :src="this.getImage()"
+              />
+            </div>
           </RouterLink>
           <div v-else>
             <a
@@ -160,10 +169,8 @@ export default {
       this.fetchCurrencyList();
       this.fetchCatList();
       this.updateCartListFromLS();
-      this.userStore.isAuthorized()
     },
     methods: {
-      ...mapActions(useUserStore,['isAuthorized']),
       ...mapActions(useCategoryStore,["fetchCatList"]),
       ...mapActions(useCartStore,["updateCartListFromLS"]),
       ...mapActions(useJSONStore,["fetchCurrencyList"]),
@@ -191,6 +198,9 @@ export default {
             }
 
             return ''
+        },
+        getImage() {
+          return require('../../img/uploads/'+this.userStore.user.Images.file.FileName)
         }
     },
 }
@@ -226,8 +236,20 @@ export default {
       pointer-events: none;
   }*/
 
+.img-size {
+    width: 57px;
+  height: 57px;
+  }
+
+.obj-fit{
+  object-fit: cover;
+}
+
   .badge-fs {
       font-size: 0.6rem !important;
   }
-
+.border-color {
+  border: 3px solid;
+  border-color: rgba(13,13,213,1)!important
+}
 </style>

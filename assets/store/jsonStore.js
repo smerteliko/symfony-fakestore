@@ -6,6 +6,7 @@ export const useJSONStore = defineStore('jsonlist', {
 		return {
 			currencies: {},
 			categories: {},
+			currencyRates:{},
 		};
 	},
 	actions: {

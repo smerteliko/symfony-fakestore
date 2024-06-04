@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-light border-1-solid-white border-product-foto w-18rem">
+  <div class="card bg-light border-1-solid-white border-product-foto w-18rem height-400px">
     <div class="card-header">
       <RouterLink
         :to="{name: 'ProductComp', params:{id: product.id}}"
@@ -29,9 +29,10 @@
           <button
             class="btn btn-outline-danger"
             :class="product.quantity !== 0 ? 'disabled':''"
+            title="Add to cart"
             @click="addItem"
           >
-            Add to cart <i class="fa-solid fa-cart-plus" />
+            <i class="fa-solid fa-cart-plus" />
           </button>
         </div>
       </div>
@@ -89,7 +90,10 @@ export default {
 
 <style scoped>
 .w-18rem {
-    width: 18rem;
+    width: 14rem;
+}
+.height-400px {
+  height: 400px;
 }
 .border-product-foto {
     border-radius: 10px;

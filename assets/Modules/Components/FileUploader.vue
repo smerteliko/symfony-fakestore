@@ -11,6 +11,7 @@
             :class="this.errors.length > 0?'is-invalid':''"
             :src="this.file"
             alt
+            role="button"
             aria-describedby="invalidFile"
             @click="this.chooseImage"
           >
@@ -157,6 +158,7 @@ export default {
   border: 2px solid rgba(13,13,213,1);
 }
 .border-color {
+  border: 2px solid;
   border-color: rgba(13,13,213,1)!important
 }
 </style>
