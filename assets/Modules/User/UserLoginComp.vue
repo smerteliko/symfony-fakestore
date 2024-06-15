@@ -12,6 +12,7 @@
     >
       <div
         class="modal-dialog modal-dialog-centered"
+        role="document"
       >
         <div class="modal-content border-radius">
           <div class="modal-header justify-content-between border-bottom-0">
@@ -68,6 +69,7 @@
                     data-bs-target="#modalPassword"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
+
                   >
                     <b> Continue </b>
                   </button>

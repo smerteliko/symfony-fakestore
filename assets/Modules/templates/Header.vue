@@ -1,5 +1,8 @@
 <template>
-  <nav class=" container navbar  navbar-expand-lg navbar-light bg-light mt-5 container-color">
+  <nav
+    :class="{'change-color': scrollPosition > 50}"
+    class=" container navbar sticky-top navbar-expand-lg navbar-light mt-5 container-color"
+  >
     <div class="container-fluid">
       <div class="navbar-brand  align-content-start me-lg-5">
         <RouterLink
@@ -115,7 +118,8 @@
               <img
                 class=" border-color img-size rounded-container obj-fit"
                 :src="this.getImage()"
-              />
+                alt=""
+              >
             </div>
           </RouterLink>
           <div v-else>
@@ -133,7 +137,6 @@
                 <small>User</small>
               </p>
             </a>
-            <UserLoginComp />
           </div>
         </div>
       </div>
@@ -148,13 +151,13 @@ import {useCategoryStore} from "../../store/categoryStore";
 import {useCartStore} from "../../store/cartStore";
 import {useUserStore} from "../../store/userStore";
 import {useJSONStore} from "../../store/jsonStore";
-import UserLoginComp from "../User/UserLoginComp.vue";
 
 export default {
     name: 'FakestoreHeader',
-    components:{UserLoginComp},
+    components:{},
     data() {
         return {
+          scrollPosition: null,
         }
     },
     computed: {
@@ -169,6 +172,9 @@ export default {
       this.fetchCurrencyList();
       this.fetchCatList();
       this.updateCartListFromLS();
+    },
+    mounted() {
+      window.addEventListener('scroll', this.updateScroll);
     },
     methods: {
       ...mapActions(useCategoryStore,["fetchCatList"]),
@@ -201,6 +207,9 @@ export default {
         },
         getImage() {
           return require('../../img/uploads/'+this.userStore.user.Images.file.FileName)
+        },
+        updateScroll() {
+          this.scrollPosition = window.scrollY
         }
     },
 }
@@ -251,5 +260,11 @@ export default {
 .border-color {
   border: 3px solid;
   border-color: rgba(13,13,213,1)!important
+}
+.container-color.scrolled {
+  background-color: whitesmoke;
+}
+.change-color{
+  background-color: #b3c6d3 !important;
 }
 </style>
