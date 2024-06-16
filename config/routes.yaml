@@ -4,8 +4,3 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-app_user_login:
-    path: /user/login
-    methods: ['POST']
-    defaults:
-        _format: json

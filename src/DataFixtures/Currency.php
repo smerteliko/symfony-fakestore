@@ -2,15 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Service\Currency\CurrencyLoaders\CurrencyLoader;
+use App\Service\Currency\CurrencyLoaders\CurrencyRCBLoader;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class Currency extends Fixture
 {
-	private CurrencyLoader $currency;
+	private CurrencyRCBLoader $currency;
 
-	public function __construct(CurrencyLoader $currency) {
+	public function __construct(CurrencyRCBLoader $currency) {
 		$this->currency = $currency;
 	}
 

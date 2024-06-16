@@ -315,8 +315,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->Currency) {
             $rtrnArray['currency'] = [
                 'id' => $this->Currency->getId(),
-                'name' => $this->Currency->getName(),
-                'symbol' => $this->Currency->getSymbol(),
+                'Name' => $this->Currency->getName(),
+                'Symbol' => $this->Currency->getSymbol(),
+                'IsoCode' => $this->Currency->getIsoNumCode(),
+                'ISOCharCode' => $this->Currency->getISOCharCode(),
             ];
         }
 

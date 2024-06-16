@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\Currency\CurrencyLoaders\CurrencyRatesLoader;
+use App\Service\Currency\CurrencyLoaders\CurrencyRCBRatesLoader;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -17,7 +17,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 )]
 class UpdateCurrencyRatesCommand extends Command
 {
-    public function __construct(private readonly CurrencyRatesLoader $ratesLoader,
+    public function __construct(private readonly CurrencyRCBRatesLoader $ratesLoader,
                                 private readonly TagAwareCacheInterface $cache)
     {
         parent::__construct();
@@ -29,6 +29,7 @@ class UpdateCurrencyRatesCommand extends Command
 
 	/**
 	 * @throws InvalidArgumentException
+	 * @throws \Exception
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int
     {

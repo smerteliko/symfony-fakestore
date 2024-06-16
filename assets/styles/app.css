@@ -1,4 +1,13 @@
 @import "~bootstrap/dist/css/bootstrap.css";
+@import 'vue-select/dist/vue-select.css';
+
+
+:root{
+    --vs-line-height: 1.5;
+    --vs-font-size: 1rem;
+
+}
+
 body {
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(13,13,213,1) 41%, rgba(0,212,255,1) 100%);
@@ -19,7 +28,7 @@ body {
     display: flex !important;
     flex-wrap: wrap !important;
 }
-.color-main {
+.color-main, .icon-color {
     color: rgba(13,13,213,1)!important
 }
 
@@ -60,12 +69,33 @@ body {
     border-color: rgba(13,13,213,1)!important;
 }
 
-.icon-color {
-    color: rgba(13,13,213,1) !important;
+/* V-SELECT ----------------------------------------------------------------*/
+.select-styles .vs__dropdown-toggle {
+    background: white;
+    border: 1px solid rgba(13,13,213,1);
+    border-radius: 50rem;
+    padding-right: 20px;
+    padding-left: 10px;
+    line-height: unset;
+    height: 38px;
 }
 
-.hr {
+.select-styles .vs__dropdown-menu {
+    border-bottom-left-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    margin-left: 10px !important;
+    width: 95% !important;
+    overflow-x:hidden;
+    line-height: unset;
+}
+.select-styles .vs__dropdown-option {
+    text-wrap: wrap;
+    white-space: unset;
 
+}
+/* V-SELECT ----------------------------------------------------------------*/
+
+.hr {
     height: 3px!important;
     width: 100% !important;
     background-color: rgba(13,13,213,1)!important;

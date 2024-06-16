@@ -54,6 +54,6 @@ services:
             - { name: monolog.logger, channel: cache }
 
     currency.rates:
-        class: App\Service\Currency\CurrencyLoaders\CurrencyRatesLoader
+        class: App\Service\Currency\CurrencyLoaders\CurrencyRCBRatesLoader
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

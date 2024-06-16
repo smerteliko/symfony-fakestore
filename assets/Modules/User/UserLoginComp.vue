@@ -56,7 +56,7 @@
                       id="validationEmail"
                       class="invalid-feedback text-center"
                     >
-                      {{ this.errors.email }}
+                      {{ this.errors.email.msg }}
                     </span>
                   </div>
                 </div>
@@ -69,7 +69,7 @@
                     data-bs-target="#modalPassword"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-
+                    :disabled="this.errors.email.msg"
                   >
                     <b> Continue </b>
                   </button>
@@ -216,10 +216,10 @@ export default {
 
     validateEmail() {
       if (this.email && !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.email))) {
-        this.errors.email = 'Please enter a valid email address';
+        this.errors.email.msg = 'Please enter a valid email address';
         return false;
       } else {
-        this.errors.email = '';
+        this.errors.email = {};
         return true;
       }
     }

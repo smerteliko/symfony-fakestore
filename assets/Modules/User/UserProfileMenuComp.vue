@@ -16,23 +16,6 @@
     </RouterLink>
     <button
       type="button"
-      class="
-       mt-3 mb-3
-       list-group-item list-group-item-action
-       btn rounded-container rounded-pill"
-    >
-      <b><i class="fa-solid fa-language" /> Language  </b>
-    </button>
-    <button
-      type="button"
-      class="mt-3 mb-3
-       list-group-item list-group-item-action
-       btn rounded-container rounded-pill"
-    >
-      <b><i class="fa-solid fa-money-bill-wave" />  Currency  </b>
-    </button>
-    <button
-      type="button"
       class="mt-3 mb-3
        list-group-item list-group-item-action
        btn rounded-container rounded-pill"

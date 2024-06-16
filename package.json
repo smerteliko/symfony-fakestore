@@ -34,13 +34,19 @@
             "no-unused-vars": "off"
         }
     },
+    "alias": {
+        "@vue/composition-api/dist/vue-composition-api.esm.js": "@vue/composition-api/dist/vue-composition-api.mjs"
+    },
     "dependencies": {
+        "@popperjs/core": "^2.11.8",
+        "@types/vue-select": "^3.16.8",
         "axios": "^1.6.8",
         "install": "^0.13.0",
         "jquery": "^3.7.1",
         "npm": "^10.6.0",
         "pinia": "^2.1.7",
         "pinia-plugin-persistedstate": "^3.2.1",
-        "vue-router": "^4.0.14"
+        "vue-router": "^4.0.14",
+        "vue-select": "^4.0.0-beta.6"
     }
 }

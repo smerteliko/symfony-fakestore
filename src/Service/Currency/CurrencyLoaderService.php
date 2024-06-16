@@ -7,13 +7,13 @@
 
 namespace App\Service\Currency;
 
-abstract class CurrencyLoaderService implements CurrencyLoaderServiceInterface {
+abstract class CurrencyLoaderService {
 
-	public string $url = 'https://www.cbr.ru/scripts/';
+	public string $url = '';
 
 	abstract public function load(): void;
 
-	abstract public function saveToDB(): void;
+	abstract public function save(): void;
 
 	abstract public function setUrl(string $url): void;
 

@@ -10,26 +10,39 @@ namespace App\Service\Currency\CurrencyLoaders;
 
 use App\Repository\CurRatesRepository;
 use App\Service\Currency\CurrencyLoaderService;
+use Psr\Log\LoggerInterface;
 
-class CurrencyRatesLoader extends CurrencyLoaderService {
+
+/**
+ * Currency rates loader from Russian Central Bank
+ *
+ * @class CurrencyRCBRatesLoader
+ */
+final class CurrencyRCBRatesLoader extends CurrencyLoaderService {
 
     private CurRatesRepository $currencyRatesRepository;
-    private string             $urlParams = 'XML_daily_eng.asp?date_req=';
+	private LoggerInterface    $logger;
+
+	public string              $url = 'https://www.cbr.ru/scripts/';
+	private string             $urlParams = 'XML_daily_eng.asp?date_req=';
 
     private array $localCurrencyRatesArr =[];
 
-    public function __construct(CurRatesRepository $currencyRatesRepository) {
+    public function __construct(CurRatesRepository $currencyRatesRepository,
+                                LoggerInterface $logger) {
         $this->currencyRatesRepository = $currencyRatesRepository;
+		$this->logger = $logger;
     }
-    /**
-     * @return void
-     */
+
+	/**
+	 * @return void
+	 * @throws \Exception
+	 */
     public function load(): void {
         try {
             $page = file_get_contents($this->getUrl());
             if($page) {
                 $xml = simplexml_load_string($page);
-                $aRates = [];
 
                 if(count($xml)) {
                     foreach ($xml as $oneCurRate) {
@@ -38,7 +51,11 @@ class CurrencyRatesLoader extends CurrencyLoaderService {
                 }
             }
         } catch (\Exception $e) {
-            $error = $e->getMessage();
+	        $this->logger->critical('Currency Rates Loader Service '. __CLASS__ , [
+				'Message' => $e->getMessage(),
+		        'Trace ' => $e->getTrace(),
+	        ]);
+			throw $e;
         }
     }
 
@@ -54,14 +71,14 @@ class CurrencyRatesLoader extends CurrencyLoaderService {
         }
     }
 
-    public function saveToDB(): void {
-        if (count($this->localCurrencyRatesArr)) {
-            foreach ($this->localCurrencyRatesArr as $currency) {
-                $this->currencyRatesRepository->setCurrencyRateEntity($currency);
-            }
-        }
+    public function save(): void {
+	    if (count($this->localCurrencyRatesArr)) {
+		    foreach ($this->localCurrencyRatesArr as $currency) {
+			    $this->currencyRatesRepository->setCurrencyRateEntity($currency);
+		    }
+	    }
     }
-    
+
     public function updateRates(): void {
         if (count($this->localCurrencyRatesArr)) {
             foreach ($this->localCurrencyRatesArr as $currencyRate) {

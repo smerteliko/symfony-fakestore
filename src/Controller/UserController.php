@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -19,7 +20,9 @@ class UserController extends AbstractController
 {
     public function __construct(
         private readonly SerializerInterface $serializer,
-        private readonly TokenStorageInterface $tokenStorage)
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly UserRepository $userRepository,
+    )
     {
     }
 
@@ -84,4 +87,53 @@ class UserController extends AbstractController
             ], Response::HTTP_FORBIDDEN
         );
     }
+
+	#[Route('/update_info', name: '_update_info', methods: ['POST', 'GET'])]
+	public function updateUserInfo(
+		Request $request,
+		#[CurrentUser] ?User $user): JsonResponse
+	{
+		$requestTransformed = $this->transformJsonBody($request);
+		$updatedUser =$requestTransformed->get('user');
+		if(!$user) {
+			return new JsonResponse([
+				'message' => 'No user to update',
+				'code' =>   Response::HTTP_INTERNAL_SERVER_ERROR]
+				, 500);
+		}
+		$this->userRepository->updatePersonalInfo($updatedUser, $user);
+
+		return new JsonResponse(
+			[
+				'message' => 'User was updated successfully',
+				'code' =>   Response::HTTP_OK
+			], Response::HTTP_OK
+		);
+	}
+
+
+	/**
+	 * this method allows us to accept JSON payloads in POST requests
+	 * since Symfony doesn't handle that automatically:
+	 *
+	 * @param Request $request
+	 * @return object
+	 */
+	private  function transformJsonBody(Request $request): object
+	{
+		$data = json_decode($request->getContent(), true);
+
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			return (object)[];
+		}
+
+		if ($data === null) {
+			return $request;
+		}
+
+		$request->request->replace($data);
+
+		return $request;
+	}
+
 }

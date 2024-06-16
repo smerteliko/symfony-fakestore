@@ -71,6 +71,24 @@ export const useUserStore = defineStore('user', {
 			window.history.pushState({},"",'/')
 			window.location.reload();
 
+		},
+
+		async updateUserInfo() {
+			const response = await axios.post('/user/update_info',
+					{user: this.user},
+					{
+						headers: {
+							"Content-Type":'application/json',
+							Authorization: `Bearer ${this.token}`
+						},
+			})
+			.catch((e)=> {
+				this.errors = e;
+			});
+			if(response.status === 200) {
+				this.isLoading = false;
+				return response.data.message;
+			}
 		}
 	},
 	getters: {
