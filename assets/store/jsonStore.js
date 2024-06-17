@@ -22,7 +22,7 @@ export const useJSONStore = defineStore('jsonlist', {
 		async fetchCurrencyList() {
 			await axios.get('/json/currency')
 					.then((response )=> {
-						this.currencies = response.data.currencies
+						this.currencies = response.data.currencies;
 					}).catch((reason)=>{
 						console.warn(reason)
 					})

@@ -22,9 +22,6 @@ class Product
     private ?Category $Category = null;
 
     #[ORM\Column]
-    private ?float $price = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'Product')]
@@ -41,6 +38,9 @@ class Product
 
     #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
     private ?ProductCharacteristic $productCharacteristic = null;
+
+    #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
+    private ?ProductPrice $productPrice = null;
 
     public function __construct()
     {
@@ -76,17 +76,6 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): static
-    {
-        $this->price = $price;
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -134,7 +123,7 @@ class Product
     {
         if ($this->productImages->removeElement($productImage)) {
             // set the owning side to null (unless already changed)
-            if ($productImage->getProductID() === $this) {
+            if ($productImage->getProduct() === $this) {
                 $productImage->setProductID(null);
             }
         }
@@ -186,32 +175,72 @@ class Product
         return $this;
     }
 
-    public function toArray(): array
+    public function getProductPrice(): ?ProductPrice
     {
-        $rtrnData = [
-            'id' => $this->getId(),
-            'Name' => $this->getName(),
-            'Category' => $this->getCategory()->getName(),
-            'price' => $this->getPrice(),
-            'created_at' => $this->getCreatedAt(),
-            'subCategory' => $this->getSubCategory()->getName(),
-        ];
-
-        if ($this->getProductCharacteristic()) {
-            $rtrnData['productCharacteristic'] = [
-                'id' => $this->getProductCharacteristic()->getId(),
-                'data' => $this->getProductCharacteristic()->getData(),
-            ];
-        }
-
-        if ($this->getProductDescription()) {
-            $rtrnData['productDescription'] = [
-                'id' => $this->getProductDescription()->getId(),
-                'BriefDesc' => $this->getProductDescription()->getBriefDesc(),
-                'FullDescription' => $this->getProductDescription()->getFullDescription(),
-            ];
-        }
-
-        return $rtrnData;
+        return $this->productPrice;
     }
+
+    public function setProductPrice(?ProductPrice $productPrice): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($productPrice === null && $this->productPrice !== null) {
+            $this->productPrice->setProduct(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($productPrice !== null && $productPrice->getProduct() !== $this) {
+            $productPrice->setProduct($this);
+        }
+
+        $this->productPrice = $productPrice;
+
+        return $this;
+    }
+
+	public function toArray(): array
+	{
+		$rtrnData = [
+			'id' => $this->getId(),
+			'Name' => $this->getName(),
+			'Category' => $this->getCategory()->getName(),
+			'created_at' => $this->getCreatedAt(),
+			'subCategory' => $this->getSubCategory()->getName(),
+		];
+
+		if ($this->getProductCharacteristic()) {
+			$rtrnData['productCharacteristic'] = [
+				'id' => $this->getProductCharacteristic()->getId(),
+				'data' => $this->getProductCharacteristic()->getData(),
+			];
+		}
+
+		if ($this->getProductDescription()) {
+			$rtrnData['productDescription'] = [
+				'id' => $this->getProductDescription()->getId(),
+				'BriefDesc' => $this->getProductDescription()->getBriefDesc(),
+				'FullDescription' => $this->getProductDescription()->getFullDescription(),
+			];
+		}
+
+		if ($this->getProductPrice()) {
+			$rtrnData['productPrice'] = [
+				'id' => $this->getProductPrice()->getId(),
+				'Price' => $this->getProductPrice()->getPrice(),
+				'VAT' => $this->getProductPrice()->getVAT(),
+				'Discount' => $this->getProductPrice()->getDiscount(),
+			];
+			if($this->getProductPrice()->getCurrency()) {
+				$rtrnData['productPrice']['Currency'] = [
+					'id' => $this->getProductPrice()->getCurrency()->getId(),
+					'Name' => $this->getProductPrice()->getCurrency()->getName(),
+					'IsoCode' => $this->getProductPrice()->getCurrency()->getIsoNumCode(),
+					'ISOCharCode' => $this->getProductPrice()->getCurrency()->getISOCharCode(),
+					'Symbol' => $this->getProductPrice()->getCurrency()->getSymbol(),
+				];
+
+			}
+		}
+
+		return $rtrnData;
+	}
 }

@@ -33,14 +33,21 @@ class CurRatesRepository extends ServiceEntityRepository
 	{
 		return $this->cache->get('CurrencyRatesList', function (ItemInterface $item) {
 			$item->tag('Currencies');
-			return $this->getEntityManager()
-			            ->createQueryBuilder()
-			            ->select('CURRATE')
-			            ->from(CurRates::class, 'CURRATE')
-			            ->orderBy('CURRATE.id', 'ASC')
-			            ->getQuery()
-			            ->getArrayResult()
-				;
+
+			$allRates = $this->getEntityManager()
+			                 ->createQueryBuilder()
+			                 ->select('CURRATE', 'CURR')
+			                 ->from(CurRates::class, 'CURRATE')
+							 ->leftJoin('CURRATE.Currency', 'CURR')
+			                 ->orderBy('CURRATE.id', 'ASC')
+			                 ->getQuery()
+			                 ->getArrayResult();
+
+			$result = [];
+			foreach($allRates as $oneRate) {
+				$result[$oneRate['Currency']['IsoCode']] = $oneRate;
+			}
+			return $result;
 		});
 	}
 
@@ -63,6 +70,7 @@ class CurRatesRepository extends ServiceEntityRepository
 		if($currencyRateEntity) {
 			$currencyRateEntity->setRate($currencyRate['Value']);
 			$currencyRateEntity->setUnitRate($currencyRate['UnitRate']);
+			$currencyRateEntity->setUpdatedAt();
 			$this->save($currencyRateEntity);
 		}
 

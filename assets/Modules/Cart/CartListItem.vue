@@ -54,11 +54,17 @@
     </td>
     <td class="align-content-center col-3">
       <h5 class="mb-0">
-        Total: {{ this.cartItem.totalPrice }} <i class="fa-solid fa-dollar-sign" />
+        Total: {{ this.cartItem.totalPrice }}
+        <i
+          class=""
+          v-text="this.getPriceCurrency()"
+        />
       </h5>
       <small class="text-secondary text-decoration-underline">
-        <i> Per each: {{ this.cartItem.price }} </i>
-        <i class="fa-italic  fa-dollar-sign" />
+        <i> Per each: {{ this.price }} </i>
+        <i
+          v-text="this.getPriceCurrency()"
+        />
       </small>
       <p class="align-text-bottom mb-0">
         Shipping:
@@ -91,6 +97,8 @@
 <script>
 import {mapActions, mapStores} from "pinia";
 import {useCartStore} from "../../store/cartStore";
+import {useUserStore} from "../../store/userStore";
+import {useJSONStore} from "../../store/jsonStore";
 
 export default {
     name: "CartListItem",
@@ -108,11 +116,12 @@ export default {
             favourite: false,
             quantity: this.cartItem.quantity,
             image: this.checkImg() ? require(`../../img/products/` + this.checkImg()) : '',
-            desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : ''
+            desc: this.cartItem.productDescription ? this.cartItem.productDescription.BriefDesc : '',
+            price: 0
         }
     },
     computed:{
-      ...mapStores(useCartStore)
+      ...mapStores(useCartStore, useUserStore, useJSONStore)
     },
 
     watch:{
@@ -133,6 +142,7 @@ export default {
     beforeMount() {
       this.cartStore.setCartItemsTotal(this.cartItem);
       this.cartStore.updateCartItemsSelection(false)
+      this.price = this.cartStore.getCartItemPrice(this.cartItem)
       this.checked = this.cartItem.checked;
     },
     methods: {
@@ -142,7 +152,8 @@ export default {
         "updateCartItemsSelection",
         'addCartItemQuantity',
         "removeCartItemQuantity",
-        "removeItemFromCart"
+        "removeItemFromCart",
+        "getCartItemPrice"
       ]),
 
         checkImg() {
@@ -153,13 +164,15 @@ export default {
         },
 
         addQuantity() {
+          this.cartStore.addCartItemQuantity(this.cartItem);
             this.cartStore.setCartItemsTotal(this.cartItem);
-            this.cartStore.addCartItemQuantity(this.cartItem);
+
 
         },
         removeQuantity() {
-          this.cartStore.setCartItemsTotal(this.cartItem);
           this.cartStore.removeCartItemQuantity(this.cartItem);
+          this.cartStore.setCartItemsTotal(this.cartItem);
+
             if(this.cartItem.quantity === 0) {
               this.cartStore.removeItemFromCart(this.cartItem);
 
@@ -167,7 +180,13 @@ export default {
             this.$forceUpdate();
 
 
-        }
+        },
+      getPriceCurrency() {
+        const findSymbol = this.jsonlistStore.currencies.find((item)=>{
+          return parseInt(item.IsoCode) === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : 840)
+        })
+        return findSymbol.Symbol
+      }
     }
 }
 </script>

@@ -14,6 +14,7 @@ export const useUserStore = defineStore('user', {
 			isLoading: false,
 			user: {},
 			errors: {},
+			currencyID: null
 		}
 	},
 	actions: {
@@ -28,6 +29,7 @@ export const useUserStore = defineStore('user', {
 						this.email = this.user.email;
 						this.id = this.user.id
 						this.loading = false;
+						this.currencyID = this.user.currency.IsoCode
 
 					})
 					.catch((e)=>{

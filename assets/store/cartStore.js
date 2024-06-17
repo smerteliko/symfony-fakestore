@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import {useUserStore} from "./userStore";
 
 export const useCartStore = defineStore('cart', {
 	state: () => {
@@ -42,7 +43,6 @@ export const useCartStore = defineStore('cart', {
 		},
 
 		updateCartItemSelection(item, checked) {
-			console.log(checked)
 			const index = this.cartItems.findIndex(lsItem=>lsItem.id === item.id);
 			this.cartItems[index].checked = checked;
 		},
@@ -62,9 +62,27 @@ export const useCartStore = defineStore('cart', {
 	 		}
 			this.setCartItemsLS();
 		},
+
+		getCartItemPrice(item) {
+			const userStore = useUserStore();
+			const index = this.cartItems.findIndex(lsItem=>lsItem.id === item.id);
+			let price = this.cartItems[index].productPrice.ConvertedPrice[840];
+			if(userStore.currencyID) {
+				price = this.cartItems[index].productPrice.ConvertedPrice[userStore.currencyID]
+			}
+			return price;
+		},
+
 		setCartItemsTotal(item) {
- 			const index = this.cartItems.findIndex(lsItem=>lsItem.id === item.id);
-			this.cartItems[index].totalPrice = this.cartItems[index].price * this.cartItems[index].quantity;
+			const userStore = useUserStore();
+			const index = this.cartItems.findIndex(lsItem=>lsItem.id === item.id);
+			let price = this.cartItems[index].productPrice.ConvertedPrice[840];
+			if(userStore.currencyID) {
+				price = this.cartItems[index].productPrice.ConvertedPrice[userStore.currencyID]
+			}
+
+			this.cartItems[index].totalPrice =
+					(price * this.cartItems[index].quantity).toFixed(2);
 
 		}
 	},

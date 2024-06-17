@@ -27,8 +27,11 @@ class ProductRepository extends ServiceEntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->select('product')
-            ->from(Product::class, 'product');
+        $qb->select('product', 'price', 'currency')
+            ->from(Product::class, 'product')
+            ->leftJoin('product.productPrice', 'price')
+            ->leftJoin('price.currency', 'currency');
+
 
         if (isset($options['id'])) {
             $qb->where('product.id = :id')
@@ -65,7 +68,6 @@ class ProductRepository extends ServiceEntityRepository
         if (isset($options['withAdditionalFields'])) {
             return $this->setAdditionalFields($qb->getQuery()->getArrayResult());
         }
-
         return $qb->getQuery()->getArrayResult();
     }
 

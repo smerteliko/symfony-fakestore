@@ -40,7 +40,6 @@ class CurrencyRepository extends ServiceEntityRepository
     public function getCurrencyListCached()
     {
         return $this->cache->get('CurrencyList', function (ItemInterface $item) {
-			d(1);
 	        $item->tag('Currencies');
             return $this->getEntityManager()
                         ->createQueryBuilder()

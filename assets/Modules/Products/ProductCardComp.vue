@@ -21,9 +21,17 @@
       <span class="product-description "> {{ desc }}</span>
     </div>
     <div class="card-footer">
-      <div class="d-flex  justify-content-between">
-        <div>
-          <h3> {{ product.price }}</h3>
+      <div 
+        v-if="product.productPrice" 
+        class="d-flex  justify-content-between"
+      >
+        <div class="row">
+          <h4>{{ this.getPrice() }} 
+            <i 
+              class="" 
+              v-text="this.getPriceCurrency()"
+            />
+          </h4>
         </div>
         <div>
           <button
@@ -43,6 +51,8 @@
 <script>
 import {mapActions, mapStores} from "pinia";
 import {useCartStore} from "../../store/cartStore";
+import {useUserStore} from "../../store/userStore";
+import {useJSONStore} from "../../store/jsonStore";
 
 export default {
     name: "ProductCardComp",
@@ -63,7 +73,7 @@ export default {
         }
     },
     computed:{
-        ...mapStores(useCartStore)
+        ...mapStores(useCartStore, useUserStore, useJSONStore)
     },
 
     methods: {
@@ -84,6 +94,20 @@ export default {
             }
             return '';
         },
+
+      getPrice() {
+          if(!this.userStore.isAuthed) {
+            return this.product.productPrice.ConvertedPrice[840]
+          }
+
+          return this.product.productPrice.ConvertedPrice[this.userStore.currencyID]
+      },
+      getPriceCurrency() {
+        const findSymbol = this.jsonlistStore.currencies.find((item)=>{
+          return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : 840)
+        })
+        return findSymbol.Symbol
+      }
     }
 }
 </script>

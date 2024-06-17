@@ -4,27 +4,33 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\ProductDescriptionRepository;
+use App\Entity\User;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
+use App\Service\Currency\CurrencyOperations;
+use App\Service\Product\ProductPriceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/products', name: 'app_products')]
 class ProductsController extends AbstractController
 {
-    private ProductImagesRepository $productImagesRepository;
-    private ProductRepository $productRepository;
+	private CurrencyOperations      $currencyOperations;
+	private ProductImagesRepository $productImagesRepository;
+	private ProductPriceService     $productPriceService;
+	private ProductRepository       $productRepository;
 
     public function __construct(
         ProductRepository $productRepository,
         ProductImagesRepository $productImagesRepository,
-        ProductDescriptionRepository $productDescriptionRepository)
+        ProductPriceService  $productPriceService)
     {
         $this->productRepository = $productRepository;
         $this->productImagesRepository = $productImagesRepository;
+		$this->productPriceService = $productPriceService;
     }
 
     #[Route('/', name: '_list')]
@@ -42,46 +48,58 @@ class ProductsController extends AbstractController
     #[Route('/ajax/category/{id}', name: '_list_category', methods: ['GET'])]
     public function listByCategory(int $id): Response
     {
+	    $list =    $this->productRepository->findProductBy([
+		                                                       'catID' => $id,
+		                                                       'withImages' => true,
+		                                                       'withDescriptions' => true,
+		                                                       'withAdditionalFields' => true,
+	                                                       ]);
+
+			$products = $this->productPriceService->getProductListPricesInAllCurr($list);
+
+
         return new JsonResponse(
-            $this->productRepository->findProductBy([
-                'catID' => $id,
-                'withImages' => true,
-                'withDescriptions' => true,
-                'withAdditionalFields' => true,
-            ])
+	        $products
         );
     }
 
     #[Route('/ajax/subcategory/{id}', name: '_list_subcategory', methods: ['GET'])]
     public function listBySubcategory(int $id): Response
     {
+	    $list =   $this->productRepository->findProductBy([
+		                                                      'subID' => $id,
+		                                                      'withImages' => true,
+		                                                      'withDescriptions' => true,
+		                                                      'withAdditionalFields' => true,
+	                                                      ]);
+	    $products = $this->productPriceService->getProductListPricesInAllCurr($list);
         return new JsonResponse(
-            $this->productRepository->findProductBy([
-                'subID' => $id,
-                'withImages' => true,
-                'withDescriptions' => true,
-                'withAdditionalFields' => true,
-            ])
+	        $products
         );
     }
 
     #[Route('/ajax/list', name: '_list_ajax', methods: ['GET'])]
-    public function listProducts(): Response
+    public function listProducts(#[CurrentUser] ?User $user): Response
     {
+		$list =  $this->productRepository->findProductBy([
+			                                                 'withImages' => true,
+			                                                 'withDescriptions' => true,
+			                                                 'withAdditionalFields' => true,
+		                                                 ]);
+	    $products = $this->productPriceService->getProductListPricesInAllCurr($list);
         return new JsonResponse(
-            $this->productRepository->findProductBy([
-                'withImages' => true,
-                'withDescriptions' => true,
-                'withAdditionalFields' => true,
-            ])
+	        $products
+
         );
     }
 
     #[Route('/ajax/{id}', name: '_item_ajax', methods: ['GET'])]
     public function ProductData(int $id): Response
     {
+		$product = $this->productRepository->find($id)->toArray();
+	    $product['productPrice'] = $this->productPriceService->getProductPriceInAllCurr($product['productPrice']);
         return new JsonResponse([
-            'productData' => $this->productRepository->find($id)->toArray(),
+            'productData' => $product
         ]);
     }
 

@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Repository\CategoryRepository;
 use App\Repository\CurRatesRepository;
 use App\Repository\CurrencyRepository;
-use App\Service\Currency\RatesLoader;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +36,6 @@ class JsonListController extends AbstractController
 	public function rates(CurRatesRepository $ratesRepository,CurrencyRepository $currencyRepository): JsonResponse {
 
 		return new JsonResponse([
-			'currencyRates' => $ratesRepository->getCurrencyRatesListCached(),
 			'currencies' => $currencyRepository->getCurrencyListCached(),
 		], Response::HTTP_OK);
 	}

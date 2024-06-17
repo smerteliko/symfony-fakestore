@@ -27,7 +27,10 @@
         </div>
         <div class="col-4 text-end">
           <i v-text="setTotalPriceForAll()" />
-          <i class="ms-1 fa-italic  fa-dollar-sign" />
+          <i
+            class="ms-1"
+            v-text="this.getPriceCurrency()"
+          />
         </div>
       </div>
       <div class="row ms-2 me-2 flex-nowrap">
@@ -63,7 +66,10 @@
             <span class="text-decoration-underline">
               <i>Total to pay: </i>
               <i v-text="setTotalToOrder()" />
-              <i class="ms-1 fa-italic  fa-dollar-sign" />
+              <i
+                class="ms-1"
+                v-text="this.getPriceCurrency()"
+              />
             </span>
           </button>
         </div>
@@ -73,6 +79,10 @@
 </template>
 
 <script>
+import {mapStores} from "pinia";
+import {useUserStore} from "../../store/userStore";
+import {useJSONStore} from "../../store/jsonStore";
+
 export default {
     name: "CartOrderComp",
     props:{
@@ -85,11 +95,14 @@ export default {
     },
     data(){
         return {
-            sale: 1276,
+            sale: 5,
             total: 0,
             delivery: 0
         }
     },
+  computed: {
+    ...mapStores(useUserStore, useJSONStore)
+  },
     methods: {
         setTotalQuantity() {
             let totalQty = 0;
@@ -101,16 +114,24 @@ export default {
         setTotalPriceForAll(){
             let total = 0;
             this.selectedItems.forEach((value)=>{
-                total+=value.totalPrice
+                total+=parseFloat(value.totalPrice)
             })
-            this.total = total;
-            return total.toLocaleString('ru');
+            this.total = total.toFixed(2);
+            return total.toFixed(2);
         },
 
+
         setTotalToOrder() {
-            return (this.total-this.sale).toLocaleString('ru')
+            return (this.total-this.sale)
+        },
+        getPriceCurrency() {
+          const findSymbol = this.jsonlistStore.currencies.find((item)=>{
+            return parseInt(item.IsoCode) === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : 840)
+          })
+          return findSymbol.Symbol
         }
     }
+
 
 }
 </script>

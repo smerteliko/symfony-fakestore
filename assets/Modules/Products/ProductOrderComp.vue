@@ -3,8 +3,11 @@
     <div class="d-flex flex-column mt-3 mb-3">
       <div class="row">
         <h4>
-          <span v-text="this.productPrice" />
-          <i class="ms-1 fa-italic  fa-dollar-sign" />
+          {{ this.getPrice() }}
+          <i
+            class=""
+            v-text="this.getPriceCurrency()"
+          />
         </h4>
       </div>
       <div class="mt-3 row flex-row">
@@ -70,6 +73,10 @@
 </template>
 
 <script>
+import {mapStores} from "pinia";
+import {useUserStore} from "../../store/userStore";
+import {useJSONStore} from "../../store/jsonStore";
+
 export default {
   name: "ProductOrderComp",
   props: {
@@ -87,11 +94,12 @@ export default {
   },
   computed: {
     productPrice() {
-      return this.product.price;
+      return this.product.productPrice? this.product.productPrice.Price:'';
     },
     productQuantity() {
       return this.productQ;
     },
+    ...mapStores(useUserStore, useJSONStore)
   },
 
   methods: {
@@ -102,6 +110,20 @@ export default {
     },
     removeQuantity() {
       this.productQ--;
+    },
+
+    getPrice() {
+      if(!this.userStore.isAuthed) {
+        return this.product.productPrice.ConvertedPrice[840]
+      }
+
+      return this.product.productPrice.ConvertedPrice[this.userStore.currencyID]
+    },
+    getPriceCurrency() {
+      const findSymbol = this.jsonlistStore.currencies.find((item)=>{
+        return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : 840)
+      })
+      return findSymbol.Symbol
     }
   }
 }

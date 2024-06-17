@@ -106,7 +106,10 @@
         />
       </div>
     </div>
-    <div v-show="this.updateStatus" id="alertSuccesUpdate">
+    <div
+      v-show="this.updateStatus"
+      id="alertSuccesUpdate"
+    >
       <div
         class="alert alert-success alert-dismissible"
         role="alert"
@@ -117,7 +120,7 @@
           class="btn-close"
           data-bs-dismiss="alert"
           aria-label="Close"
-        ></button>
+        />
       </div>
     </div>
   </div>
