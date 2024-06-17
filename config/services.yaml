@@ -55,5 +55,18 @@ services:
 
     currency.rates:
         class: App\Service\Currency\CurrencyLoaders\CurrencyRCBRatesLoader
+
+    currency.operations:
+        class: App\Service\Currency\CurrencyOperations
+        public: true
+        arguments:
+            - '@cache.redis_project_pool'
+        calls:
+            - ['setRates']
+
+    product.price:
+        class: App\Service\Product\ProductPriceService
+        arguments:
+            - '@currency.operations'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
