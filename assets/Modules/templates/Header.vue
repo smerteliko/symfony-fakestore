@@ -27,11 +27,11 @@
         class="collapse navbar-collapse"
       >
         <div class="nav-item dropdown align-content-lg-center ms-lg-5">
-          <RouterLink
+          <button
             id="navbarDropdownMenuLink"
             class="nav-link dropdown-toggle link-primary"
-            :to="{name:'CatalogListComp'}"
             data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
           >
@@ -41,9 +41,9 @@
             <p class="mb-0">
               <small>Categories</small>
             </p>
-          </RouterLink>
+          </button>
           <div
-            class="dropdown-menu"
+            class="dropdown-menu dropdown-own"
             aria-labelledby="navbarDropdownMenuLink"
           >
             <div
@@ -222,28 +222,30 @@ export default {
     backdrop-filter: saturate(180%) blur(20px);
   }
 
-  .dropdown:hover>.dropdown-menu,
-  .dropend:hover>.dropdown-menu {
+  .dropdown-own .dropdown:hover>.dropdown-menu,
+  .dropdown-own .dropend:hover>.dropdown-menu {
       display: block;
       margin-top: 0.125em;
   }
 
-  .dropend:hover > .dropdown-menu {
+  .dropdown-own .dropend:hover > .dropdown-menu {
       position: absolute;
       top: 0;
       left: 100%;
   }
 
+  .dropdown-toggle::after{
+    content:none;
+  }
 
-
-  .dropdown-toggle::after {
+  .dropdown-own .dropdown-toggle::after {
       content:none;
   }
 
-/*  .dropdown>.dropdown-toggle:active {
-      !*Without this, clicking will make it sticky*!
+  .dropdown-own .dropdown>.dropdown-toggle:active {
+      /*Without this, clicking will make it sticky*/
       pointer-events: none;
-  }*/
+  }
 
 .img-size {
     width: 57px;

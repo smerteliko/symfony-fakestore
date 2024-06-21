@@ -1,6 +1,6 @@
 <template>
   <div class="card bg-light border-1-solid-white border-product-foto w-18rem height-400px">
-    <div class="card-header">
+    <div class="card-header header-height">
       <RouterLink
         :to="{name: 'ProductComp', params:{id: product.id}}"
         class=" link-underline-opacity-100 text-decoration-none"
@@ -25,8 +25,8 @@
         v-if="product.productPrice" 
         class="d-flex  justify-content-between"
       >
-        <div class="row">
-          <h4>{{ this.getPrice() }} 
+        <div class="row align-items-center">
+          <h4 class="mb-0">{{ this.getPrice() }}
             <i 
               class="" 
               v-text="this.getPriceCurrency()"
@@ -104,7 +104,7 @@ export default {
       },
       getPriceCurrency() {
         const findSymbol = this.jsonlistStore.currencies.find((item)=>{
-          return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : 840)
+          return parseInt(item.IsoCode) === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : 840)
         })
         return findSymbol.Symbol
       }
@@ -154,6 +154,9 @@ input:disabled{
 
 .input-width {
     width: 50% !important;
+}
+.header-height {
+  height: 73px;
 }
 
 </style>
