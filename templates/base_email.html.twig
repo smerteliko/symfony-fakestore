@@ -1,0 +1,401 @@
+{% trans_default_domain 'mail' %}
+<html>
+<head>
+	<title>{% trans %}email.base.title {% endtrans %}{{ subject }}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<style >
+		body,
+		td {
+			font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+			font-size: 14px;
+		}
+		body {
+			padding: 0;
+			-webkit-text-size-adjust: none;
+			-ms-text-size-adjust: none;
+			display: table;
+			margin: 0 auto !important;
+			background: rgb(2,0,36);
+			background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(13,13,213,1) 41%, rgba(0,212,255,1) 100%);
+		}
+		h2 {
+			padding-top: 12px;
+			color: #0e7693;
+			font-size: 22px;
+		}
+
+		.__m-0 {
+			margin: 0;
+		}
+		.__mt-20 {
+			margin-top:20px;
+		}
+
+		.__p-0 {
+			padding: 0!important;
+		}
+
+		.__webkit-text-size-adjust_none {
+			-webkit-text-size-adjust:none!important;
+		}
+
+		.__bg-white {
+			background-color:#ffffff!important;
+		}
+		.__w-100 {
+			width: 100%!important;
+		}
+		.__border-spacing-0{
+			border-spacing: 0!important;
+		}
+		.__border-0 {
+			border: 0!important;
+		}
+		.__text-align-center {
+			text-align: center!important;
+		}
+
+		.__text-align-left {
+			text-align: left!important;
+		}
+
+		.__h-1px {
+			height: 1px;
+		}
+		.__h-10px {
+			height: 10px!important;
+		}
+
+		.__h-20 {
+			height: 20px!important;
+		}
+
+		.__h-30 {
+			height: 30px!important;
+		}
+
+		.__h-60 {
+			height: 60px!important;
+		}
+
+		.__h-280{
+			height: 280px!important;
+		}
+
+		.__w-30px {
+			width: 30px;
+		}
+		.__w-160px {
+			width: 160px;
+		}
+		.__w-190px {
+			width: 190px;
+		}
+		.__w-195px {
+			width: 195px;
+		}
+		.__w-205px {
+			width: 205px;
+		}
+		.__w-210px {
+			width: 210px;
+		}
+		.__w-240px {
+			width: 240px;
+		}
+		.__w-214px {
+			width: 214px;
+		}
+
+		.__w-580px {
+			width: 580px;
+		}
+
+		.__w-66 {
+			width: 66%;
+		}
+
+		.__w-96 {
+			width: 96%;
+		}
+		.__w-640px {
+			width: 640px!important;
+		}
+
+		.__fs-42px {
+			font-size: 42px;
+		}
+
+		.__fs-11px {
+			font-size: 11px;
+		}
+
+		.__fs-19px {
+			font-size: 19px;
+		}
+
+		.__fw-500 {
+			font-weight: 500;
+		}
+
+		.__line-height {
+			line-height: 1em;
+		}
+
+		.__vertical-align-middle{
+			vertical-align: middle;
+		}
+
+		.__bg-color-dadada {
+			background-color: #dadada;
+		}
+
+		.__bg-efef{
+			background-color: #efefef !important;
+		}
+
+		.__color-black {
+			color: black;
+		}
+		.__color-gray {
+			color: gray;
+		}
+
+	</style>
+</head>
+<body  class="__m-0 __p-0 __webkit-text-size-adjust_none">
+<table class="__bg-white __p-0 __w-100 __border-spacing-0 __border-0">
+	<tbody>
+	<tr>
+		<td class="__bg-white __text-align-center">
+			<table class="__border-0 __border-spacing-0 __p-0">
+				<tbody>
+
+				<tr>
+					<td class="__w-640px __h-10px"></td>
+				</tr>
+
+				<tr class="pagetoplogo">
+					<td class="__w-640px" >
+						<table class="__w-640px __border-0 __border-spacing-0 __p-0 __bg-efef">
+							<tbody>
+							<tr>
+								<td class="__w-640px  __bg-efef __h-30"></td>
+							</tr>
+							<tr>
+								<td class="__w-214px __vertical-align-middle __text-align-left">
+									<div class="pagetoplogo-content">
+										<h1 class="__text-align-center __fs-42px">{% trans %}email.base.title{% endtrans %}</h1>
+									</div>
+									<div class="pagetoplogodesc __fs-11px __text-align-center __w-96">
+										{% block header %}
+											{% trans %}email.base.header{% endtrans %}
+										{% endblock %}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="__w-214px __vertical-align-middle __text-align-center __fs-19px __fw-500 __line-height">
+									<div class="pagetoplogoslogan __text-align-center">
+										<p>{% trans %}email.base.slogan{% endtrans %}</p>
+									</div>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="__w-640px __bg-efef __h-1px"></td>
+				</tr>
+
+				<tr class="content">
+					<td class="__w-640px __bg-efef">
+						<table class="__w-640px __border-0 __border-spacing-0 __p-0">
+							<tbody>
+							<tr>
+								<td class="__w-30px"></td>
+								<td class="__w-580px" >
+									<table class="__w-580px __bg-white __border-0 __border-spacing-0 __p-0">
+										<tbody>
+										<tr>
+											<td class="__w-640px __bg-efef __h-20"></td>
+										</tr>
+										<tr>
+											<td class="__vertical-align-middle __text-align-center __h-280">
+												<div class="pagecontent __color-black">
+													<p>{% block content %}{% endblock %}</p>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="__w-580px __h-1px __bg-color-dadada"></td>
+										</tr>
+										</tbody>
+									</table>
+									{#
+									<table
+									  class="w580"
+									  width="580"
+									  cellpadding="0"
+									  cellspacing="0"
+									  border="0"
+									  style="margin-top: 20px;"
+									>
+									  <tbody>
+										{% if discover_url %}
+										<tr>
+										  <td colspan="5">
+											<h2
+											  style="color:#ffffff; font-size:22px; padding:12px; text-align:center; background-color:#e52829;"
+											>
+											  <a href="{{ discover_url }}">{% trans %}email.base.discover{% endtrans %}</a>
+											</h2>
+										  </td>
+										</tr>
+										{% endif %}
+										{% if manage_url %}
+										<tr>
+										  <td colspan="5">
+											<h2
+											  style="color:#ffffff; font-size:22px; padding:12px;text-align:center;background-color:#e8422e;"
+											>
+											  <a href="{{ manage_url }}"></a>{% trans %}email.base.manage{% endtrans %}</a>
+											</h2>
+										  </td>
+										</tr>
+										{% endif %}
+
+										<tr>
+										  <td
+											colspan="5"
+											class="w580"
+											width="580"
+											height="1"
+											bgcolor="#c7c5c5"
+										  ></td>
+										</tr>
+									  </tbody>
+									</table>
+									#}
+								</td>
+								<td class="__w-30px"></td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="__w-640px __bg-efef __h-20"></td>
+				</tr>
+
+				<tr class="pagebottom ">
+					<td class="__w-640px" >
+						<table class="__w-640px __bg-efef __border-0 __border-spacing-0 __p-0">
+							<tbody>
+							<tr>
+								<td class="__h-30 __w-210px"><div></div></td>
+{#								{% if facebook_url and facebook_url != '#' %}#}
+{#									<td width="50" height="30">#}
+{#										<div>#}
+{#											<a href="{{ facebook_url }}">#}
+{#												<img#}
+{#														width="55%"#}
+{#														alt="Facebook"#}
+{#												/>#}
+{#											</a>#}
+{#										</div>#}
+{#									</td>#}
+{#								{% endif %}#}
+{#								{% if twitter_url and twitter_url != '#' %}#}
+{#									<td width="50" height="30">#}
+{#										<div>#}
+{#											<a href="{{ twitter_url }}">#}
+{#												<img#}
+{#														width="55%"#}
+{#														alt="Twitter"#}
+{#												/>#}
+{#											</a>#}
+{#										</div>#}
+{#									</td>#}
+{#								{% endif %}#}
+{#								{% if linkedin_url and linkedin_url != '#' %}#}
+{#									<td width="50" height="30">#}
+{#										<div>#}
+{#											<a href="{{ linkedin_url }}">#}
+{#												<img#}
+{#														width="55%"#}
+{#														alt="LinkedIn"#}
+{#												/>#}
+{#											</a>#}
+{#										</div>#}
+{#									</td>#}
+{#								{% endif %}#}
+{#								{% if youtube_url and youtube_url != '#' %}#}
+{#									<td width="50" height="30">#}
+{#										<div>#}
+{#											<a href="{{ youtube_url }}">#}
+{#												<img#}
+{#														width="55%"#}
+{#														alt="Youtube"#}
+{#												/>#}
+{#											</a>#}
+{#										</div>#}
+{#									</td>#}
+{#								{% endif %}#}
+								<td class="__h-30 __w-190px"><div></div></td>
+							</tr>
+							</tbody>
+						</table>
+
+						<table class="__w-640px  __bg-efef __border-0 __border-spacing-0 __p-0">
+							<tbody>
+							<tr>
+								<td class="__h-30 __w-205px"><div></div></td>
+								<td class="__h-30 __w-240px" >
+									<p class="__text-align-center __mt-20 __color-gray">
+										{% block footer %}
+											{% trans %}email.base.footer{% endtrans %}
+										{% endblock %}
+									</p>
+								</td>
+								<td class="__h-30 __w-195px"><div></div></td>
+							</tr>
+							</tbody>
+						</table>
+
+						<table class="__w-640px  __bg-efef __border-0 __border-spacing-0 __p-0">
+							<tbody>
+								<tr>
+									<td class="__w-640px __bg-efef __h-20"></td>
+								</tr>
+
+								<tr>
+									<td  class="__h-30 __w-240px"><div></div></td>
+									<td class="__h-30 __w-160px">
+										<div>
+										</div>
+									</td>
+									<td class="__h-30 __w-240px"><div></div></td>
+								</tr>
+
+								<tr>
+									<td class="__w-640px __h-30 __bg-efef"></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="__w-640px __h-60"></td>
+				</tr>
+				</tbody>
+			</table>
+		</td>
+	</tr>
+	</tbody>
+</table>
+</body>
+</html>

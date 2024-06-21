@@ -33,7 +33,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="d-flex flex-column">
+            <div class="container-fluid">
               <div class="row">
                 <div class="input-group ps-5 pe-5">
                   <div class="form-floating ">
@@ -77,7 +77,24 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer" />
+          <div class="modal-footer justify-content-center" >
+            <div class="container-fluid">
+              <div class="row pt-4">
+                <div class="btn-group height-58px ps-5 pe-5">
+                  <button
+                    type="button"
+                    class="bg-body-secondary rounded-pill btn"
+                    data-bs-target="#modalRegister"
+                    data-bs-toggle="modal"
+                    data-bs-dismiss="modal"
+                  >
+                    <b> Create an account </b>
+
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -120,7 +137,7 @@
             <span class="text-black"> For account <b> {{ this.email }} </b></span>
           </div>
           <div class="modal-body">
-            <div class="d-flex flex-column">
+            <div class="container-fluid d-flex flex-column">
               <div class="row">
                 <div class="input-group ps-5 pe-5">
                   <div class="form-floating ">
@@ -156,7 +173,7 @@
             </div>
           </div>
           <div class="modal-footer d-block">
-            <div class="d-flex flex-column justify-content-center align-items-stretch">
+            <div class="container-fluid d-flex flex-column justify-content-center align-items-stretch">
               <div class="row">
                 <div class="btn-group height-58px ps-5 pe-5">
                   <button
@@ -173,14 +190,19 @@
       </div>
     </div>
   </form>
+  <UserRegisterComp/>
 </template>
 
 <script>
 import {mapActions, mapStores, mapWritableState} from "pinia";
 import {useUserStore} from "../../store/userStore";
+import UserRegisterComp from "./UserRegisterComp.vue";
 
 export default {
   name: "UserLoginComp",
+  components:{
+    UserRegisterComp
+  },
   data(){
     return {
       errors: {

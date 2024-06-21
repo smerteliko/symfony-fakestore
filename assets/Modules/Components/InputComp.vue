@@ -5,6 +5,7 @@
         :id="this.id"
         :value="this.model"
         :type="this.type"
+        :class="this.class"
         class="form-control border border-right-50rem border-left-50rem border-color"
         @input="$emit('input-value', $event.target.value)"
       >
@@ -12,8 +13,9 @@
         :for="this.id"
         class="text-black"
       >
-        {{ this.label }}
+        <b>{{ this.label }}</b>
       </label>
+
     </div>
   </div>
 </template>
@@ -37,6 +39,10 @@ export default {
     id: {
       type: String,
       default: 'customInput'
+    },
+    class: {
+      type: Object,
+      default: ()=>{return {}}
     }
   },
   emits: ['input-value'],

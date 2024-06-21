@@ -1,8 +1,16 @@
 <template>
   <div class="container container-color rounded-pill d-flex flex-column">
     <div class="row">
-      <h1>
-        Personal info
+      <h1 class="">
+        <span
+          v-if="this.userStore.user.isVerified"
+          :title="`User verified`"
+          class="border-2 border-right-50rem border-left-50rem border border-success">
+          <i
+            class="text-success fa-solid fa-check p-2"
+          />
+        </span>
+        Personal information
         <button
           class="btn btn-success btn rounded-container rounded-pill"
           @click="this.updateUser"

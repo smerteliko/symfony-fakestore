@@ -65,11 +65,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Language = null;
 
-    #[ORM\OneToOne(targetEntity: Currency::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Currency::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name:'IsoCode',referencedColumnName: 'IsoCode',nullable: true)]
     private ?Currency $Currency = null;
     #[ORM\OneToOne(mappedBy: 'ImageUser', cascade: ['persist', 'remove'])]
     private ?UserImages $userImages = null;
+
+    #[ORM\OneToOne(mappedBy: 'verificationUser', cascade: ['persist', 'remove'])]
+    private ?UserVerification $VerificationCode = null;
+
+    #[ORM\Column]
+    private ?bool $isVerified = false;
+
+    #[ORM\Column]
+    private ?bool $enabled = true;
 
     public function __construct()
     {
@@ -300,44 +309,135 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function toArray(): array
+    public function getVerificationCode(): ?UserVerification
     {
-        $rtrnArray = [
-            'id' => $this->id,
-            'uuid' => $this->uuid,
-            'email' => $this->email,
-            'FirstName' => $this->FirstName,
-            'LastName' => $this->LastName,
-            'phone' => $this->Phone,
-            'language' => $this->Language,
-        ];
-
-        if ($this->Currency) {
-            $rtrnArray['currency'] = [
-                'id' => $this->Currency->getId(),
-                'Name' => $this->Currency->getName(),
-                'Symbol' => $this->Currency->getSymbol(),
-                'IsoCode' => $this->Currency->getIsoNumCode(),
-                'ISOCharCode' => $this->Currency->getISOCharCode(),
-            ];
-        }
-
-        if ($this->userImages) {
-            $rtrnArray['Images'] = [
-                'id' => $this->userImages->getId(),
-                'updatedAt' => $this->userImages->getUpdatedAt(),
-                'createdAt' => $this->userImages->getCreatedAt(),
-            ];
-            if ($this->userImages->getImageFile()) {
-                $rtrnArray['Images']['file'] = [
-                    'id' => $this->userImages->getImageFile()->getId(),
-                    'FileName' => $this->userImages->getImageFile()->getFilename(),
-                    'Type' => $this->userImages->getImageFile()->getType(),
-                    'Size' => $this->userImages->getImageFile()->getSize(),
-                ];
-            }
-        }
-
-        return $rtrnArray;
+        return $this->VerificationCode;
     }
+
+    public function setVerificationCode(?UserVerification $VerificationCode): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($VerificationCode === null && $this->VerificationCode !== null) {
+            $this->VerificationCode->setVerificationUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($VerificationCode !== null && $VerificationCode->getVerificationUser() !== $this) {
+            $VerificationCode->setVerificationUser($this);
+        }
+
+        $this->VerificationCode = $VerificationCode;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified = false): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+	/**
+	 * @return static
+	 */
+	public function verify(): self
+	{
+		$this->setVerified(true);
+
+		if (!in_array('ROLE_VERIFIED_USER', $this->roles, true)) {
+			$this->roles[] = 'ROLE_VERIFIED_USER';
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return static
+	 */
+	public function unverify(): self
+	{
+		$this->setVerified(false);
+
+		if (in_array('ROLE_VERIFIED_USER', $this->roles, true)) {
+			// Ensure there are no duplicates AND no holes in array keys
+			$tempRoles = [];
+			foreach ($this->roles as $role) {
+				if ($role !== 'ROLE_VERIFIED_USER' && !in_array($role, $tempRoles)) {
+					$tempRoles[] = $role;
+				}
+			}
+			$this->roles[] = $tempRoles;
+		}
+
+		return $this;
+	}
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled = true): static
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+	public function toArray(): array
+	{
+		$rtrnArray = [
+			'id' => $this->id,
+			'uuid' => $this->uuid,
+			'email' => $this->email,
+			'FirstName' => $this->FirstName,
+			'LastName' => $this->LastName,
+			'phone' => $this->Phone,
+			'language' => $this->Language,
+			'isVerified' => $this->isVerified,
+			'enabled' => $this->enabled,
+		];
+
+		if ($this->Currency) {
+			$rtrnArray['currency'] = [
+				'id' => $this->Currency->getId(),
+				'Name' => $this->Currency->getName(),
+				'Symbol' => $this->Currency->getSymbol(),
+				'IsoCode' => $this->Currency->getIsoNumCode(),
+				'ISOCharCode' => $this->Currency->getISOCharCode(),
+			];
+		}
+
+		if ($this->userImages) {
+			$rtrnArray['Images'] = [
+				'id' => $this->userImages->getId(),
+				'updatedAt' => $this->userImages->getUpdatedAt(),
+				'createdAt' => $this->userImages->getCreatedAt(),
+			];
+			if ($this->userImages->getImageFile()) {
+				$rtrnArray['Images']['file'] = [
+					'id' => $this->userImages->getImageFile()->getId(),
+					'FileName' => $this->userImages->getImageFile()->getFilename(),
+					'Type' => $this->userImages->getImageFile()->getType(),
+					'Size' => $this->userImages->getImageFile()->getSize(),
+				];
+			}
+		}
+
+		if ($this->VerificationCode) {
+			$rtrnArray['verificationCode'] = [
+				'id' => $this->VerificationCode->getId(),
+				'code' => $this->VerificationCode->getCode(),
+
+			];
+		}
+
+		return $rtrnArray;
+	}
 }

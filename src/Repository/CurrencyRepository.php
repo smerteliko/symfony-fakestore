@@ -21,6 +21,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class CurrencyRepository extends ServiceEntityRepository
 {
+
+	public const USD_ISO_CODE = '840';
     private CacheInterface $cache;
 
     public function __construct(ManagerRegistry $registry, CacheInterface $cache)

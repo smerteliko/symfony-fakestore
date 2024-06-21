@@ -1,6 +1,7 @@
 
 const UserComp = ()=> import("../Modules/User/UserComp.vue");
 const UserPersonalInfo = ()=> import("../Modules/User/UserPersonalInfoComp.vue");
+const UserVerificationComp = ()=> import("../Modules/User/UserVerificationComp.vue");
 
 let userRoute = [
 	{
@@ -16,7 +17,14 @@ let userRoute = [
 				path: 'personal_info',
 				component: UserPersonalInfo,
 			},
-		]
+			{
+				// UserProfile will be rendered inside User's <router-view>
+				// when /user/:id/profile is matched
+				name: 'UserVerification',
+				path: 'verify',
+				component: UserVerificationComp,
+			},
+		],
 
 	}
 ];

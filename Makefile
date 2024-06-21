@@ -53,6 +53,9 @@ dc_kill: ## Docker compose kill
 	${DOCKER_COMPOSE} kill
 	${DOCKER_COMPOSE} down --volumes --remove-orphans
 
+dc_fix_perm: ## Fix permissions of docker files
+	@chmod -R 777 docker/*
+
 dc_restart: ## Docker compose restart
 dc_restart: \
 	dc_stop \

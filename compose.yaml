@@ -10,6 +10,7 @@ services:
       PHP_IDE_CONFIG: "serverName=Docker"
     volumes:
       - ./:/var/www/
+      -  ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
     networks:
       - symfony-fakestore
     links:
@@ -45,6 +46,17 @@ services:
         - symfony-fakestore
 
 
+  symfony-fakestore_mailer:
+    image: sj26/mailcatcher:latest
+    container_name: ${COMPOSE_PROJECT_NAME}_mailer
+    restart: always
+    expose:
+      - '1025'
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+    networks:
+      - symfony-fakestore
 #  mailer:
 #    image: maildev/maildev
 #    container_name: ${COMPOSE_PROJECT_NAME}_mailer
@@ -62,19 +74,25 @@ services:
     networks:
       - symfony-fakestore
 
-
-#  rabbitmq:
-#    container_name: ${COMPOSE_PROJECT_NAME}_rabbit
-#    hostname: rabbit
-#    image: rabbitmq:3-management
-#    environment:
-#      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-#      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
-#    volumes:
-#      - ./docker/rabbitmq/:/var/lib/rabbitmq
-#    ports:
-#      - "5672:5672"
-#      - "15672:15672"
+  symfony-fakestore-rabbitmq:
+    container_name: ${COMPOSE_PROJECT_NAME}_rabbit
+    image: rabbitmq:3-management
+    restart: always
+    command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      timeout: 5s
+      retries: 1
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - ./docker/rabbitmq/:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - symfony-fakestore
 
 networks:
   symfony-fakestore:

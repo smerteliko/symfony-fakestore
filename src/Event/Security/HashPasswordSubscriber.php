@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Event\Security;
 
 use App\Entity\User;
 use Doctrine\Common\EventSubscriber;

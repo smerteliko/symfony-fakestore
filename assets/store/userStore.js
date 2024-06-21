@@ -9,12 +9,15 @@ export const useUserStore = defineStore('user', {
 			isAuthed: false,
 			email: '',
 			password:'',
+			phone:'',
 			id: '',
 			token: null,
-			isLoading: false,
+			verification: '',
 			user: {},
+			currencyID: null,
+			isLoading: false,
 			errors: {},
-			currencyID: null
+			response: {}
 		}
 	},
 	actions: {
@@ -33,7 +36,7 @@ export const useUserStore = defineStore('user', {
 
 					})
 					.catch((e)=>{
-						this.errors = e
+						//this.errors = e
 						this.loading = false;
 					})
 		},
@@ -50,7 +53,7 @@ export const useUserStore = defineStore('user', {
 						}
 					})
 					.catch((e)=> {
-						this.errors = e;
+						//this.errors = e;
 					});
 			if(response.data.token){
 				this.token = response.data.token;
@@ -85,11 +88,73 @@ export const useUserStore = defineStore('user', {
 						},
 			})
 			.catch((e)=> {
-				this.errors = e;
+				//this.errors = e;
 			});
 			if(response.status === 200) {
 				this.isLoading = false;
 				return response.data.message;
+			}
+		},
+
+		async register() {
+			this.errors = {};
+			const response = await axios.post('/user/register',
+					{
+						user: {
+							email: this.email,
+							password: this.password,
+							phone: this.phone
+						}
+					}
+					)
+					.catch((e)=> {
+						this.errors = e;
+					});
+			if(response && response.status === 200) {
+				this.isLoading = false;
+				this.response = response;
+			}
+
+		},
+
+		async verify() {
+			this.errors = {};
+			this.isLoading= true;
+			const response = await axios.post('/user/verify',
+					{
+						code: this.verification
+
+					},
+					{
+						headers: {
+							"Content-Type":'application/json',
+							Authorization: `Bearer ${this.token}`
+						},
+					}
+			)
+					.catch((e)=> {
+						//this.errors = e;
+					});
+			if(response && response.status === 200) {
+				this.isLoading = false;
+				this.response = response;
+			}
+
+		},
+		async resendVerificationCode (){
+			const response = await axios.post('/user/verify_resend_code',{},
+					{
+						headers: {
+							"Content-Type":'application/json',
+							Authorization: `Bearer ${this.token}`
+						},
+					}
+			)
+					.catch((e)=> {
+						//this.errors = e;
+					});
+			if(response && response.status === 200) {
+				this.response = response;
 			}
 		}
 	},

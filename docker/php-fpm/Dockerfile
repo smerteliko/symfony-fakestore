@@ -1,7 +1,7 @@
 FROM php:8.1-fpm-alpine
 
 # Install packages
-RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev autoconf bash libpq-dev
+RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev autoconf bash libpq-dev rabbitmq-c-dev
 RUN apk add --update linux-headers
 
 RUN apk add icu-dev
@@ -12,9 +12,10 @@ RUN docker-php-ext-enable intl
 # If postgress
 RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
+RUN pecl install amqp
+RUN docker-php-ext-enable amqp
 
 RUN pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis
-
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 RUN echo "error_reporting = E_ERROR" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini

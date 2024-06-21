@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
  * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method User[]    findBy(array $criteria, array $orderBy = null, $limit =null, $offset = null)
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
@@ -44,6 +45,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
 		$this->save($user);
     }
+
+	public function createUser($data): User {
+		$user = new User();
+		$user->setUuid(Uuid::v7()::generate());
+		$user->setEmail($data['email']);
+		$user->setPhone($data['phone']);
+		$user->setCreatedAt();
+		$user->setUpdatedAt();
+		$user->setPassword(trim($data['password']));
+
+
+		$currency = $this->currencyRepository->find($this->currencyRepository::USD_ISO_CODE);
+		$user->setCurrency($currency);
+		$this->save($user);
+		return $user;
+	}
 
 	public function updatePersonalInfo($data, User $user): void {
 		if($data) {

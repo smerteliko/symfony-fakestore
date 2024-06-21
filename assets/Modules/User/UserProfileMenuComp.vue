@@ -6,13 +6,28 @@
       mb-2 mt-2 rounded-container"
   >
     <RouterLink
-      class="active
+      class="
        mt-1 mb-3
        list-group-item list-group-item-action
        btn rounded-container rounded-pill"
+      :class="{'active text-white': this.$router.currentRoute.value.name === `UserPersonalInfo`}"
       :to="{name:'UserPersonalInfo'}"
     >
-      <b class="text-white"><i class="fa-solid fa-gear" /> Personal info  </b>
+      <b><i class="fa-solid fa-gear" /> Personal info  </b>
+    </RouterLink>
+    <RouterLink
+      class="
+       mt-1 mb-3
+       list-group-item list-group-item-action
+       btn rounded-container rounded-pill"
+      :disabled="this.userStore.user.isVerified"
+      :class="{
+        'active text-white': this.$router.currentRoute.value.name === `UserVerification`,
+        'disabled' : this.userStore.user.isVerified
+      }"
+      :to="{name:'UserVerification'}"
+    >
+      <b><i class="fa-solid fa-file-signature" /> User verification  </b>
     </RouterLink>
     <button
       type="button"
