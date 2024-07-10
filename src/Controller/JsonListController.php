@@ -36,6 +36,7 @@ class JsonListController extends AbstractController
 	public function rates(CurRatesRepository $ratesRepository,CurrencyRepository $currencyRepository): JsonResponse {
 
 		return new JsonResponse([
+			'currencyRates' => $ratesRepository->getCurrencyRatesListCached(),
 			'currencies' => $currencyRepository->getCurrencyListCached(),
 		], Response::HTTP_OK);
 	}

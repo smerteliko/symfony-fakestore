@@ -110,7 +110,7 @@ export const useUserStore = defineStore('user', {
 					.catch((e)=> {
 						this.errors = e;
 					});
-			if(response && response.status === 200) {
+			if(response && response.status === 201) {
 				this.isLoading = false;
 				this.response = response;
 			}

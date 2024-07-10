@@ -9,10 +9,11 @@
           <i
             class="text-success fa-solid fa-check p-2"
           />
+          <small class="font-size-1rem">Verified</small>
         </span>
         Personal information
         <button
-          class="btn btn-success btn rounded-container rounded-pill"
+          class="ms-3 btn btn-success btn rounded-container rounded-pill"
           @click="this.updateUser"
         >
           <b>
@@ -161,7 +162,7 @@ export default {
           let intlCode = (match[1] ? +match[1]  : '');
           return [intlCode, ' (', match[2], ') ', match[3], '-', match[4]].join('');
         }
-        return '';
+        return phoneNumberString;
     },
     async updateUser() {
        this.userStore.isLoading = true;
@@ -174,6 +175,10 @@ export default {
 
 
 <style>
+
+.font-size-1rem {
+  font-size: 1rem !important;
+}
 .border-left-50rem {
   border-top-left-radius: 50rem !important;
   border-bottom-left-radius: 50rem !important;

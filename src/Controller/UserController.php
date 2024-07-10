@@ -154,8 +154,8 @@ class UserController extends AbstractController
 					$this->translator->trans('user.create.authorize', [], 'user'),
 					$this->translator->trans('user.create.check_email',[],'user')
 				],
-				'code' =>   Response::HTTP_OK
-			], Response::HTTP_OK
+				'code' =>   Response::HTTP_CREATED
+			], Response::HTTP_CREATED
 		);
 	}
 
