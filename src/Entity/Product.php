@@ -42,6 +42,9 @@ class Product
     #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
     private ?ProductPrice $productPrice = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Users')]
+    private ?Shop $shop = null;
+
     public function __construct()
     {
         $this->productImages = new ArrayCollection();
@@ -197,6 +200,17 @@ class Product
         return $this;
     }
 
+	public function getShop(): ?Shop
+	{
+		return $this->shop;
+	}
+
+	public function setShop(?Shop $shop): static
+	{
+		$this->shop = $shop;
+
+		return $this;
+	}
 	public function toArray(): array
 	{
 		$rtrnData = [
