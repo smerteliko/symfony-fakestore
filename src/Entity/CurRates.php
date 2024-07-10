@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CurRatesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CurRatesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -20,6 +21,7 @@ class CurRates
     #[ORM\Column(nullable: true)]
     private ?float $unitRate = null;
 
+	#[Assert\Currency]
     #[ORM\OneToOne(targetEntity: Currency::class,inversedBy: 'rates')]
     #[ORM\JoinColumn(name:'IsoCode',referencedColumnName: 'IsoCode',nullable: true)]
     private ?Currency $Currency;

@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 class Currency
@@ -25,6 +26,8 @@ class Currency
 	#[ORM\OneToOne(targetEntity: CurRates::class,mappedBy: 'Currency')]
 	private ?CurRates $rates;
 
+	#[Assert\Currency]
+	#[Assert\NotBlank]
 	#[ORM\Column(name: 'IsoCode',length: 5)]
 	#[ORM\Id]
     private string $IsoCode;
