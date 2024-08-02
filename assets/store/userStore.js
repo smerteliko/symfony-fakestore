@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
-
 export const useUserStore = defineStore('user', {
 	state: () => {
 		return {
@@ -17,7 +16,8 @@ export const useUserStore = defineStore('user', {
 			currencyID: null,
 			isLoading: false,
 			errors: {},
-			response: {}
+			response: {},
+			isAdmin: false,
 		}
 	},
 	actions: {
@@ -36,7 +36,7 @@ export const useUserStore = defineStore('user', {
 
 					})
 					.catch((e)=>{
-						//this.errors = e
+						this.errors = e;
 						this.loading = false;
 					})
 		},
@@ -156,7 +156,7 @@ export const useUserStore = defineStore('user', {
 			if(response && response.status === 200) {
 				this.response = response;
 			}
-		}
+		},
 	},
 	getters: {
 		getAuthStatus() {
@@ -167,6 +167,15 @@ export const useUserStore = defineStore('user', {
 		},
 		getUser() {
 			return this.user
+		},
+		checkAdmin() {
+			if(!this.user) {
+				return false;
+			}
+
+
+			return this.user.roles.includes('ROLE_SUPER_ADMIN');
+
 		}
 	}
 })

@@ -19,7 +19,9 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('app', './assets/app.js')
+    .addEntry('main', './assets/Main/fakestore.js')
+
+    .addEntry('admin', './assets/Admin/admin.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
@@ -73,7 +75,20 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    .autoProvidejQuery()
+    // .autoProvidejQuery()
+    //
+    //     .addRule({
+    //         test: /\.vue$/,
+    //         loader: 'vue-loader',
+    //         options: {
+    //             preLoaders: {
+    //                 i18n: 'yaml-loader'
+    //             },
+    //             loaders: {
+    //                 i18n: '@intlify/vue-i18n-loader'
+    //             }
+    //         }
+    //     })
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -5,17 +5,16 @@
         <title>{% block title %}fakestore{% endblock %}</title>
         <link rel="icon" href="{{ asset('favicon.ico') }}">
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+            {{ encore_entry_link_tags('main') }}
         {% endblock %}
 
-        {% block javascripts %}
-            <script src="https://kit.fontawesome.com/096da35ac9.js" crossorigin="anonymous"></script>
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
     </head>
     <body>
 
     <div id="fakestore" ></div>
     </body>
-
+    {% block javascripts %}
+        <script src="https://kit.fontawesome.com/096da35ac9.js" crossorigin="anonymous"></script>
+        {{ encore_entry_script_tags('main') }}
+    {% endblock %}
 </html>
