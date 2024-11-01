@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace App\Event\Security;
 
 use App\Entity\User;
-use Doctrine\Common\EventSubscriber;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final class HashPasswordSubscriber implements EventSubscriber
+#[AsDoctrineListener('prePersist')]
+final class HashPasswordSubscriber
 {
     private UserPasswordHasherInterface $passwordHasher;
 
@@ -29,7 +30,6 @@ final class HashPasswordSubscriber implements EventSubscriber
         if (!$entity instanceof User) {
             return;
         }
-
         $this->encodePassword($entity);
     }
 
