@@ -29,7 +29,7 @@
           <h4 class="mb-0">{{ this.getPrice() }}
             <i 
               class="" 
-              v-text="this.getPriceCurrency()"
+              v-text="this.getPriceCurrencySymbol()"
             />
           </h4>
         </div>
@@ -102,11 +102,11 @@ export default {
 
           return this.product.productPrice.ConvertedPrice[this.userStore.currencyID]
       },
-      getPriceCurrency() {
-        const findSymbol = this.jsonlistStore.currencies.find((item)=>{
-          return parseInt(item.IsoCode) === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : 840)
+      getPriceCurrencySymbol() {
+        const findCurrency = this.jsonlistStore.currencies.find((item)=>{
+          return item.IsoCode === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : '840')
         })
-        return findSymbol.Symbol
+        return findCurrency?findCurrency.Symbol:'';
       }
     }
 }

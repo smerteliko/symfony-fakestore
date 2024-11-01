@@ -57,13 +57,13 @@
         Total: {{ this.cartItem.totalPrice }}
         <i
           class=""
-          v-text="this.getPriceCurrency()"
+          v-text="this.getPriceCurrencySymbol()"
         />
       </h5>
       <small class="text-secondary text-decoration-underline">
         <i> Per each: {{ this.price }} </i>
         <i
-          v-text="this.getPriceCurrency()"
+          v-text="this.getPriceCurrencySymbol()"
         />
       </small>
       <p class="align-text-bottom mb-0">
@@ -181,11 +181,11 @@ export default {
 
 
         },
-      getPriceCurrency() {
+      getPriceCurrencySymbol() {
         const findSymbol = this.jsonlistStore.currencies.find((item)=>{
-          return parseInt(item.IsoCode) === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : 840)
+          return item.IsoCode === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : '840')
         })
-        return findSymbol.Symbol
+        return findSymbol?findSymbol.Symbol:''
       }
     }
 }

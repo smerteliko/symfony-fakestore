@@ -79,10 +79,7 @@
             <div class="btn-group">
               <button
                 type="button"
-                class="
-         mt-3 mb-3
-         active
-         btn rounded-container rounded-pill"
+                class="mt-3 mb-3 active btn rounded-container rounded-pill"
               >
                 <b><i class="fa-solid fa-language" /> Language  </b>
               </button>

@@ -8,7 +8,6 @@
         <RouterLink
           class="nav-link  link-primary"
           to="/"
-          replace
         >
           <h3 class="text-lg-center mb-lg-0 ">
             Home
@@ -91,7 +90,6 @@
             type="button"
             class="nav-link link-primary me-lg-3 position-relative"
             to="/cart"
-            replace
           >
             <h3 class="text-lg-center mb-0">
               <i class="fa-solid fa-cart-shopping" />
@@ -107,7 +105,7 @@
           <RouterLink
             v-if="this.userStore.isAuthed === true"
             class="nav-link link-primary ms-lg-3"
-            to="/user/profile/personal_info" replace
+            to="/user/profile/personal_info"
           >
             <div v-if="!this.userStore.user.Images">
               <h3 class="text-lg-center mb-0">

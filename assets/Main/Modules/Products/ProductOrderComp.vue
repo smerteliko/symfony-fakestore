@@ -6,7 +6,7 @@
           {{ this.getPrice() }}
           <i
             class=""
-            v-text="this.getPriceCurrency()"
+            v-text="this.getPriceCurrencySymbol()"
           />
         </h4>
       </div>
@@ -119,11 +119,11 @@ export default {
 
       return this.product.productPrice.ConvertedPrice[this.userStore.currencyID]
     },
-    getPriceCurrency() {
+    getPriceCurrencySymbol() {
       const findSymbol = this.jsonlistStore.currencies.find((item)=>{
-        return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : 840)
+        return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : '840')
       })
-      return findSymbol.Symbol
+      return findSymbol?findSymbol.Symbol:''
     }
   }
 }
