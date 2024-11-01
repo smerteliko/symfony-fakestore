@@ -3,9 +3,11 @@ version: "3.8"
 services:
   symfony-fakestore-php-fpm:
     container_name: ${COMPOSE_PROJECT_NAME}_php-fpm
+    restart: always
     build:
       context: docker
       dockerfile: ./php-fpm/Dockerfile
+
     environment:
       PHP_IDE_CONFIG: "serverName=Docker"
     volumes:
@@ -18,6 +20,7 @@ services:
 
   symfony-fakestore-nginx:
     container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    restart: always
     build:
       context: docker/nginx
     ports:
@@ -68,6 +71,7 @@ services:
 
   symfony-fakestore-redis:
     container_name: ${COMPOSE_PROJECT_NAME}_redis
+    restart: always
     image: redis:alpine
     ports:
       - "6379:6379"
