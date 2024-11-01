@@ -11,6 +11,15 @@ import vSelect from 'vue-select';
 // DO NOT USE, HACK TO LOAD THIS COMPONENT ONCE, USE OWN SelectComp
 import fileUploader from "../Components/FileUploader.vue";
 
+import {dom, library} from "@fortawesome/fontawesome-svg-core";
+import {fas} from '@fortawesome/free-solid-svg-icons'
+import {fab} from '@fortawesome/free-brands-svg-icons';
+import {far} from '@fortawesome/free-regular-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+
+
+library.add(fas, far, fab)
+dom.watch();
 
 const app = createApp(fakeStore);
 
@@ -23,6 +32,7 @@ app.component('SelectComp',vSelect)
 
 app.component('InputComp', InputComp)
 app.component('FileUploader', fileUploader)
+app.component('FontAwesomeIcon', FontAwesomeIcon)
 
 
 const store = createPinia();
