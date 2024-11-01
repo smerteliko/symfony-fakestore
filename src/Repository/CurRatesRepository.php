@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -37,8 +38,8 @@ class CurRatesRepository extends ServiceEntityRepository
 			$allRates = $this->getEntityManager()
 			                 ->createQueryBuilder()
 			                 ->select('CURRATE', 'CURR')
-			                 ->from(CurRates::class, 'CURRATE')
-							 ->leftJoin('CURRATE.Currency', 'CURR')
+                             ->from(CurRates::class, 'CURRATE')
+                             ->leftJoin('CURRATE.Currency', 'CURR')
 			                 ->orderBy('CURRATE.id', 'ASC')
 			                 ->getQuery()
 			                 ->getArrayResult();
@@ -61,7 +62,7 @@ class CurRatesRepository extends ServiceEntityRepository
 		$currencyRateEntity->setRate($currencyRate['Value']);
 		$currencyRateEntity->setUnitRate($currencyRate['UnitRate']);
 		$currencyRateEntity->setCurrency($this->currencyRepository->find($currencyRate['NumCode']));
-
+		$currencyRateEntity->setUpdatedAt();
 		$this->save($currencyRateEntity);
 	}
 

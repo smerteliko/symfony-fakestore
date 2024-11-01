@@ -6,15 +6,19 @@ namespace App\Entity;
 
 use App\Repository\UserImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserImagesRepository::class)]
+#[ORM\Table(options: ["comment" => 'User avatar table'])]
 #[ORM\HasLifecycleCallbacks]
 class UserImages
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
     #[ORM\OneToOne(inversedBy: 'userImages', cascade: ['persist', 'remove'])]
     private ?User $ImageUser = null;
@@ -28,8 +32,7 @@ class UserImages
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
 
-    public function getId(): ?int
-    {
+    public function getId(): Uuid {
         return $this->id;
     }
 

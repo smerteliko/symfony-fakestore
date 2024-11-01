@@ -9,6 +9,7 @@ use App\Event\UserCreatedEvent;
 use App\Repository\UserRepository;
 use App\Service\Mail\EmailNotification\EmailNotification;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use JsonException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -40,7 +41,6 @@ class UserController extends AbstractController
     #[Route('/login', name: '_login', methods: ['POST'])]
     public function login(#[CurrentUser] ?User $user): JsonResponse
     {
-
         return new JsonResponse([$user], 200);
     }
 
@@ -100,7 +100,10 @@ class UserController extends AbstractController
         );
     }
 
-	#[Route('/update_info', name: '_update_info', methods: ['POST'])]
+	/**
+	 * @throws \JsonException
+	 */
+	#[Route('/update_info', name: '_update_info', methods: [ 'POST'])]
 	public function updateUserInfo(
 		Request $request,
 		#[CurrentUser] ?User $user): JsonResponse
@@ -124,10 +127,10 @@ class UserController extends AbstractController
 	}
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	#[Route('/register', name: '_register', methods: [ 'POST'])]
-	public function register(Request $request,EventDispatcherInterface $dispatcher,): JsonResponse {
+	public function register(Request $request): JsonResponse {
 		$requestTransformed = $this->transformJsonBody($request);
 		$newUser =$requestTransformed->get('user');
 		try {
@@ -139,7 +142,7 @@ class UserController extends AbstractController
 			],Response::HTTP_BAD_REQUEST);
 		}
 
-		if(!$lastUser->getUuid()) {
+		if(!$lastUser->getId()) {
 			return new JsonResponse([
 				'message' =>  $this->translator->trans('user.create.failure', [], 'user'),
 				'code' => Response::HTTP_INTERNAL_SERVER_ERROR
@@ -225,7 +228,7 @@ class UserController extends AbstractController
 				[
 					'subject' => $subject,
 					'verifyAccount' => $verifyAccount,
-					'code' => $user->getVerificationCode()->getCode()
+					'code' => $user->getVerificationCode()?->getCode()
 				],
 				'user_account_confirmation'
 			),
@@ -250,10 +253,13 @@ class UserController extends AbstractController
 	 */
 	private  function transformJsonBody(Request $request): object
 	{
+
 		$data = json_decode($request->getContent(),
 		                    TRUE,
 		                    512,
 		                    JSON_THROW_ON_ERROR);
+
+
 
 		if (json_last_error() !== JSON_ERROR_NONE) {
 			return (object)[];

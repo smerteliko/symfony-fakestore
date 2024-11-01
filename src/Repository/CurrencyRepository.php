@@ -47,7 +47,7 @@ class CurrencyRepository extends ServiceEntityRepository
                         ->createQueryBuilder()
                         ->select('CUR')
                         ->from(Currency::class, 'CUR')
-                        ->orderBy('CUR.id', 'ASC')
+                        ->orderBy('CUR.IsoCode', 'ASC')
                         ->getQuery()
                         ->getArrayResult()
             ;
@@ -59,8 +59,11 @@ class CurrencyRepository extends ServiceEntityRepository
 		$currencyEntity->setName($currency['Name']);
 		$currencyEntity->setISOCharCode($currency['ISOCharCode']);
 		$currencyEntity->setIsoNumCode($currency['ISOCode']);
+		$currencyEntity->setUpdatedAt();
+		$currencyEntity->setCreatedAt();
 		$this->save($currencyEntity);
 	}
+
 
     //    /**
     //     * @return Currency[] Returns an array of Currency objects

@@ -6,35 +6,43 @@ namespace App\Entity;
 
 use App\Repository\FilesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: FilesRepository::class)]
+#[ORM\Table(options: ["comment" => 'Files list (user avatar, product images, etc)'])]
+#[ORM\HasLifecycleCallbacks]
 class Files
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,options: ["comment" => 'File original name'])]
     private ?string $OriginalName = null;
 
-    #[ORM\Column(length: 512)]
+    #[ORM\Column(length: 512, options: ["comment" => 'File asset name'])]
     private ?string $FileName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, options: ["comment" => 'File type'])]
     private ?string $Type = null;
 
-    #[ORM\Column(length: 8)]
+    #[ORM\Column(length: 8, options: ["comment" => 'File extension'])]
     private ?string $Ext = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ["comment" => 'File size'])]
     private ?int $Size = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
-    public function getId(): ?int
-    {
+	#[ORM\Column]
+	private ?\DateTimeImmutable $created_at = null;
+
+	#[ORM\Column(nullable: true)]
+	private ?\DateTimeImmutable $updated_at = null;
+
+    public function getId(): Uuid {
         return $this->id;
     }
 
@@ -98,15 +106,28 @@ class Files
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->created_at;
+	}
 
-    public function setCreatedAt(): static
-    {
-        $this->createdAt = new \DateTimeImmutable();
+	public function setCreatedAt(): static
+	{
+		$this->created_at = new \DateTimeImmutable();
 
-        return $this;
-    }
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+	{
+		return $this->updated_at;
+	}
+
+	#[ORM\PreFlush]
+	public function setUpdatedAt(): static
+	{
+		$this->updated_at = new \DateTimeImmutable();
+
+		return $this;
+	}
 }

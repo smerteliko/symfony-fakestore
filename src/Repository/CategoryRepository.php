@@ -35,10 +35,10 @@ class CategoryRepository extends ServiceEntityRepository
         $category->setName($data['Name']);
 
         if ('' !== trim($data['Description'])) {
-            $category->setDescriprion($data['Description']);
+            $category->setDescription($data['Description']);
         }
 
-        $category->setCreatedAt(new \DateTimeImmutable());
+        $category->setCreatedAt();
 
         $this->getEntityManager()->persist($category);
         $this->getEntityManager()->flush();
@@ -78,7 +78,6 @@ class CategoryRepository extends ServiceEntityRepository
             $qb->addSelect('sub');
             $qb->leftJoin('category.subCategories', 'sub');
         }
-
         return $qb->getQuery()->getArrayResult();
     }
 

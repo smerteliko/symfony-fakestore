@@ -8,36 +8,36 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
+#[ORM\Table(name: '`user`',options: ["comment" => 'Users'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['id'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 180)]
-    private ?string $uuid = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
     /**
      * @var list<string> The user roles
      */
-    #[ORM\Column]
+    #[ORM\Column(options: ["comment" => 'User system roles'])]
     private array $roles = [];
 
     /**
      * @var ?string The hashed password
      */
 	#[Assert\NotBlank]
-    #[ORM\Column]
+    #[ORM\Column(options: ["comment" => 'User password'])]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -56,20 +56,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
        message: 'The email {{ value }} is not a valid email.',
     )]
     #[Assert\NotBlank]
-	#[ORM\Column(length: 255)]
+	#[ORM\Column(length: 255, options: ["comment" => 'User email'])]
 	private ?string $email = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true,options: ["comment" => 'User first name'])]
     private ?string $FirstName = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, options: ["comment" => 'User last name'])]
     private ?string $LastName = null;
 
 	#[Assert\NotBlank]
-	#[ORM\Column(length: 255, nullable: true)]
+	#[ORM\Column(length: 255, nullable: true, options: ["comment" => 'User phone number'])]
 	private ?string $Phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, options: ["comment" => 'User system language'])]
     private ?string $Language = null;
 
     #[ORM\ManyToOne(targetEntity: Currency::class, cascade: ['persist', 'remove'])]
@@ -81,10 +81,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'verificationUser', cascade: ['persist', 'remove'])]
     private ?UserVerification $VerificationCode = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ["comment" => 'If user verified flag'])]
     private ?bool $isVerified = false;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ["comment" => 'User enabled flag'])]
     private ?bool $enabled = true;
 
 	#[ORM\ManyToOne(inversedBy: 'Shop')]
@@ -94,21 +94,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userCarts = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): Uuid {
         return $this->id;
-    }
-
-    public function getUuid(): ?string
-    {
-        return $this->uuid;
-    }
-
-    public function setUuid(string $uuid): static
-    {
-        $this->uuid = $uuid;
-
-        return $this;
     }
 
     /**
@@ -415,7 +402,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	{
 		$rtrnArray = [
 			'id' => $this->id,
-			'uuid' => $this->uuid,
 			'email' => $this->email,
 			'FirstName' => $this->FirstName,
 			'LastName' => $this->LastName,
@@ -423,11 +409,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 			'language' => $this->Language,
 			'isVerified' => $this->isVerified,
 			'enabled' => $this->enabled,
+			'roles' => $this->roles,
 		];
 
 		if ($this->Currency) {
 			$rtrnArray['currency'] = [
-				'id' => $this->Currency->getId(),
 				'Name' => $this->Currency->getName(),
 				'Symbol' => $this->Currency->getSymbol(),
 				'IsoCode' => $this->Currency->getIsoNumCode(),

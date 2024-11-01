@@ -6,52 +6,39 @@ namespace App\Entity;
 
 use App\Repository\ProductImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductImagesRepository::class)]
+#[ORM\Table(options: ["comment" => 'Products images'])]
+#[ORM\HasLifecycleCallbacks]
 class ProductImages
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'productImages')]
     private ?Product $Product = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $FileNameBase = null;
-
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true,options: ["comment" => 'Is MAIN image flag'])]
     private ?bool $Main = null;
 
-    public function getId(): ?int
-    {
+	#[ORM\OneToOne(cascade: ['persist', 'remove'])]
+	private ?Files $ImageFile = null;
+
+	#[ORM\Column]
+	private ?\DateTimeImmutable $created_at = null;
+
+	#[ORM\Column]
+	private ?\DateTimeImmutable $updated_at = null;
+
+    public function getId(): Uuid {
         return $this->id;
     }
 
-    public function getProduct(): ?Product
-    {
-        return $this->ProductID;
-    }
-
-    public function setProductID(?Product $ProductID): static
-    {
-        $this->ProductID = $ProductID;
-
-        return $this;
-    }
-
-    public function getFileNameBase(): ?string
-    {
-        return $this->FileNameBase;
-    }
-
-    public function setFileNameBase(string $FileNameBase): static
-    {
-        $this->FileNameBase = $FileNameBase;
-
-        return $this;
-    }
 
     public function isMain(): ?bool
     {
@@ -64,4 +51,55 @@ class ProductImages
 
         return $this;
     }
+
+	/**
+	 * @return Product|null
+	 */
+	public function getProduct(): ?Product {
+		return $this->Product;
+	}
+
+	/**
+	 * @param Product|null $Product
+	 */
+	public function setProduct(?Product $Product): void {
+		$this->Product = $Product;
+	}
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->created_at;
+	}
+
+	public function setCreatedAt(): static
+	{
+		$this->created_at = new \DateTimeImmutable();
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+	{
+		return $this->updated_at;
+	}
+
+	#[ORM\PreFlush]
+	public function setUpdatedAt(): static
+	{
+		$this->updated_at = new \DateTimeImmutable();
+
+		return $this;
+	}
+
+	public function getImageFile(): ?Files
+	{
+		return $this->ImageFile;
+	}
+
+	public function setImageFile(?Files $ImageFile): static
+	{
+		$this->ImageFile = $ImageFile;
+
+		return $this;
+	}
 }

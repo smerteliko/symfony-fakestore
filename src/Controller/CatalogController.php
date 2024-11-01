@@ -27,14 +27,13 @@ class CatalogController extends AbstractController
     }
 
     #[Route('/category/{catID}', name: 'app_catalog_category')]
-    public function category(int $catID): Response
+    public function category(string $catID): Response
     {
-        return $this->render('base.html.twig', [
-        ]);
+        return $this->render('base.html.twig', []);
     }
 
     #[Route('/category/{catID}/subcategory/{subID}', name: 'app_catalog_subcat_by_category')]
-    public function subCatBuCategory(int $catID, int $subID): Response
+    public function subCatBuCategory(string $catID, string $subID): Response
     {
         return $this->render('base.html.twig', [
         ]);
@@ -46,7 +45,7 @@ class CatalogController extends AbstractController
     }
 
     #[Route('/ajax/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
-    public function ajaxCategory(int $id): JsonResponse
+    public function ajaxCategory(string $id): JsonResponse
     {
         $category = $this->categoryRepository->findCategoriesBy(['id' => $id, 'withSubs' => true]) ?: [];
 

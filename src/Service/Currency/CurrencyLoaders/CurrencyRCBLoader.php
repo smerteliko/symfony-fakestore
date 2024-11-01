@@ -5,6 +5,8 @@
  * Time: 09:24
  */
 
+declare(strict_types=1);
+
 namespace App\Service\Currency\CurrencyLoaders;
 
 use App\Repository\CurrencyRepository;
@@ -24,7 +26,7 @@ final class CurrencyRCBLoader extends CurrencyLoaderService {
 	public string              $url = 'https://www.cbr.ru/scripts/';
 	private string             $urlParams = 'XML_valFull.asp';
 
-	private array $localCurrenciesArr = [];
+	private array              $localCurrenciesArr = [];
 
 
 	public function __construct(CurrencyRepository $currencyRepository,
@@ -62,7 +64,7 @@ final class CurrencyRCBLoader extends CurrencyLoaderService {
 		if((int)$currency->ISO_Num_Code) {
 			$this->localCurrenciesArr[(int)$currency->ISO_Num_Code] = [
 				'Name' => (string)$currency->EngName,
-				'ISOCode' => str_pad($currency->ISO_Num_Code, 3, '0', STR_PAD_LEFT),
+				'ISOCode' => str_pad((string)$currency->ISO_Num_Code, 3, '0', STR_PAD_LEFT),
 				'ISOCharCode'=> (string)$currency->ISO_Char_Code
 			];
 		}

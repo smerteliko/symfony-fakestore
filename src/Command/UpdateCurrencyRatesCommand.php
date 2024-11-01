@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\CurRatesRepository;
 use App\Service\Currency\CurrencyLoaders\CurrencyRCBRatesLoader;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,10 +16,12 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
     name: 'app:update-currency-rates',
     description: 'Update currency rates',
 )]
-class UpdateCurrencyRatesCommand extends Command
+final class UpdateCurrencyRatesCommand extends Command
 {
     public function __construct(private readonly CurrencyRCBRatesLoader $ratesLoader,
-                                private readonly TagAwareCacheInterface $cache)
+                                private readonly TagAwareCacheInterface $cache,
+                                private readonly CurRatesRepository $currencyRatesRepository,
+    )
     {
         parent::__construct();
     }
@@ -37,7 +40,12 @@ class UpdateCurrencyRatesCommand extends Command
 
 	    $this->cache->invalidateTags(['Currencies']);
 		$this->ratesLoader->load();
-		$this->ratesLoader->updateRates();
+		if(count($this->currencyRatesRepository->findAll())>0) {
+			$this->ratesLoader->updateRates();
+		} else {
+			$this->ratesLoader->save();
+		}
+
 
 
 		$io->success('rates loaded and invalidated cache tags');

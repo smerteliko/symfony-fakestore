@@ -4,34 +4,39 @@ namespace App\Entity;
 
 use App\Repository\CurRatesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CurRatesRepository::class)]
+#[ORM\Table(name: 'cur_rates', options: ["comments" => 'Currency rates table'])]
 #[ORM\HasLifecycleCallbacks]
 class CurRates
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true ,options: ["comment" => 'Currency rate value'])]
     private ?float $Rate = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true, options: ["comment" => 'Currency unit rate value'])]
     private ?float $unitRate = null;
+
+
 
 	#[Assert\Currency]
     #[ORM\OneToOne(targetEntity: Currency::class,inversedBy: 'rates')]
     #[ORM\JoinColumn(name:'IsoCode',referencedColumnName: 'IsoCode',nullable: true)]
     private ?Currency $Currency;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
 
-    public function getId(): ?int
-    {
+    public function getId(): Uuid {
         return $this->id;
     }
 

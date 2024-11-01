@@ -8,20 +8,28 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\Table(name: 'category', options: ["comment" => 'Product category'])]
+#[ORM\HasLifecycleCallbacks]
 class Category
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, options: ["comment" => 'Product category name'])]
     private ?string $Name = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+	#[ORM\Column]
+	private ?\DateTimeImmutable $created_at = null;
+
+	#[ORM\Column]
+	private ?\DateTimeImmutable $updated_at = null;
 
     /**
      * @var Collection<int, Product>
@@ -35,8 +43,8 @@ class Category
     #[ORM\OneToMany(targetEntity: SubCategory::class, mappedBy: 'Category')]
     private Collection $subCategories;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $descriprion = null;
+    #[ORM\Column(length: 255, nullable: true, options: ["comment" => 'Product category description'])]
+    private ?string $description = null;
 
     public function __construct()
     {
@@ -44,8 +52,7 @@ class Category
         $this->subCategories = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): Uuid {
         return $this->id;
     }
 
@@ -57,18 +64,6 @@ class Category
     public function setName(string $Name): static
     {
         $this->Name = $Name;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
 
         return $this;
     }
@@ -133,15 +128,40 @@ class Category
         return $this;
     }
 
-    public function getDescriprion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descriprion;
+        return $this->description;
     }
 
-    public function setDescriprion(string $descriprion): static
+    public function setDescription(string $description): static
     {
-        $this->descriprion = $descriprion;
+        $this->description = $description;
 
         return $this;
     }
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->created_at;
+	}
+
+	public function setCreatedAt(): static
+	{
+		$this->created_at = new \DateTimeImmutable();
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+	{
+		return $this->updated_at;
+	}
+
+	#[ORM\PreFlush]
+	public function setUpdatedAt(): static
+	{
+		$this->updated_at = new \DateTimeImmutable();
+
+		return $this;
+	}
 }

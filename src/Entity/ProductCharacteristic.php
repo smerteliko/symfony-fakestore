@@ -6,23 +6,33 @@ namespace App\Entity;
 
 use App\Repository\ProductCharacteristicRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductCharacteristicRepository::class)]
+#[ORM\Table(options: ["comment" => 'Currency list'])]
+#[ORM\HasLifecycleCallbacks]
 class ProductCharacteristic
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
     #[ORM\OneToOne(inversedBy: 'productCharacteristic', cascade: ['persist', 'remove'])]
     private ?Product $product = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true,options: ["comment" => 'Characteristic as JSON'])]
     private ?array $Data = null;
 
-    public function getId(): ?int
-    {
+	#[ORM\Column]
+	private ?\DateTimeImmutable $created_at = null;
+
+	#[ORM\Column]
+	private ?\DateTimeImmutable $updated_at = null;
+
+    public function getId(): Uuid {
         return $this->id;
     }
 
@@ -49,4 +59,29 @@ class ProductCharacteristic
 
         return $this;
     }
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->created_at;
+	}
+
+	public function setCreatedAt(): static
+	{
+		$this->created_at = new \DateTimeImmutable();
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+	{
+		return $this->updated_at;
+	}
+
+	#[ORM\PreFlush]
+	public function setUpdatedAt(): static
+	{
+		$this->updated_at = new \DateTimeImmutable();
+
+		return $this;
+	}
 }

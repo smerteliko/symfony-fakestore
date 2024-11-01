@@ -8,14 +8,19 @@ use App\Repository\UserCartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserCartRepository::class)]
+#[ORM\Table(options: ["comment" => 'User cart table'])]
+#[ORM\HasLifecycleCallbacks]
 class UserCart
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userCarts')]
     private ?User $appliesTo = null;
@@ -26,13 +31,18 @@ class UserCart
     #[ORM\OneToMany(targetEntity: UserCartItem::class, mappedBy: 'userCart')]
     private Collection $userCartItem;
 
+	#[ORM\Column(nullable: true)]
+	private ?\DateTimeImmutable $created_at = null;
+
+	#[ORM\Column(nullable: true)]
+	private ?\DateTimeImmutable $updated_at = null;
+
     public function __construct()
     {
         $this->userCartItem = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): Uuid {
         return $this->id;
     }
 
@@ -77,4 +87,29 @@ class UserCart
 
         return $this;
     }
+
+	public function getCreatedAt(): ?\DateTimeImmutable
+	{
+		return $this->created_at;
+	}
+
+	public function setCreatedAt(): static
+	{
+		$this->created_at = new \DateTimeImmutable();
+
+		return $this;
+	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+	{
+		return $this->updated_at;
+	}
+
+	#[ORM\PreFlush]
+	public function setUpdatedAt(): static
+	{
+		$this->updated_at = new \DateTimeImmutable();
+
+		return $this;
+	}
 }

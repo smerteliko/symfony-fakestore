@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
 use App\Service\Currency\CurrencyOperations;
@@ -13,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/products', name: 'app_products')]
 class ProductsController extends AbstractController
@@ -46,7 +44,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/ajax/category/{id}', name: '_list_category', methods: ['GET'])]
-    public function listByCategory(int $id): Response
+    public function listByCategory(string $id): Response
     {
 	    $list =    $this->productRepository->findProductBy([
 		                                                       'catID' => $id,
@@ -64,7 +62,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/ajax/subcategory/{id}', name: '_list_subcategory', methods: ['GET'])]
-    public function listBySubcategory(int $id): Response
+    public function listBySubcategory(string $id): Response
     {
 	    $list =   $this->productRepository->findProductBy([
 		                                                      'subID' => $id,
@@ -79,7 +77,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/ajax/list', name: '_list_ajax', methods: ['GET'])]
-    public function listProducts(#[CurrentUser] ?User $user): Response
+    public function listProducts(): Response
     {
 		$list =  $this->productRepository->findProductBy([
 			                                                 'withImages' => true,
@@ -94,9 +92,9 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/ajax/{id}', name: '_item_ajax', methods: ['GET'])]
-    public function ProductData(int $id): Response
+    public function ProductData(string $id): Response
     {
-		$product = $this->productRepository->find($id)->toArray();
+		$product = $this->productRepository->find($id)?->toArray();
 	    $product['productPrice'] = $this->productPriceService->getProductPriceInAllCurr($product['productPrice']);
         return new JsonResponse([
             'productData' => $product
@@ -104,7 +102,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/ajax/{id}/images/', name: '_images', methods: ['GET'])]
-    public function ProductImages(int $id): Response
+    public function ProductImages(string $id): Response
     {
         return new JsonResponse([
             'productImages' => $this->productImagesRepository->findProductImagesBy(

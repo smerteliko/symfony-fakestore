@@ -5,6 +5,8 @@
  * Time: 20:51
  */
 
+declare(strict_types=1);
+
 namespace App\Service\Currency;
 
 use Psr\Cache\CacheItemPoolInterface;
@@ -14,7 +16,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 class CurrencyOperations {
 
 	private CacheItemPoolInterface $cache;
-	private static array           $rates = [];
+	private            $rates = [];
 
 	public function __construct(CacheItemPoolInterface $cache) {
 		$this->cache = $cache;
@@ -26,8 +28,8 @@ class CurrencyOperations {
 	#[Required]
 	public function setRates(): void {
 		$cachedRates = $this->cache->getItem('CurrencyRatesList');
-		if($cachedRates->isHit()) {
-			self::$rates = $cachedRates->get();
+		if($cachedRates->isHit()) { 
+			$this->rates = $cachedRates->get();
 		}
 
 	}
@@ -40,25 +42,32 @@ class CurrencyOperations {
 	 * @param array $options
 	 * @return mixed
 	 */
-	public static function exchangeFromTo($sum, $fromCurrency, $toCurrency, array $options = []): mixed {
+	public function exchangeFromTo($sum, $fromCurrency, $toCurrency, array $options = []): mixed {
 		$precision		= !empty($options['precision']) ? $options['precision'] : 2;
 		$ratioPrecision	= !empty($options['ratioPrecision']) ? $options['ratioPrecision'] : 8;
 
 		if ($fromCurrency !== $toCurrency){
-			$ratio =  self::$rates[$fromCurrency]['Rate'] ?
-				round((float)self::$rates[$toCurrency]['Rate'] / (float)self::$rates[$fromCurrency]['Rate'],$ratioPrecision) :
+			$ratio =  $this->rates[$fromCurrency]['Rate'] ?
+				round(
+					(float)$this->rates[$toCurrency]['Rate']
+				      /
+				      (float)$this->rates[$fromCurrency]['Rate'],$ratioPrecision) :
 				0;
-			$sum = $ratio ? round( (float)$sum * $ratio, $precision ) : 0;
+			$sum = $ratio ? round( (float)$sum * $precision ) : 0;
 		}
 		return $sum;
 	}
 
-	public static function exchangeToAllCurrencies($item): array {
-		foreach (self::$rates as $rate) {
-			$item['ConvertedPrice'][$rate['Currency']['IsoCode']] = self::exchangeFromTo(
+	/**
+	 * @param $item
+	 * @return array
+	 */
+	public function exchangeToAllCurrencies($item): array {
+		foreach ($this->rates as $rate) {
+			$item['ConvertedPrice'][$rate['Currency']['IsoCode']] = $this->exchangeFromTo(
 				$item['Price']??$item['price'],
 				$rate['Currency']['IsoCode'],
-				$item['Currency']['IsoCode']??$item['currency']['IsoCode']
+				$item['currency']?$item['currency']['IsoCode']:840
 			);
 		}
 		return $item;

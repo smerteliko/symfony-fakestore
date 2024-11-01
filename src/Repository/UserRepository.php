@@ -10,7 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -48,7 +47,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 	public function createUser($data): User {
 		$user = new User();
-		$user->setUuid(Uuid::v7()::generate());
 		$user->setEmail($data['email']);
 		$user->setPhone($data['phone']);
 		$user->setCreatedAt();

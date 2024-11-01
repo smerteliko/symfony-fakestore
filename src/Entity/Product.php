@@ -6,23 +6,25 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\Table(options: ["comment" => 'Products'])]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column]
-    private ?int $id = null;
+	#[ORM\Id]
+	#[ORM\Column(type: UuidType::NAME, unique: true)]
+	#[ORM\GeneratedValue(strategy: 'CUSTOM')]
+	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+	private ?Uuid $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, options: ["comment" => 'Products name'])]
     private ?string $Name = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $Category = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'Product')]
     private ?SubCategory $subCategory = null;
@@ -45,13 +47,19 @@ class Product
     #[ORM\ManyToOne(inversedBy: 'Users')]
     private ?Shop $shop = null;
 
+
+	#[ORM\Column]
+	private ?\DateTimeImmutable $created_at = null;
+
+	#[ORM\Column]
+	private ?\DateTimeImmutable $updated_at = null;
+
     public function __construct()
     {
         $this->productImages = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): Uuid {
         return $this->id;
     }
 
@@ -85,9 +93,9 @@ class Product
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(): static
     {
-        $this->created_at = $created_at;
+	    $this->created_at = new \DateTimeImmutable();
 
         return $this;
     }
@@ -116,7 +124,7 @@ class Product
     {
         if (!$this->productImages->contains($productImage)) {
             $this->productImages->add($productImage);
-            $productImage->setProductID($this);
+            $productImage->setProduct($this);
         }
 
         return $this;
@@ -127,7 +135,7 @@ class Product
         if ($this->productImages->removeElement($productImage)) {
             // set the owning side to null (unless already changed)
             if ($productImage->getProduct() === $this) {
-                $productImage->setProductID(null);
+                $productImage->setProduct(null);
             }
         }
 
@@ -211,6 +219,19 @@ class Product
 
 		return $this;
 	}
+
+	public function getUpdatedAt(): ?\DateTimeImmutable
+	{
+		return $this->updated_at;
+	}
+
+	#[ORM\PreFlush]
+	public function setUpdatedAt(): static
+	{
+		$this->updated_at = new \DateTimeImmutable();
+
+		return $this;
+	}
 	public function toArray(): array
 	{
 		$rtrnData = [
@@ -244,8 +265,7 @@ class Product
 				'Discount' => $this->getProductPrice()->getDiscount(),
 			];
 			if($this->getProductPrice()->getCurrency()) {
-				$rtrnData['productPrice']['Currency'] = [
-					'id' => $this->getProductPrice()->getCurrency()->getId(),
+				$rtrnData['productPrice']['currency'] = [
 					'Name' => $this->getProductPrice()->getCurrency()->getName(),
 					'IsoCode' => $this->getProductPrice()->getCurrency()->getIsoNumCode(),
 					'ISOCharCode' => $this->getProductPrice()->getCurrency()->getISOCharCode(),

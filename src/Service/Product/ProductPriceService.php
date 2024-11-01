@@ -18,11 +18,11 @@ class ProductPriceService {
 	}
 
 	private function getProductPriceByCurrency( $productPrice): array {
-		return $this->currencyOperations::exchangeToAllCurrencies($productPrice);
+		return $this->currencyOperations->exchangeToAllCurrencies($productPrice);
 	}
 
 	public function getProductPriceInAllCurr( $productPrice): array {
-		return $this->currencyOperations::exchangeToAllCurrencies($productPrice);
+		return $this->currencyOperations->exchangeToAllCurrencies($productPrice);
 	}
 
 
