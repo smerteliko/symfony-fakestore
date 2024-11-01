@@ -9,7 +9,7 @@
               width="136px"
               height="136px"
               class="col-4 img-fluid border-color p-0 rounded-container img-size obj-fit d-block"
-              :class="this.errors.length > 0?'is-invalid':''"
+              :class="this.errors.length > 0 ?'is-invalid' : ''"
               :src="this.file"
               role="button"
               aria-describedby="invalidFile"
@@ -66,7 +66,7 @@ export default {
     entity : {
       type: Object,
       default() {
-        return {}
+        return undefined;
       }
     },
   },
@@ -134,37 +134,37 @@ export default {
 
 
 <style scoped>
-.img-size{
-  width: 136px;
-  height: 136px;
-}
-.button-width {
-  width: 136px;
-}
+  .img-size{
+    width: 136px;
+    height: 136px;
+  }
+  .button-width {
+    width: 136px;
+  }
 
-.obj-fit {
-  object-fit: cover;
-}
+  .obj-fit {
+    object-fit: cover;
+  }
 
-.icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  padding: 0;
-  background: none;
-  color: rgba(13,13,213,1);
-  border: 2px solid rgba(13,13,213,1);
-}
-.icon::after {
-  content: '';
-  bottom: 0;
-}
-.border-color {
-  border: 2px solid;
-  border-color: rgba(13,13,213,1)!important
-}
+  .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    padding: 0;
+    background: none;
+    color: rgba(13,13,213,1);
+    border: 2px solid rgba(13,13,213,1);
+  }
+  .icon::after {
+    content: '';
+    bottom: 0;
+  }
+  .border-color {
+    border: 2px solid;
+    border-color: rgba(13,13,213,1)!important
+  }
 </style>
