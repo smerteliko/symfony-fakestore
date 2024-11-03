@@ -14,7 +14,7 @@
         >
           <button
             class="list-group-item list-group-item-action btn"
-            :class="{'active' : subCat.id === active}"
+            :class="{'active' : subCat.id === this.active}"
             @click="changeSubCat(subCat.id)"
           >
             {{ subCat.Name }}
@@ -71,7 +71,7 @@ export default {
             productsList: {},
             loading: true,
             total: 0,
-            active: Number
+            active: ''
         }
     },
     computed: {
@@ -89,7 +89,7 @@ export default {
 
             await this.productStore.fetchProductListBySubCat(subID)
             this.productsList = this.productStore.getProductListBySubCat;
-            this.active = parseInt(subID);
+            this.active = subID;
             this.total = this.productsList.length;
 
             this.loading = false;
@@ -104,7 +104,7 @@ export default {
             if(params.subID) {
               await this.productStore.fetchProductListBySubCat(params.subID)
               this.productsList = this.productStore.getProductListBySubCat;
-              this.active = parseInt(params.subID);
+              this.active = params.subID;
             }
 
 
