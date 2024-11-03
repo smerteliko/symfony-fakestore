@@ -1,19 +1,20 @@
 <template>
   <div class="container container-color rounded-pill d-flex flex-column">
     <div class="row">
-      <h1 class="">
+      <h2 class="d-inline-flex align-items-center">
         <span
           v-if="this.userStore.user.isVerified"
-          :title="`User verified`"
-          class="border-2 border-right-50rem border-left-50rem border border-success">
+          class="col-1"
+          title="User verified"
+        >
           <i
-            class="text-success fa-solid fa-check p-2"
+            class="text-success text-center fa-solid fa-check"
           />
-          <small class="font-size-1rem">Verified</small>
         </span>
-        Personal information
+
+        <span class="col-5">Personal information</span>
         <button
-          class="ms-3 btn btn-success btn rounded-container rounded-pill"
+          class="col-3 ms-3 btn btn-success btn rounded-container rounded-pill"
           @click="this.updateUser"
         >
           <b>
@@ -28,7 +29,7 @@
             />
           </b>
         </button>
-      </h1>
+      </h2>
     </div>
     <div class="d-flex pt-5">
       <div class="col-8">
@@ -85,13 +86,13 @@
               </button>
             </div>
           </div>
-          <div class="col ">
+          <div class="col">
             <SelectComp
               v-model="this.userStore.user.currency"
               class="select-styles "
               label="Name"
               :clearable="false"
-              :options="this.jsonlistStore.currencies"
+              :options="this.jsonlistStore.getCurrencies"
               placeholder="Please select currency"
             >
               <template #option="{ Name, Symbol }">

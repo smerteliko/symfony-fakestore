@@ -39,7 +39,9 @@
               <p
                 v-if="this.userStore.errors.response"
                 class="m-0"
-              >{{ this.userStore.errors.response.data.message }}</p>
+              >
+                {{ this.userStore.errors.response.data.message }}
+              </p>
             </div>
             <div
               v-if="this.userStore.response && this.userStore.response.data"
@@ -52,7 +54,9 @@
               >
                 <p
                   class="m-0"
-                >{{ message }}</p>
+                >
+                  {{ message }}
+                </p>
               </div>
             </div>
             <h3
@@ -64,60 +68,29 @@
           <div class="modal-body">
             <div class="container-fluid d-flex flex-column">
               <div class="row">
-                <div class="input-group ps-5 pe-5">
-                  <div class="form-floating ">
-                    <input
-                      id="registerEmail"
-                      v-model="this.email"
-                      class="form-control border-left-50rem border-right-50rem border-color"
-                      placeholder="Email address"
-                      type="email"
-                      aria-describedby="validationEmail"
-                      autocomplete="email"
-                      required
-                    >
-                    <label
-                      for="registerEmail"
-                      class="text-black"
-                    >
-                      Email
-                    </label>
-                    <span
-                      v-show="this.errors.email"
-                      id="validationEmail"
-                      class="text-danger text-center"
-                    >
-                      {{ this.errors.email }}
-                    </span>
-                  </div>
+                <div class="ps-5 pe-5">
+                  <InputComp
+                    :id="`registerEmail`"
+                    :type="`email`"
+                    :model="this.email"
+                    :label="`Email`"
+                    :class="`border-color`"
+                    :required="true"
+                    @input-value="this.email = $event"
+                  />
                 </div>
               </div>
               <div class="row pt-2">
-                <div class="input-group ps-5 pe-5">
-                  <div class="form-floating ">
-                    <input
-                      id="registerPhone"
-                      v-model="this.phone"
-                      class="form-control border-left-50rem border-right-50rem border-color"
-                      placeholder="Phone"
-                      type="tel"
-                      aria-describedby="validationPhone"
-                      required
-                    >
-                    <label
-                      for="registerPhone"
-                      class="text-black"
-                    >
-                      Phone
-                    </label>
-                    <span
-                      v-show="this.errors.phone"
-                      id="validationPhone"
-                      class="text-danger text-center"
-                    >
-                      {{ this.errors.phone }}
-                    </span>
-                  </div>
+                <div class=" ps-5 pe-5">
+                  <InputComp
+                    :id="`registerPhone`"
+                    :type="`tel`"
+                    :model="this.phone"
+                    :label="`Phone`"
+                    :class="`border-color`"
+                    :required="true"
+                    @input-value="this.phone = $event"
+                  />
                 </div>
               </div>
               <div class="row pt-2">
@@ -126,10 +99,10 @@
                     <input
                       id="registerPassword"
                       v-model="this.password"
-                      class="form-control border-left-50rem border-right-50rem border-color"
+                      class="form-control border-left-50rem border-color"
                       placeholder="Password"
                       aria-describedby="validationPassword"
-                      type="password"
+                      :type="this.showPasswordType"
                       autocomplete="current-password"
                       required
                     >
@@ -137,105 +110,19 @@
                       for="registerPassword"
                       class="text-black"
                     >
-                      Password
+                      <b> Password: </b>
                     </label>
-                    <div
-                      v-show="this.password.length !== 0"
-                      id="validationPassword"
-                      class="bg-info-subtle p-1 ps-4 pe-4 mt-2 border-radius"
+                  </div>
+                  <div class="input-group-text pe-3 bg-none border-start-0 border-right-50rem bg-light border-color">
+                    <button
+                      type="button"
+                      class="btn  form-control"
+                      @click="this.passwordToggler"
                     >
-                      <p class="m-0"><small>Password must contain the following:</small></p>
-                      <p
-                        id="letter"
-                        class="m-0"
-                        :class="{
-                          'text-danger' : this.errors.password.lowerCase,
-                          'text-success' : !this.errors.password.lowerCase,
-                          'text-dark': this.password.length === 0
-                        }"
-                      >
-                        <i
-                          :class="{
-                            'fa-xmark' : this.errors.password.lowerCase,
-                            'fa-check' : !this.errors.password.lowerCase,
-                          }"
-                          class="  fa-solid "
-                        />
-                        <small> A <b>lowercase</b> letter </small>
-                      </p>
-                      <p
-                        id="capital"
-                        class="m-0"
-                        :class="{
-                          'text-danger' : this.errors.password.upperCase,
-                          'text-success' : !this.errors.password.upperCase,
-                          'text-dark': this.password.length === 0
-                        }"
-                      >
-                        <i
-                          :class="{
-                            'fa-xmark' : this.errors.password.upperCase,
-                            'fa-check' : !this.errors.password.upperCase,
-                          }"
-                          class="  fa-solid "
-                        />
-                        <small> A <b>capital (uppercase)</b> letter </small>
-                      </p>
-                      <p
-                        id="number"
-                        class="m-0"
-                        :class="{
-                          'text-danger' : this.errors.password.number,
-                          'text-success' : !this.errors.password.number,
-                          'text-dark': this.password.length === 0
-                        }"
-                      >
-                        <i
-                          :class="{
-                            'fa-xmark' : this.errors.password.number,
-                            'fa-check' : !this.errors.password.number,
-                          }"
-                          class="  fa-solid "
-                        />
-                        <small> A <b>number</b> </small>
-                      </p>
-                      <p
-                        id="special"
-                        class="m-0"
-                        :class="{
-                          'text-danger' : this.errors.password.special,
-                          'text-success' : !this.errors.password.special,
-                          'text-dark': this.password.length === 0
-                        }"
-                      >
-                        <i
-                          :class="{
-                            'fa-xmark' : this.errors.password.special,
-                            'fa-check' : !this.errors.password.special,
-                          }"
-                          class="  fa-solid "
-                        />
-                        <small> A <b> special character</b> </small>
-                      </p>
-                      <p
-                        id="length"
-                        class="m-0"
-                        :class="{
-                          'text-danger' : this.errors.password.length,
-                          'text-success' : !this.errors.password.length,
-                          'text-dark': this.password.length === 0
-                        }"
-                      >
-                        <i
-                          :class="{
-                            'fa-xmark' : this.errors.password.length,
-                            'fa-check' : !this.errors.password.length,
-                          }"
-                          class="  fa-solid "
-                        />
-                        <small> Minimum <b>6 characters</b> </small>
-                      </p>
-                    </div>
+                      <i
+                        :class="{'fa-solid fa-eye': !this.showPassword, 'fa-eye-slash':this.showPassword}"
+                      />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -273,20 +160,21 @@
         </div>
       </div>
     </div>
+
   </form>
 </template>
 
 <script>
 import {mapStores, mapWritableState} from "pinia";
 import {useUserStore} from "../../../store/userStore";
+import InputComp from "../../../Components/InputComp.vue";
 
 export default {
   name: "UserRegisterComp",
+  components: {InputComp},
   data() {
     return {
       errors: {
-        email: false,
-        phone:false,
         password:{
           special: false,
           lowerCase: false,
@@ -298,7 +186,9 @@ export default {
       disable : true,
       authorize: false,
       response: null,
-      responseMessages: null
+      responseMessages: null,
+      showPassword: false,
+      showPasswordType: `password`
     }
   },
   computed:{
@@ -320,27 +210,13 @@ export default {
       if(this.errors.password.upperCase) {
         return  true;
       }
-      if(this.errors.email || this.email.length === 0) {
-        return true;
-      }
-      if(this.errors.phone || this.phone.length === 0) {
-       return true;
-      }
       return false
     }
   },
   watch: {
-    email(newVal) {
-      this.validateEmail(newVal)
-    },
-    phone(newVal) {
-      this.validatePhone(newVal)
-    },
     password(newVal) {
       this.validatePassword(newVal)
     },
-    response(newVal) {
-    }
   },
 
   methods: {
@@ -355,22 +231,16 @@ export default {
         this.authorize = true
       }
     },
-    validatePhone(newVal) {
-      this.errors.phone = newVal.length === 0 ? 'Please fill in phone number':false
-    },
-    validateEmail() {
-      if (this.email && !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.email))) {
-        this.errors.email = 'Please enter a valid email address';
-      } else {
-        this.errors.email = false;
-      }
-    },
     validatePassword(pw) {
-      this.errors.password.upperCase = !(/(?=.*[A-Z])/.test(pw));
-      this.errors.password.lowerCase = !(/(?=.*[a-z])/.test(pw));
-      this.errors.password.number = !(/(?=.*\d)/.test(pw));
-      this.errors.password.special = !(/(?=.*(\W|_))/.test(pw));
-      this.errors.password.length = pw.length < 6;
+      this.errors.password.upperCase = this.disable = !(/(?=.*[A-Z])/.test(pw));
+      this.errors.password.lowerCase = this.disable =  !(/(?=.*[a-z])/.test(pw));
+      this.errors.password.number = this.disable = !(/(?=.*\d)/.test(pw));
+      this.errors.password.special = this.disable = !(/(?=.*(\W|_))/.test(pw));
+      this.errors.password.length = this.disable = pw.length < 6;
+    },
+    passwordToggler() {
+      this.showPassword = !this.showPassword;
+      this.showPasswordType = this.showPassword ? 'text' : 'password'
     },
   }
 }

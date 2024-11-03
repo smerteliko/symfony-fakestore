@@ -63,9 +63,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 	public function updatePersonalInfo($data, User $user): void {
 		if($data) {
 			$user->setUpdatedAt();
-			$user->setPhone(trim($data['phone']));
-			$user->setFirstName(trim($data['FirstName']));
-			$user->setLastName(trim($data['LastName']));
+			$user->setPhone(trim($data['phone']??''));
+			$user->setFirstName(trim($data['FirstName']??''));
+			$user->setLastName(trim($data['LastName']??''));
 
 			if(isset($data['currency']) && $data['currency']) {
 				$currency = $this->currencyRepository->find($data['currency']['IsoCode']);

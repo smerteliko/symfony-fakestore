@@ -4,8 +4,8 @@ import axios from "axios";
 export const useJSONStore = defineStore('jsonlist', {
 	state: () => {
 		return {
-			currencies: {},
-			categories: {},
+			currencies: [],
+			categories: [],
 			currencyRates:{},
 		};
 	},

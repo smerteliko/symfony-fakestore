@@ -7,7 +7,9 @@
       <h5 class="text-center">
         To your email <b>{{ this.userStore.email }}</b> were sent the verification code.
       </h5>
-      <h6 class="text-center"> Please enter code bellow:</h6>
+      <h6 class="text-center">
+        Please enter code bellow:
+      </h6>
     </div>
     <div class="row justify-content-center">
       <div class="col-4 needs-validation">
@@ -16,7 +18,7 @@
           :model="this.verification"
           :label="`Verification code:`"
           :type="`text`"
-          :class="{ 'is-invalid':this.codeError === true ,'is-valid' : this.codeError === false}"
+          :class="this.codeError ? 'is-invalid':'is-valid'"
           aria-describedby="validationCode"
           @input-value="this.verification = $event"
         />

@@ -29,16 +29,6 @@
     >
       <b><i class="fa-solid fa-file-signature" /> User verification  </b>
     </RouterLink>
-    <RouterLink
-      v-if="this.userStore.checkAdmin"
-      class="
-       mt-1 mb-3
-       list-group-item list-group-item-action
-       btn rounded-container rounded-pill"
-      to="/admin/main"
-    >
-      <b><i class="fa-solid fa-file-signature" /> Admin  </b>
-    </RouterLink>
     <button
       type="button"
       class="mt-3 mb-3
@@ -62,16 +52,6 @@ export default {
       }
     }
   },
-  data(){
-    return {
-
-    };
-  },
-  computed: {
-    // ...mapStores
-  },
-  methods: {
-  }
 }
 </script>
 
