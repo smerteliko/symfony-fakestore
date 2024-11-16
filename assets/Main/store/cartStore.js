@@ -1,12 +1,15 @@
 import {defineStore} from "pinia";
 import {useUserStore} from "../../store/userStore";
+import {useJSONStore} from "../../store/jsonStore";
 
 export const useCartStore = defineStore('cart', {
 	state: () => {
 		return {
 			cartItems: [],
 			cartTotal: 0,
-			selectedCartItems: []
+			selectedCartItems: [],
+			userStore: useUserStore(),
+			jsonlistStore: useJSONStore()
 		};
 	},
 	actions: {
@@ -48,7 +51,7 @@ export const useCartStore = defineStore('cart', {
 		},
 
 		updateCartListFromLS() {
-			this.cartItems = JSON.parse(window.localStorage.getItem('cart'));
+			this.cartItems = this.getCartItemsLS;
 		},
 		setCartItemsLS() {
 			window.localStorage.setItem('cart', JSON.stringify(this.cartItems));
@@ -64,26 +67,29 @@ export const useCartStore = defineStore('cart', {
 		},
 
 		getCartItemPrice(item) {
-			const userStore = useUserStore();
-			const index = this.cartItems.findIndex(lsItem=>lsItem.id === item.id);
-			let price = this.cartItems[index].productPrice.ConvertedPrice[840];
-			if(userStore.currencyID) {
-				price = this.cartItems[index].productPrice.ConvertedPrice[userStore.currencyID]
-			}
-			return price;
+			return this.convertPrice(this.cartItems.findIndex(lsItem=>lsItem.id === item.id));
 		},
 
 		setCartItemsTotal(item) {
-			const userStore = useUserStore();
 			const index = this.cartItems.findIndex(lsItem=>lsItem.id === item.id);
-			let price = this.cartItems[index].productPrice.ConvertedPrice[840];
-			if(userStore.currencyID) {
-				price = this.cartItems[index].productPrice.ConvertedPrice[userStore.currencyID]
-			}
 
 			this.cartItems[index].totalPrice =
-					(price * this.cartItems[index].quantity).toFixed(2);
+					(this.convertPrice(index) * this.cartItems[index].quantity).toFixed(2);
 
+		},
+
+		convertPrice(itemIndex) {
+			let price = this.cartItems[itemIndex].productPrice.ConvertedPrice[840];
+			if(this.userStore.currencyID) {
+				price = this.cartItems[itemIndex].productPrice.ConvertedPrice[this.userStore.currencyID]
+			}
+			return price
+		},
+		getPriceCurrencySymbol() {
+			const findCurrency = this.jsonlistStore.currencies.find((item)=>{
+				return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : '840')
+			})
+			return findCurrency?findCurrency.Symbol:'';
 		}
 	},
 	getters: {
@@ -94,15 +100,17 @@ export const useCartStore = defineStore('cart', {
 		},
 		getCheckedCartItems() {
 			let checked = [];
-			this.cartItems.forEach((value)=>{
-				if(value.checked) {
-					checked.push(value);
-				}
-			})
+			if(this.cartItems.length) {
+				this.cartItems.forEach((value)=>{
+					if(value.checked) {
+						checked.push(value);
+					}
+				});
+			}
 			return checked;
 		},
 		getCartTotalItems() {
-			return this.cartItems.length;
+			return this.cartItems?this.cartItems.length:[];
 		},
 		getCartTotal() {
 			return this.cartTotal;

@@ -27,7 +27,7 @@
         <button
           class="btn btn-outline-danger border-end-0 border-radius"
           type="button"
-          @click="removeQuantity()"
+          @click="this.removeQuantity()"
         >
           <i
             :class="{
@@ -46,7 +46,7 @@
         <button
           class=" btn btn-outline-success border-start-0 border-radius"
           type="button"
-          @click="addQuantity()"
+          @click="this.addQuantity()"
         >
           <i class="fa-solid fa-plus" />
         </button>
@@ -128,7 +128,8 @@ export default {
         checked: {
             handler(newVal) {
                 this.cartStore.updateCartItemSelection(this.cartItem,newVal)
-                this.checked = this.cartItem.checked;
+                //this.checked = this.cartItem.checked;
+                console.log(newVal);
 
             },
         },
@@ -136,6 +137,7 @@ export default {
             handler(newVal) {
                 this.cartStore.updateCartItemSelection(this.cartItem,newVal)
                 this.checked = newVal
+              console.log(newVal);
             },
         },
     },
@@ -183,7 +185,7 @@ export default {
         },
       getPriceCurrencySymbol() {
         const findSymbol = this.jsonlistStore.currencies.find((item)=>{
-          return item.IsoCode === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : '840')
+          return item.IsoCode === (this.userStore.currencyID ? this.userStore.currencyID : '840')
         })
         return findSymbol?findSymbol.Symbol:''
       }

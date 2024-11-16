@@ -23,13 +23,13 @@
       <hr class="hr hr-blurry">
       <div class="row ms-2 me-2 flex-nowrap">
         <div class="col-8">
-          <h6> Products (<span v-text="setTotalQuantity()" />)</h6>
+          <h6> Products (<span v-text="this.setTotalQuantity()" />)</h6>
         </div>
         <div class="col-4 text-end">
-          <i v-text="setTotalPriceForAll()" />
+          <i v-text="this.setTotalPriceForAll()" />
           <i
             class="ms-1"
-            v-text="this.getPriceCurrencySymbol()"
+            v-text="this.cartStore.getPriceCurrencySymbol()"
           />
         </div>
       </div>
@@ -68,7 +68,7 @@
               <i v-text="setTotalToOrder()" />
               <i
                 class="ms-1"
-                v-text="this.getPriceCurrency()"
+                v-text="this.cartStore.getPriceCurrencySymbol()"
               />
             </span>
           </button>
@@ -79,9 +79,8 @@
 </template>
 
 <script>
+import {useCartStore} from "../../store/cartStore";
 import {mapStores} from "pinia";
-import {useUserStore} from "../../../store/userStore";
-import {useJSONStore} from "../../../store/jsonStore";
 
 export default {
     name: "CartOrderComp",
@@ -100,9 +99,9 @@ export default {
             delivery: 0
         }
     },
-  computed: {
-    ...mapStores(useUserStore, useJSONStore)
-  },
+    computed: {
+      ...mapStores(useCartStore)
+    },
     methods: {
         setTotalQuantity() {
             let totalQty = 0;
@@ -114,6 +113,7 @@ export default {
         setTotalPriceForAll(){
             let total = 0;
             this.selectedItems.forEach((value)=>{
+
                 total+=parseFloat(value.totalPrice)
             })
             this.total = total.toFixed(2);
@@ -124,12 +124,6 @@ export default {
         setTotalToOrder() {
             return (this.total-this.sale)
         },
-        getPriceCurrencySymbol() {
-          const findCurrency = this.jsonlistStore.currencies.find((item)=>{
-            return item.IsoCode === (this.userStore.currencyID ? parseInt(this.userStore.currencyID) : '840')
-          })
-          return findCurrency?findCurrency.Symbol:'';
-        }
     }
 
 

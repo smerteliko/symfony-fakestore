@@ -30,14 +30,6 @@ export default {
         }
       }
     },
-    data(){
-        return {
-
-        }
-    },
-    beforeMount() {
-
-    },
 }
 </script>
 
