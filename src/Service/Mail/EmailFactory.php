@@ -16,7 +16,7 @@ class EmailFactory {
 	/**
 	 * @var string
 	 */
-	private $mailerFrom;
+	private string $mailerFrom;
 
 	public function __construct(string $mailerFrom)
 	{

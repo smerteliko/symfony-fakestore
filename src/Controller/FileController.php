@@ -36,7 +36,10 @@ class FileController extends AbstractController
         return new JsonResponse([$filename]);
     }
 
-    #[Route('/new_user_avatar', name: '_new_avatar', methods: ['POST'])]
+	/**
+	 * @throws \JsonException
+	 */
+	#[Route('/new_user_avatar', name: '_new_avatar', methods: [ 'POST'])]
     public function newUserAvatar(Request $request,
         ImageFileUploader $fileUploader,
         UserImagesRepository $userImagesRepository,
@@ -48,7 +51,10 @@ class FileController extends AbstractController
             return new JsonResponse(['errors' => $violation->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        $userEntity = json_decode($request->get('entity'), true);
+        $userEntity = json_decode($request->get('entity'),
+                                  TRUE,
+                                  512,
+                                  JSON_THROW_ON_ERROR);
 
         $oldFile = $userEntity['Images']['file'] ?? [];
 

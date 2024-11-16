@@ -15,7 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'app:create-sub-cat',
     description: 'Sub category creation',
 )]
-class CreateSubCatCommand extends Command
+final class CreateSubCatCommand extends Command
 {
     private CategoryRepository $categoryRepository;
     private SubCategoryRepository $subCategoryRepository;

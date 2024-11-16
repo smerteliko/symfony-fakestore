@@ -5,18 +5,19 @@
         :id="this.id"
         :value="this.model"
         :type="this.mutableType"
-        class="form-control border border-right-50rem border-left-50rem"
-        :class="this.class +''+ this.mutableClass"
+        :class="this.class +' '+ this.mutableClass"
         :placeholder="this.label"
         :aria-describedby="`validation`+this.id"
         :autocomplete="this.type"
+        :required="this.required"
+        class="form-control border border-right-50rem border-left-50rem"
         @input="$emit('input-value', $event.target.value)"
       >
       <label
         :for="this.id"
         class="text-black"
       >
-        <b>{{ this.label }}</b>
+        <b>{{ this.label }}&#x0003A;</b>
       </label>
       <span
         v-if="this.errors"
@@ -51,11 +52,13 @@ export default {
   props: {
     model: {
       type: String,
-      default: ''
+      default: '',
+      required: true
     },
     type: {
       type: String,
-      default: ''
+      default: '',
+      required: true
     },
     label: {
       type: String,
@@ -73,6 +76,10 @@ export default {
       type: Boolean,
       default: false
     },
+    required: {
+      type: Boolean,
+      default: false
+    },
     passwordToggleClass: {
       type:Object,
       default: ()=>{
@@ -81,7 +88,7 @@ export default {
           textColor:'icon-color'
         }
       }
-    }
+    },
   },
   emits: ['input-value'],
   data(){
@@ -112,8 +119,7 @@ export default {
         this.mutableClass = ''
       }
     },
-    validatePhone() {
-
+    validatePhone(newVal) {
     },
     passwordToggler() {
       this.showPassword = !this.showPassword;

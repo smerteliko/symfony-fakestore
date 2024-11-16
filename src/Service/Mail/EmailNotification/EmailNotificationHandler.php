@@ -15,16 +15,11 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class EmailNotificationHandler
 {
-	private MailerInterface $mailer;
-
-	private EmailFactory $factory;
 
 	public function __construct(
-		MailerInterface $mailer,
-		EmailFactory $factory
+		private readonly MailerInterface $mailer,
+		private readonly EmailFactory    $factory
 	) {
-		$this->mailer = $mailer;
-		$this->factory = $factory;
 	}
 
 	/**

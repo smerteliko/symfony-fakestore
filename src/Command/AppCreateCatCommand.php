@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'app:create-cat',
     description: 'Category creation',
 )]
-class AppCreateCatCommand extends Command
+final class AppCreateCatCommand extends Command
 {
     private CategoryRepository $categoryRepository;
 
