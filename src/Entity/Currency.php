@@ -51,6 +51,13 @@ class Currency
         $this->country = new ArrayCollection();
     }
 
+	public function setIsoCode(string $IsoCode): self {
+		$this->IsoCode = $IsoCode;
+		return $this;
+	}
+	public function getIsoCode(): string {
+		return $this->IsoCode;
+	}
 
 	public function getName(): ?string
     {
@@ -77,10 +84,6 @@ class Currency
         return $this;
     }
 
-
-	public function setIsoNumCode(string $IsoNumCode): void {
-		$this->IsoCode = $IsoNumCode;
-	}
 
 	public function getIsoNumCode(): string {
 		return $this->IsoCode;

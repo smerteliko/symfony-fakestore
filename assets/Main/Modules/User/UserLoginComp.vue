@@ -190,8 +190,7 @@ export default {
 
     async submitLogin() {
       await this.userStore.logIn();
-      this.$router.push({path: '/', replace: true});
-      document.querySelector('[data-bs-target="#loginModal"]').modal('dispose');
+      //document.querySelector('[data-bs-target="#loginModal"]').modal('dispose');
     },
 
     toggleCloseModal() {

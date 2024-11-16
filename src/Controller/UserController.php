@@ -10,7 +10,6 @@ use App\Repository\UserRepository;
 use App\Service\Mail\EmailNotification\EmailNotification;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use JsonException;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,9 +30,8 @@ class UserController extends AbstractController
 	    private readonly SerializerInterface          $serializer,
 	    private readonly TokenStorageInterface        $tokenStorage,
 	    private readonly UserRepository               $userRepository,
-	    private readonly AuthenticationSuccessHandler $authenticationSuccessHandler,
 	    private readonly EventDispatcherInterface     $dispatcher,
-	    private readonly MessageBusInterface $bus,
+	    private readonly MessageBusInterface          $bus,
 	    private readonly TranslatorInterface          $translator)
     {
     }
@@ -101,22 +99,21 @@ class UserController extends AbstractController
     }
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	#[Route('/update_info', name: '_update_info', methods: [ 'POST'])]
 	public function updateUserInfo(
 		Request $request,
-		#[CurrentUser] ?User $user): JsonResponse
+		#[CurrentUser] ?User $user, SerializerInterface $serializer): JsonResponse
 	{
-		$requestTransformed = $this->transformJsonBody($request);
-		$updatedUser =$requestTransformed->get('user');
+		$updatedUserdata = $serializer->deserialize($request->getContent(), User::class, 'json');
 		if(!$user) {
 			return new JsonResponse([
 				'message' => $this->translator->trans('user.login.not_login', [],'user'),
 				'code' =>   Response::HTTP_FORBIDDEN]
 				, 500);
 		}
-		$this->userRepository->updatePersonalInfo($updatedUser, $user);
+		$this->userRepository->updatePersonalInfo($updatedUserdata, $user);
 
 		return new JsonResponse(
 			[
@@ -131,13 +128,12 @@ class UserController extends AbstractController
 	 */
 	#[Route('/register', name: '_register', methods: [ 'POST'])]
 	public function register(Request $request): JsonResponse {
-		$requestTransformed = $this->transformJsonBody($request);
-		$newUser =$requestTransformed->get('user');
+		$newUser = $this->serializer->deserialize($request->getContent(), User::class, 'json');
 		try {
 			$lastUser = $this->userRepository->createUser($newUser);
 		} catch (UniqueConstraintViolationException $exception) {
 			return new JsonResponse([
-				'message' => $this->translator->trans('user.create.exists', ['email' => $newUser['email']], 'user'),
+				'message' => $this->translator->trans('user.create.exists', ['email' => $newUser->getEmail()], 'user'),
 				'code' => Response::HTTP_BAD_REQUEST
 			],Response::HTTP_BAD_REQUEST);
 		}
@@ -166,7 +162,7 @@ class UserController extends AbstractController
 	 * @throws \JsonException
 	 */
 	#[Route('/verify', name: '_verify', methods: [ 'POST'])]
-	public function verify(Request $request,#[CurrentUser] ?User $user): JsonResponse {
+	public function verify(Request $request,#[CurrentUser] ?User $user, SerializerInterface $serializer): JsonResponse {
 		$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', NULL, $this->translator->trans('user.login.not_login', [],'user'));
 
 		if(!$user) {

@@ -120,9 +120,7 @@ export default {
   },
   methods: {
     async resendCode() {
-      this.resendLoading = true;
       await this.userStore.resendVerificationCode();
-      this.resendLoading = false;
     }
   }
 }

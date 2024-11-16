@@ -29,6 +29,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 
+    security.event.authentication_failure_listener:
+        class: App\EventListener\JWTAuthenticationFailureListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+
     security.hash.password.listener:
         class: App\Event\Security\HashPasswordSubscriber
         tags:
@@ -54,10 +59,10 @@ services:
             - { name: cache.pool, provider:  app.custom_redis_provider, clearer: cache.default_clearer, reset: reset }
             - { name: monolog.logger, channel: cache }
 
-    currency.rates:
+    app.currency.rates:
         class: App\Service\Currency\CurrencyLoaders\CurrencyRCBRatesLoader
 
-    currency.operations:
+    app.currency.operations:
         class: App\Service\Currency\CurrencyOperations
         public: true
         arguments:
@@ -65,7 +70,7 @@ services:
         calls:
             - ['setRates']
 
-    product.price:
+    app.product.price:
         class: App\Service\Product\ProductPriceService
         arguments:
             - '@currency.operations'

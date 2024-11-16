@@ -42,7 +42,6 @@ router.beforeEach( async (to, from ,next) => {
 		return;
 	}
 	if(to.meta.isAdmin && !store.checkAdmin) {
-
 		next({name:'StartComp'});
 		return;
 	}

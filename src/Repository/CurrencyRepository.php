@@ -58,7 +58,7 @@ class CurrencyRepository extends ServiceEntityRepository
 		$currencyEntity = new Currency();
 		$currencyEntity->setName($currency['Name']);
 		$currencyEntity->setISOCharCode($currency['ISOCharCode']);
-		$currencyEntity->setIsoNumCode($currency['ISOCode']);
+		$currencyEntity->setIsoCode($currency['ISOCode']);
 		$currencyEntity->setUpdatedAt();
 		$currencyEntity->setCreatedAt();
 		$this->save($currencyEntity);

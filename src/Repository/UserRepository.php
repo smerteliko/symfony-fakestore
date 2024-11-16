@@ -47,11 +47,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 	public function createUser($data): User {
 		$user = new User();
-		$user->setEmail($data['email']);
-		$user->setPhone($data['phone']);
+		$user->setEmail($data->getEmail());
+		$user->setPhone($data->getPhone());
 		$user->setCreatedAt();
 		$user->setUpdatedAt();
-		$user->setPassword(trim($data['password']));
+		$user->setPassword(trim($data->getPassword()));
 
 
 		$currency = $this->currencyRepository->find($this->currencyRepository::USD_ISO_CODE);
@@ -61,17 +61,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 	}
 
 	public function updatePersonalInfo($data, User $user): void {
-		if($data) {
-			$user->setUpdatedAt();
-			$user->setPhone(trim($data['phone']??''));
-			$user->setFirstName(trim($data['FirstName']??''));
-			$user->setLastName(trim($data['LastName']??''));
+		$user->setUpdatedAt();
+		$user->setPhone(trim($data->getPhone()));
+		$user->setFirstName(trim($data->getFirstName()));
+		$user->setLastName(trim($data->getLastName()));
 
-			if(isset($data['currency']) && $data['currency']) {
-				$currency = $this->currencyRepository->find($data['currency']['IsoCode']);
-				$user->setCurrency($currency);
-			}
-		}
+		$currency = $this->currencyRepository->find($data->getCurrency()->getIsoCode());
+		$user->setCurrency($currency);
 		$this->save($user);
 	}
 

@@ -113,15 +113,16 @@
         />
       </div>
     </div>
+
     <div
-      v-show="this.updateStatus"
+      v-if="this.userStore.response.data "
       id="alertSuccesUpdate"
     >
       <div
         class="alert alert-success alert-dismissible"
         role="alert"
       >
-        <div>{{ this.updateStatus }}</div>
+        <div>{{ this.userStore.response.data.message }}</div>
         <button
           type="button"
           class="btn-close"
@@ -142,7 +143,7 @@ export default {
   components: {},
   data(){
     return {
-      updateStatus: null,
+      response:{}
     }
   },
   computed:{
@@ -164,7 +165,7 @@ export default {
     },
     async updateUser() {
        this.userStore.isLoading = true;
-       this.updateStatus = await this.userStore.updateUserInfo();
+       await this.userStore.updateUserInfo();
     }
 
   }
