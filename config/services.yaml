@@ -73,6 +73,15 @@ services:
     app.product.price:
         class: App\Service\Product\ProductPriceService
         arguments:
-            - '@currency.operations'
+            - '@app.currency.operations'
+
+    app.admin.entities:
+        class: App\Service\Admin\Entities
+        arguments:
+            - ['@doctrine.orm.entity_manager']
+        calls:
+            - ['setEntities']
+            - ['checkMapping']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

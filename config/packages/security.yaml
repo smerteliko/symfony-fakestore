@@ -26,7 +26,9 @@ security:
                 path: /logout
                 target: / #This is home url
 
-
+        admin:
+            pattern: ^/admin/
+            jwt: ~
         user:
             pattern: ^/user/
             jwt: ~
@@ -36,9 +38,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin/store/^, roles: IS_AUTHENTICATED_FULLY && ROLE_SUPER_ADMIN }
         - { path: ^/admin/login, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin/^, roles: IS_AUTHENTICATED_FULLY && ROLE_SUPER_ADMIN }
+        - { path: ^/admin/^, roles:  IS_AUTHENTICATED_FULLY && ROLE_SUPER_ADMIN }
 
         - { path: ^/store/^, roles: IS_AUTHENTICATED_FULLY && (STORE_MANAGER || STORE_OWNER) }
 
