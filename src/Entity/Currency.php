@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CurrencyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 #[ORM\Table(options: ["comment" => 'Currency list'])]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+	operations: [
+		new Get(),
+		new GetCollection()
+	]
+)]
 class Currency
 {
 
@@ -24,7 +33,7 @@ class Currency
 
     #[ORM\Column(length: 30, nullable: true,options: ["comment" => 'Currency ISO symbol'])]
     private ?string $Symbol = null;
-	#[ORM\OneToOne(targetEntity: CurRates::class,mappedBy: 'Currency')]
+	#[ORM\OneToOne(targetEntity: CurRates::class,mappedBy: 'Currency',cascade:['persist', 'remove'])]
 	private ?CurRates $rates;
 
 	#[Assert\Currency]
@@ -37,7 +46,7 @@ class Currency
     /**
      * @var Collection<int, Countries>
      */
-    #[ORM\OneToMany(targetEntity: Countries::class, mappedBy: 'currency_iso_code')]
+    #[ORM\OneToMany(targetEntity: Countries::class, mappedBy: 'currency_iso_code',cascade:['persist'])]
     private Collection $country;
 
 	#[ORM\Column]

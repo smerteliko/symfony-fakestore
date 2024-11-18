@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CountriesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -10,6 +13,12 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: CountriesRepository::class)]
 #[ORM\Table(name: 'Countries', options: ["comment" => 'Countries table'])]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+	options: [
+		new Get(),
+		new GetCollection()
+	]
+)]
 class Countries
 {
     #[ORM\Id]
@@ -18,6 +27,10 @@ class Countries
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
+	/**
+	 * Country abbr
+	 * @var string|null
+	 */
     #[ORM\Column(length: 3, nullable: true,options: ["comment" => 'Country abbr'])]
     private ?string $code = null;
 
@@ -27,7 +40,11 @@ class Countries
     #[ORM\Column(length: 4, options: ["comment" => 'Country phone code'])]
     private int $phone_code;
 
-    #[ORM\ManyToOne(inversedBy: 'country')]
+	/**
+	 * /currency/{isocode}
+	 * @var Currency|null
+	 */
+    #[ORM\ManyToOne( cascade: [ 'persist'], inversedBy: 'country' )]
     #[ORM\JoinColumn(name:'currency_iso_code',referencedColumnName: 'IsoCode',nullable: true)]
     private ?Currency $currency_iso_code = null;
 

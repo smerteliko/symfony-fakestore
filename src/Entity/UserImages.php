@@ -20,7 +20,7 @@ class UserImages
 	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
 	private ?Uuid $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'userImages', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'userImages', cascade: ['persist'])]
     private ?User $ImageUser = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]

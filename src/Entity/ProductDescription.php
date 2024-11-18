@@ -27,7 +27,7 @@ class ProductDescription
     #[ORM\Column(type: Types::TEXT, nullable: true, options: ["comment" => 'Products description full text'])]
     private ?string $FullDescription = null;
 
-    #[ORM\OneToOne(inversedBy: 'productDescription', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'productDescription', cascade: ['persist'])]
     private ?Product $product = null;
 
 	#[ORM\Column]

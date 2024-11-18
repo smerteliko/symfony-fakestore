@@ -24,6 +24,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    app.http_kernel.cors_subscriber:
+        class: App\EventListener\CorsEventListener
+        tags:
+            - { name: kernel.event_subscriber }
+
     security.event.jwt_notfound_listener:
         class: App\EventListener\JWTNotFoundListener
         tags:

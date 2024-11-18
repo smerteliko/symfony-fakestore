@@ -21,7 +21,7 @@ class ProductPrice
     #[ORM\Column(options: ["comment" => 'Product price'])]
     private ?float $price = null;
 
-    #[ORM\OneToOne(inversedBy: 'productPrice', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'productPrice', cascade: ['persist'])]
     private ?Product $product = null;
 
     #[ORM\Column(nullable: true, options: ["comment" => 'Product VAT percent'])]
@@ -30,7 +30,7 @@ class ProductPrice
     #[ORM\Column(nullable: true, options: ["comment" => 'Product discount percent'])]
     private ?float $discount = null;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(cascade: ['persist'])]
     #[ORM\JoinColumn(name:'IsoCode',referencedColumnName: 'IsoCode',nullable: true)]
     private ?Currency $currency = null;
 

@@ -43,7 +43,7 @@ class ProductsController extends AbstractController
         return $this->render('base.html.twig', []);
     }
 
-    #[Route('/ajax/category/{id}', name: '_list_category', methods: ['GET'])]
+    #[Route('/api/category/{id}', name: '_list_category', methods: ['GET'])]
     public function listByCategory(string $id): Response
     {
 	    $list =    $this->productRepository->findProductBy([
@@ -61,7 +61,7 @@ class ProductsController extends AbstractController
         );
     }
 
-    #[Route('/ajax/subcategory/{id}', name: '_list_subcategory', methods: ['GET'])]
+    #[Route('/api/subcategory/{id}', name: '_list_subcategory', methods: ['GET'])]
     public function listBySubcategory(string $id): Response
     {
 	    $list =   $this->productRepository->findProductBy([
@@ -76,7 +76,7 @@ class ProductsController extends AbstractController
         );
     }
 
-    #[Route('/ajax/list', name: '_list_ajax', methods: ['GET'])]
+    #[Route('/api/list', name: '_list_ajax', methods: ['GET'])]
     public function listProducts(): Response
     {
 		$list =  $this->productRepository->findProductBy([
@@ -91,7 +91,7 @@ class ProductsController extends AbstractController
         );
     }
 
-    #[Route('/ajax/{id}', name: '_item_ajax', methods: ['GET'])]
+    #[Route('/api/{id}', name: '_item_ajax', methods: ['GET'])]
     public function ProductData(string $id): Response
     {
 		$product = $this->productRepository->find($id)?->toArray();
@@ -101,7 +101,7 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/ajax/{id}/images/', name: '_images', methods: ['GET'])]
+    #[Route('/api/{id}/images/', name: '_images', methods: ['GET'])]
     public function ProductImages(string $id): Response
     {
         return new JsonResponse([

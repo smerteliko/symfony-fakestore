@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SubCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +17,12 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: SubCategoryRepository::class)]
 #[ORM\Table(options: ["comment" => 'Subcategories of products'])]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+	operations: [
+		new Get(),
+		new GetCollection(),
+	]
+)]
 class SubCategory
 {
 	#[ORM\Id]
@@ -31,7 +40,7 @@ class SubCategory
     /**
      * @var Collection<int, Product>
      */
-    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'subCategory')]
+    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'subCategory', cascade: ['persist'])]
     private Collection $Product;
 
     #[ORM\Column]

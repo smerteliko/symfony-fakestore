@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +13,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(options: ["comment" => 'Products'])]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource]
 class Product
 {
 	#[ORM\Id]
@@ -32,7 +34,7 @@ class Product
     /**
      * @var Collection<int, ProductImages>
      */
-    #[ORM\OneToMany(targetEntity: ProductImages::class, mappedBy: 'Product')]
+    #[ORM\OneToMany(targetEntity: ProductImages::class, mappedBy: 'Product', cascade: ['persist', 'remove'])]
     private Collection $productImages;
 
     #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]

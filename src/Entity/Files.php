@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\FilesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -12,6 +13,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: FilesRepository::class)]
 #[ORM\Table(options: ["comment" => 'Files list (user avatar, product images, etc)'])]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource]
 class Files
 {
 	#[ORM\Id]

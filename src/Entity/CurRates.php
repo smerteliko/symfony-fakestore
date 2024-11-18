@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CurRatesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -11,6 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CurRatesRepository::class)]
 #[ORM\Table(name: 'cur_rates', options: ["comments" => 'Currency rates table'])]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+	operations: [
+		new Get(),
+		new GetCollection()
+	]
+)]
 class CurRates
 {
 	#[ORM\Id]
@@ -28,7 +37,7 @@ class CurRates
 
 
 	#[Assert\Currency]
-    #[ORM\OneToOne(targetEntity: Currency::class,inversedBy: 'rates')]
+    #[ORM\OneToOne(targetEntity: Currency::class, inversedBy: 'rates')]
     #[ORM\JoinColumn(name:'IsoCode',referencedColumnName: 'IsoCode',nullable: true)]
     private ?Currency $Currency;
 

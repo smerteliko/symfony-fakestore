@@ -12,6 +12,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ProductCharacteristicRepository::class)]
 #[ORM\Table(options: ["comment" => 'Currency list'])]
 #[ORM\HasLifecycleCallbacks]
+
 class ProductCharacteristic
 {
 	#[ORM\Id]
@@ -20,7 +21,7 @@ class ProductCharacteristic
 	#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
 	private ?Uuid $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'productCharacteristic', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'productCharacteristic', cascade: ['persist'])]
     private ?Product $product = null;
 
     #[ORM\Column(nullable: true,options: ["comment" => 'Characteristic as JSON'])]

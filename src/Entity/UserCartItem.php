@@ -23,7 +23,7 @@ class UserCartItem
     #[ORM\Column(nullable: true, options: ["comment" => 'Cart item quantity'])]
     private ?int $quantity = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist'])]
     private ?Product $cartItemProduct = null;
 
     #[ORM\Column]

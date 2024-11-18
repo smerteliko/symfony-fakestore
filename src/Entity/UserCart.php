@@ -28,7 +28,7 @@ class UserCart
     /**
      * @var Collection<int, UserCartItem>
      */
-    #[ORM\OneToMany(targetEntity: UserCartItem::class, mappedBy: 'userCart')]
+    #[ORM\OneToMany(targetEntity: UserCartItem::class, mappedBy: 'userCart', cascade: ['persist','remove'])]
     private Collection $userCartItem;
 
 	#[ORM\Column(nullable: true)]

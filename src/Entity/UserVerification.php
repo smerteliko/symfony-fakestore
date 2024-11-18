@@ -21,7 +21,7 @@ class UserVerification
     #[ORM\Column(length: 255, options: ["comment" => 'Verification code'])]
     private ?string $Code = null;
 
-    #[ORM\OneToOne(inversedBy: 'VerificationCode', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'VerificationCode', cascade: ['persist'])]
     private ?User $verificationUser = null;
 
 	#[ORM\Column(nullable: true)]

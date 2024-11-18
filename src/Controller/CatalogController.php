@@ -44,7 +44,7 @@ class CatalogController extends AbstractController
     {
     }
 
-    #[Route('/ajax/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
+    #[Route('/api/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
     public function ajaxCategory(string $id): JsonResponse
     {
         $category = $this->categoryRepository->findCategoriesBy(['id' => $id, 'withSubs' => true]) ?: [];
