@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\UserImages;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,14 +32,12 @@ class UserImagesRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function updateOrSetNewAvatar($data = []): void
+    public function updateOrSetNewAvatar(?User $user,$data = []): void
     {
-        $user = $this->userRepository->findOneBy(['id' => $data['UserEntity']['id']]);
         $file = $this->filesRepository->findOneBy(['id' => $data['FileID']]);
         $userImages = [];
-        if ($user && $user->getUserImages()) {
-            $userImageID = $user->getUserImages()->getID();
-            $userImages = $this->find($userImageID);
+        if ($user?->getUserImages()) {
+            $userImages = $this->find($user?->getUserImages()?->getID());
             $userImages->setImageFile($file);
         } else {
             $userImages = new UserImages();

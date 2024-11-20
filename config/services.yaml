@@ -11,9 +11,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $publicUploadsDir: '%kernel.project_dir%/assets/img/uploads'
             $publicUploadsPath: 'uploads'
             $mailerFrom: '%env(MAILER_FROM)%'
+            $imageTargetDirectory: '%kernel.project_dir%/public/assets/img'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -39,10 +39,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
 
-    security.hash.password.listener:
-        class: App\Event\Security\HashPasswordSubscriber
-        tags:
-            - { name: doctrine.event_subscriber }
 
     app.custom_redis_provider:
         class: Redis

@@ -52,7 +52,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 		$user->setCreatedAt();
 		$user->setUpdatedAt();
 		$user->setPassword(trim($data->getPassword()));
-
+	//	dd($user->getPassword());//"$2y$13$IIGxbB1WquAk5XofhEGS3uhJ4lhzUXcnZLlFjRV1kZXd4nzePsaBm"
 
 		$currency = $this->currencyRepository->find($this->currencyRepository::USD_ISO_CODE);
 		$user->setCurrency($currency);

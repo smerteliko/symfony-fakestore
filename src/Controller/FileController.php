@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserImagesRepository;
 use App\Service\File\ImageFileUploader;
+use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/file', name: 'app_file')]
 class FileController extends AbstractController
@@ -37,46 +40,39 @@ class FileController extends AbstractController
     }
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
-	#[Route('/new_user_avatar', name: '_new_avatar', methods: [ 'POST'])]
+	#[Route('/user-avatar', name: '_user_avatar', methods: ['POST'])]
     public function newUserAvatar(Request $request,
         ImageFileUploader $fileUploader,
         UserImagesRepository $userImagesRepository,
-        string $publicUploadsPath): JsonResponse
+		#[CurrentUser] ?User $currentUser
+	): JsonResponse
     {
+		$fileUploader->setTargetDirectory('/user-avatar');
         $file = $request->files->get('file');
         $violation = $fileUploader->validateImage($file);
         if ($violation) {
             return new JsonResponse(['errors' => $violation->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        $userEntity = json_decode($request->get('entity'),
-                                  TRUE,
-                                  512,
-                                  JSON_THROW_ON_ERROR);
 
-        $oldFile = $userEntity['Images']['file'] ?? [];
-
-        $filename = null;
+        $oldFile = $currentUser?->getUserImages()?->getImageFile();
         $lastFile = null;
-        $fileSize = '';
         if ($file) {
-            [$filename, $lastFile] = $fileUploader->upload($file, true);
+            $lastFile = $fileUploader->upload($file);
         }
 
-        $userImagesRepository->updateOrSetNewAvatar([
-            'UserEntity' => $userEntity,
-            'FileID' => $lastFile->getId(),
-        ]);
+        $userImagesRepository->updateOrSetNewAvatar($currentUser,
+            ['FileID' => $lastFile->getId()],
+        );
 
         if ($oldFile) {
-            $fileUploader->delete($userEntity['Images']['file'], true);
+            $fileUploader->delete($oldFile);
         }
-
         return new JsonResponse([
-            'fileName' => $filename,
-            'fileSize' => $fileSize,
+            'fileName' => $lastFile->getFileName(),
+
         ]);
     }
 }

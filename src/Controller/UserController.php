@@ -36,7 +36,7 @@ class UserController extends AbstractController
     {
     }
 
-    #[Route('/login', name: '_login', methods: ['POST'])]
+    #[Route('/login', name: '_login', methods: ['GET','POST'])]
     public function login(#[CurrentUser] ?User $user): JsonResponse
     {
         return new JsonResponse([$user], 200);
@@ -50,24 +50,10 @@ class UserController extends AbstractController
         return new JsonResponse([], 200);
     }
 
-    #[Route('/profile', name: '_profile', methods: ['GET'])]
-    #[Route('/profile/{vue}',
-        name: '_vue_profile',
-        requirements: ['vue' => '^(?!.*api|_wdt|_profiler).+'],
-        methods: ['GET'])
-    ]
-    public function profile(): Response
-    {
-	    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', NULL, $this->translator->trans('user.login.not_login', [],'user'));
-
-        return $this->render('base.html.twig', []);
-    }
-
     #[Route('/is_authorized', name: '_is_authorized', methods: ['GET'])]
     public function isAuthorized(UserRepository $userRepository): JsonResponse
     {
         $currentUser = $this->getUser();
-
         $userArray = [];
         if ($currentUser) {
             $userArray = $userRepository->findOneBy(['email' => $currentUser->getUserIdentifier()]);
@@ -101,12 +87,14 @@ class UserController extends AbstractController
 	/**
 	 * @throws JsonException
 	 */
-	#[Route('/update_info', name: '_update_info', methods: [ 'POST'])]
+	#[Route('/update', name: '_update_info', methods: ['PATCH'])]
 	public function updateUserInfo(
 		Request $request,
-		#[CurrentUser] ?User $user, SerializerInterface $serializer): JsonResponse
+		#[CurrentUser] ?User $user,
+		SerializerInterface $serializer): JsonResponse
 	{
-		$updatedUserdata = $serializer->deserialize($request->getContent(), User::class, 'json');
+
+		$updatedUserdata = $serializer->deserialize($request->getContent(), User::class, 'json',['groups'=>'user:update'] );
 		if(!$user) {
 			return new JsonResponse([
 				'message' => $this->translator->trans('user.login.not_login', [],'user'),
@@ -128,7 +116,7 @@ class UserController extends AbstractController
 	 */
 	#[Route('/register', name: '_register', methods: [ 'POST'])]
 	public function register(Request $request): JsonResponse {
-		$newUser = $this->serializer->deserialize($request->getContent(), User::class, 'json');
+		$newUser = $this->serializer->deserialize($request->getContent(), User::class, 'json',['groups'=>'user:write']);
 		try {
 			$lastUser = $this->userRepository->createUser($newUser);
 		} catch (UniqueConstraintViolationException $exception) {
@@ -236,38 +224,6 @@ class UserController extends AbstractController
 				'code' =>   Response::HTTP_OK
 			], Response::HTTP_OK
 		);
-	}
-
-
-	/**
-	 * this method allows us to accept JSON payloads in POST requests
-	 * since Symfony doesn't handle that automatically:
-	 *
-	 * @param Request $request
-	 * @return object
-	 * @throws \JsonException
-	 */
-	private  function transformJsonBody(Request $request): object
-	{
-
-		$data = json_decode($request->getContent(),
-		                    TRUE,
-		                    512,
-		                    JSON_THROW_ON_ERROR);
-
-
-
-		if (json_last_error() !== JSON_ERROR_NONE) {
-			return (object)[];
-		}
-
-		if ($data === null) {
-			return $request;
-		}
-
-		$request->request->replace($data);
-
-		return $request;
 	}
 
 }

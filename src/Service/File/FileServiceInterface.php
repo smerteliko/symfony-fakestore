@@ -15,11 +15,11 @@ interface FileServiceInterface
 {
     public function getTargetDirectory();
 
-    public function upload(UploadedFile $file, bool $toDB = false);
+    public function upload(UploadedFile $file);
 
     public function uploadFileToDB(UploadedFile $file, string $fileName);
 
-    public function delete(array $file = [], bool $fromDB = false);
+    public function delete(Files $file);
 
     public function deleteFromDB(Files $file);
 

@@ -23,44 +23,30 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ImageFileUploader implements FileServiceInterface
 {
     private EntityManagerInterface $em;
-    private FilesRepository $filesRepository;
-    private LoggerInterface $logger;
-    private string $publicUploadsDir;
-    private ValidatorInterface $validator;
 
-    public function __construct($publicUploadsDir,
-        FilesRepository $filesRepository,
-        ValidatorInterface $validator,
-        LoggerInterface $logger
+
+    public function __construct(
+	    private $imageTargetDirectory,
+        private readonly FilesRepository $filesRepository,
+        private readonly ValidatorInterface $validator,
+        private readonly LoggerInterface $logger
     ) {
-        $this->publicUploadsDir = $publicUploadsDir;
-        $this->filesRepository = $filesRepository;
-        $this->validator = $validator;
-        $this->logger = $logger;
     }
 
-    public function upload(UploadedFile $file, bool $toDB = false): array
+    public function upload(UploadedFile $file): Files
     {
         $fileName = $this->getFileName($file);
-        $lastFile = null;
-        if ($toDB) {
-            $lastFile = $this->uploadFileToDB($file, $fileName);
-        }
+		$newFile = $this->uploadFileToDB($file, $fileName);
 
         $file->move($this->getTargetDirectory(), $fileName);
 
-        return [$fileName, $lastFile];
+        return $newFile;
     }
 
-    public function delete(array $file = [], bool $fromDB = false): void
+    public function delete(Files $file): void
     {
-        $fileEnt = $this->filesRepository->find((int) $file['id']);
-        if ($fromDB && $fileEnt) {
-            $this->deleteFromDB($fileEnt);
-        }
-
-        $fileSystem = new Filesystem();
-        $fileSystem->remove($this->getTargetDirectory().'/'.$file['FileName']);
+	    (new Filesystem())->remove($this->getTargetDirectory().'/'.$file->getFileName());
+	    $this->deleteFromDB($file);
     }
 
     public function deleteFromDB(Files $file): void
@@ -74,8 +60,12 @@ class ImageFileUploader implements FileServiceInterface
 
     public function getTargetDirectory(): string
     {
-        return $this->publicUploadsDir;
+        return $this->imageTargetDirectory;
     }
+
+	public function setTargetDirectory(string $imageTargetDirectory): void {
+		$this->imageTargetDirectory .= $imageTargetDirectory;
+	}
 
     public function uploadFileToDB(UploadedFile $file, string $fileName): Files|ORMException
     {

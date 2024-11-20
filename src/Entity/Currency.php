@@ -5,49 +5,60 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CurrencyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 #[ORM\Table(options: ["comment" => 'Currency list'])]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
-	operations: [
-		new Get(),
-		new GetCollection()
+	normalizationContext: [
+		'groups' => ['currency:read'],
+	], denormalizationContext: [
+		'groups' => ['currency:write'],
 	]
 )]
 class Currency
 {
-
-    #[ORM\Column(length: 128,options: ["comment" => 'Currency name'])]
-    private ?string $Name = null;
-
-    #[ORM\Column( length: 5, nullable: true ,options: ["comment" => 'Currency ISO char code'])]
-    private ?string $ISOCharCode = null;
-
-    #[ORM\Column(length: 30, nullable: true,options: ["comment" => 'Currency ISO symbol'])]
-    private ?string $Symbol = null;
-	#[ORM\OneToOne(targetEntity: CurRates::class,mappedBy: 'Currency',cascade:['persist', 'remove'])]
-	private ?CurRates $rates;
-
 	#[Assert\Currency]
 	#[Assert\NotBlank]
 	#[ORM\Id]
 	#[ORM\GeneratedValue(strategy:"NONE")]
 	#[ORM\Column(name: 'IsoCode',length: 5,unique: true,options: ["comment" => 'Currency ISO num code (all unique)'])]
+	#[Groups(['user:read','user:write', 'user:update'])]
 	private string $IsoCode;
+
+    #[ORM\Column(length: 128,options: ["comment" => 'Currency name'])]
+    #[Groups(['user:read','user:write', 'user:update'])]
+    private ?string $Name = null;
+
+    #[ORM\Column( length: 5, nullable: true ,options: ["comment" => 'Currency ISO char code'])]
+    #[Groups(['user:read','user:write', 'user:update'])]
+    private ?string $ISOCharCode = null;
+
+    #[ORM\Column(length: 30, nullable: true,options: ["comment" => 'Currency ISO symbol'])]
+    #[Groups(['user:read','user:write', 'user:update'])]
+    private ?string $Symbol = null;
+	#[ORM\OneToOne(targetEntity: CurRates::class,mappedBy: 'Currency',cascade:['persist', 'remove'])]
+	#[Groups(['user:read','user:write', 'user:update'])]
+	private ?CurRates $rates;
 
     /**
      * @var Collection<int, Countries>
      */
     #[ORM\OneToMany(targetEntity: Countries::class, mappedBy: 'currency_iso_code',cascade:['persist'])]
+    #[Groups(['user:read'])]
     private Collection $country;
+
+	/**
+	 * @var Collection<int, Countries>
+	 */
+	#[ORM\OneToMany(targetEntity: User::class, mappedBy: 'Currency',cascade:['persist'])]
+	private Collection $users;
 
 	#[ORM\Column]
 	private ?\DateTimeImmutable $created_at = null;

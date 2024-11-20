@@ -20,30 +20,6 @@ class CatalogController extends AbstractController
         $this->categoryRepository = $categoryRepository;
     }
 
-    #[Route('/', name: 'app_catalog')]
-    public function index(): Response
-    {
-        return $this->render('base.html.twig', []);
-    }
-
-    #[Route('/category/{catID}', name: 'app_catalog_category')]
-    public function category(string $catID): Response
-    {
-        return $this->render('base.html.twig', []);
-    }
-
-    #[Route('/category/{catID}/subcategory/{subID}', name: 'app_catalog_subcat_by_category')]
-    public function subCatBuCategory(string $catID, string $subID): Response
-    {
-        return $this->render('base.html.twig', [
-        ]);
-    }
-
-    #[Route('/new', name: 'app_catalog_new')]
-    public function newCatalog(CategoryRepository $categoryRepository): void
-    {
-    }
-
     #[Route('/api/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
     public function ajaxCategory(string $id): JsonResponse
     {

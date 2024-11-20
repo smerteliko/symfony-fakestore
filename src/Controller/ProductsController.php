@@ -31,17 +31,6 @@ class ProductsController extends AbstractController
 		$this->productPriceService = $productPriceService;
     }
 
-    #[Route('/', name: '_list')]
-    public function index(): Response
-    {
-        return $this->render('base.html.twig', []);
-    }
-
-    #[Route('/{id}', name: '_item')]
-    public function product(): Response
-    {
-        return $this->render('base.html.twig', []);
-    }
 
     #[Route('/api/category/{id}', name: '_list_category', methods: ['GET'])]
     public function listByCategory(string $id): Response

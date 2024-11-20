@@ -32,6 +32,10 @@ security:
         user:
             pattern: ^/user/
             jwt: ~
+
+        files:
+            pattern: ^/file/
+            jwt: ~
         dev:
             pattern: ^/(_(profiler|wdt)|css|img|js)/
             security: false

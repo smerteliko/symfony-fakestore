@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\UserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,7 +26,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['id'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
-#[ApiResource]
+#[ApiResource(
+	operations: [
+		new Get(),
+		new GetCollection(),
+		new Post(
+			'/user/register',
+			controller: UserController::class,
+			denormalizationContext: [ 'groups' => [ 'user:write']]),
+		new Patch(
+			'/user/update',
+			controller: UserController::class,
+			denormalizationContext: [ 'groups' => [ 'user:update']]),
+	],
+	normalizationContext: [ 'groups' => [ 'user:read']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 	#[ORM\Id]
@@ -40,6 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
 	#[Assert\NotBlank]
     #[ORM\Column(options: ["comment" => 'User password'])]
+	#[Groups(['user:write'])]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -59,23 +80,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     #[Assert\NotBlank]
 	#[ORM\Column(length: 255, options: ["comment" => 'User email'])]
+	#[Groups(['user:read','user:write'])]
 	private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true,options: ["comment" => 'User first name'])]
+    #[Groups(['user:read','user:update'])]
     private ?string $FirstName = null;
 
     #[ORM\Column(length: 255, nullable: true, options: ["comment" => 'User last name'])]
+    #[Groups(['user:read','user:update'])]
     private ?string $LastName = null;
 
 	#[Assert\NotBlank]
 	#[ORM\Column(length: 255, nullable: true, options: ["comment" => 'User phone number'])]
+	#[Groups(['user:write','user:read','user:update'])]
 	private ?string $Phone = null;
 
     #[ORM\Column(length: 255, nullable: true, options: ["comment" => 'User system language'])]
+    #[Groups(['user:read','user:update'])]
     private ?string $Language = null;
 
-    #[ORM\ManyToOne(targetEntity: Currency::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name:'IsoCode',referencedColumnName: 'IsoCode',nullable: true)]
+    #[ORM\ManyToOne( targetEntity: Currency::class, cascade: [ 'persist'], inversedBy: 'users' )]
+    #[ORM\JoinColumn(name:'Currency',referencedColumnName: 'IsoCode',nullable: true)]
+    #[Groups(['user:read','user:write','user:update'])]
     private ?Currency $Currency = null;
     #[ORM\OneToOne(mappedBy: 'ImageUser', cascade: ['persist', 'remove'])]
     private ?UserImages $userImages = null;
@@ -407,15 +434,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 			'email' => $this->email,
 			'FirstName' => $this->FirstName,
 			'LastName' => $this->LastName,
-			'phone' => $this->Phone,
-			'language' => $this->Language,
+			'Phone' => $this->Phone,
+			'Language' => $this->Language,
 			'isVerified' => $this->isVerified,
 			'enabled' => $this->enabled,
 			'roles' => $this->roles,
 		];
 
 		if ($this->Currency) {
-			$rtrnArray['currency'] = [
+			$rtrnArray['Currency'] = [
 				'Name' => $this->Currency->getName(),
 				'Symbol' => $this->Currency->getSymbol(),
 				'IsoCode' => $this->Currency->getIsoNumCode(),
