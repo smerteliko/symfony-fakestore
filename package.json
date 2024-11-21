@@ -2,12 +2,16 @@
     "devDependencies": {
         "@babel/core": "^7.17.0",
         "@babel/preset-env": "^7.16.0",
+        "@eslint/js": "^9.2.0",
         "@symfony/webpack-encore": "^4.0.0",
         "bootstrap": "^5.3.3",
         "core-js": "^3.23.0",
+        "eslint": "^8.57.0",
+        "eslint-plugin-vue": "^9.26.0",
+        "globals": "^15.2.0",
         "regenerator-runtime": "^0.13.9",
-        "vue": "^2.7.16",
-        "vue-loader": "^15.10.0",
+        "vue": "^3.2.32",
+        "vue-loader": "^17.0.0",
         "vue-template-compiler": "^2.7.16",
         "webpack": "^5.74.0",
         "webpack-cli": "^4.10.0",
@@ -19,13 +23,35 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "lint-js": "npx eslint 'assets/**/*.vue' 'assets/**/*.js'"
+    },
+    "eslintConfig": {
+        "extends": [
+            "@eslint/js"
+        ],
+        "rules": {
+            "no-unused-vars": "off"
+        }
+    },
+    "alias": {
+        "@vue/composition-api/dist/vue-composition-api.esm.js": "@vue/composition-api/dist/vue-composition-api.mjs"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.6.0",
+        "@fortawesome/free-brands-svg-icons": "^6.6.0",
+        "@fortawesome/free-regular-svg-icons": "^6.6.0",
+        "@fortawesome/free-solid-svg-icons": "^6.6.0",
+        "@fortawesome/vue-fontawesome": "^3.0.8",
+        "@popperjs/core": "^2.11.8",
+        "@types/vue-select": "^3.16.8",
         "axios": "^1.6.8",
         "install": "^0.13.0",
+        "jquery": "^3.7.1",
         "npm": "^10.6.0",
-        "vue-router": "^3.5.0",
-        "vuex": "^3.6.2"
+        "pinia": "^2.1.7",
+        "pinia-plugin-persistedstate": "^3.2.1",
+        "vue-router": "^4.0.14",
+        "vue-select": "^4.0.0-beta.6"
     }
 }

@@ -4,12 +4,16 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    app_locales: en|ru
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $publicUploadsPath: 'uploads'
+            $mailerFrom: '%env(MAILER_FROM)%'
+            $imageTargetDirectory: '%kernel.project_dir%/public/assets/img'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -19,6 +23,66 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    app.http_kernel.cors_subscriber:
+        class: App\EventListener\CorsEventListener
+        tags:
+            - { name: kernel.event_subscriber }
+
+    security.event.jwt_notfound_listener:
+        class: App\EventListener\JWTNotFoundListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+
+    security.event.authentication_failure_listener:
+        class: App\EventListener\JWTAuthenticationFailureListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+
+
+    app.custom_redis_provider:
+        class: Redis
+        factory: ['Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(resolve:REDIS_URL)%'
+            - { retry_interval: 2, timeout: 60 }
+
+    cache.app.redis_tag_aware:
+        class: Symfony\Component\Cache\Adapter\RedisTagAwareAdapter
+        arguments:
+            - '@app.custom_redis_provider'
+            - ''
+            - '0'
+            - '@?cache.default_marshaller'
+        calls:
+            - ['setLogger', ['@?logger']]
+        tags:
+            - { name: cache.pool, provider:  app.custom_redis_provider, clearer: cache.default_clearer, reset: reset }
+            - { name: monolog.logger, channel: cache }
+
+    app.currency.rates:
+        class: App\Service\Currency\CurrencyLoaders\CurrencyRCBRatesLoader
+
+    app.currency.operations:
+        class: App\Service\Currency\CurrencyOperations
+        public: true
+        arguments:
+            - '@cache.redis_project_pool'
+        calls:
+            - ['setRates']
+
+    app.product.price:
+        class: App\Service\Product\ProductPriceService
+        arguments:
+            - '@app.currency.operations'
+
+    app.admin.entities:
+        class: App\Service\Admin\Entities
+        arguments:
+            - ['@doctrine.orm.entity_manager']
+        calls:
+            - ['setEntities']
+            - ['checkMapping']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

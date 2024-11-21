@@ -1,0 +1,19 @@
+{% extends "base_email.html.twig" %}
+
+{% block stylesheets %}
+    <style >
+        .__fs-34px{
+            font-size: 34px;
+        }
+    </style
+{% endblock %}
+
+{% block content %}
+    <h3>{{ subject }}</h3>
+    <p>{{ verifyAccount }}:
+        <br>
+        <br>
+        <br>
+        <b><code class="__fs-34px">{{ code }}</code></b>
+    </p>
+{% endblock %}

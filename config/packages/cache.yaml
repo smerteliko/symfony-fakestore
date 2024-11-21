@@ -1,15 +1,19 @@
 framework:
     cache:
         # Unique name of your app: used to compute stable namespaces for cache keys.
-        #prefix_seed: your_vendor_name/app_name
+        prefix_seed: 'fakestore'
 
         # The "app" cache stores to the filesystem by default.
         # The data in this cache should persist between deploys.
         # Other options include:
-
+        pools:
+            cache.redis_project_pool:
+                adapter: cache.adapter.redis
+                tags: true
+                provider: app.custom_redis_provider
         # Redis
-        #app: cache.adapter.redis
-        #default_redis_provider: redis://localhost
+        app: cache.app.redis_tag_aware
+        default_redis_provider: '%env(resolve:REDIS_URL)%'
 
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu

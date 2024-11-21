@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\CategoryRepository;
@@ -11,30 +13,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/catalog')]
 class CatalogController extends AbstractController
 {
-	private CategoryRepository $categoryRepository;
-	public function __construct(CategoryRepository $categoryRepository){
-		$this->categoryRepository = $categoryRepository;
-	}
-	#[Route('/', name: 'app_catalog')]
-	public function index(): Response
-	{
-		return $this->render('base.html.twig', [
-		]);
-	}
+    private CategoryRepository $categoryRepository;
 
-	#[Route('/category/{id}', name: 'app_catalog_category')]
-	public function category(int $id): Response {
-		return new JsonResponse([ ],Response::HTTP_OK);
-	}
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
 
-	#[Route('/new', name: 'app_catalog_new')]
-	public function newCatalog(CategoryRepository $categoryRepository): void {
-	}
+    #[Route('/api/category/{id}', name: 'app_catalog_category_ajax', methods: ['GET'])]
+    public function ajaxCategory(string $id): JsonResponse
+    {
+        $category = $this->categoryRepository->findCategoriesBy(['id' => $id, 'withSubs' => true]) ?: [];
 
-	#[Route('/list', name: 'app_catalog_list', methods: ['GET'])]
-	public function catalogList(CategoryRepository $categoryRepository): JsonResponse {
-		return new JsonResponse([
-			'list'=> $this->categoryRepository->findAllArray()], Response::HTTP_OK);
-	}
-
+        return new JsonResponse(
+            [
+                'list' => $category[0],
+            ],
+            Response::HTTP_OK);
+    }
 }
