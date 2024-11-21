@@ -13,23 +13,23 @@ jobs:
     # https://hub.docker.com/_/ubuntu/
     runs-on: ubuntu-latest
     env:
-      APP_ENV: ${{}}
-      APP_SECRET: ${{}}
-      DATABASE_URL: ${{}}
-      COMPOSE_PROJECT_NAME: ${{}}
-      REDIS_URL: ${{}}
-      DB_USERNAME: ${{}}
-      DB_PASSWORD: ${{}}
-      DB_ROOT_PASSWORD: ${{}}
-      MESSENGER_TRANSPORT_DSN: ${{}}
-      MAILER_DSN: ${{}}
-      MAILER_FROM: ${{}}
-      RABBITMQ_USER: ${{}}
-      RABBITMQ_PASSWORD: ${{}}
-      JWT_SECRET_KEY: ${{}}
-      JWT_PUBLIC_KEY: ${{}}
-      JWT_PASSPHRASE: ${{}}
-      CORS_ALLOW_ORIGIN: ${{}}
+      APP_ENV: ${{secrets.APP_ENV}}
+      APP_SECRET: ${{secrets.APP_SECRET}}
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      COMPOSE_PROJECT_NAME: ${{secrets.COMPOSE_PROJECT_NAME}}
+      REDIS_URL: ${{secrets.REDIS_URL}}
+      DB_USERNAME: ${{secrets.DB_USERNAME}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_ROOT_PASSWORD: ${{secrets.DB_ROOT_PASSWORD}}
+      MESSENGER_TRANSPORT_DSN: ${{secrets.MESSENGER_TRANSPORT_DSN}}
+      MAILER_DSN: ${{secrets.MAILER_DSN}}
+      MAILER_FROM: ${{secrets.MAILER_FROM}}
+      RABBITMQ_USER: ${{secrets.RABBITMQ_USER}}
+      RABBITMQ_PASSWORD: ${{secrets.RABBITMQ_PASSWORD}}
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
+      JWT_PASSPHRASE: ${{secrets.JWT_PASSPHRASE}}
+      CORS_ALLOW_ORIGIN: ${{secrets.CORS_ALLOW_ORIGIN}}
 
     steps:
       - name: Checkout
