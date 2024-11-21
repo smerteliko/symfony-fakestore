@@ -154,9 +154,6 @@ psalm: ## Run PSALM
 lint-yaml: ## Lints YAML coding standarts
 	${SYMFONY} lint:yaml config --parse-tags
 
-eslint-js: ## Lints JS coding standarts
-	npm run lint-js
-
 php-cs-fixer: ## Lint files with php-cs-fixer
 	${DOCKER_COMPOSE_PHP_FPM_EXEC} vendor/bin/php-cs-fixer fix src/  --allow-risky=yes --dry-run --diff --verbose
 
