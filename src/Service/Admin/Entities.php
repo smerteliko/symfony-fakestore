@@ -9,26 +9,29 @@ namespace App\Service\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class Entities {
 
 	private array                  $entities;
-	private EntityManagerInterface $entityManager;
 
 	private array $entitiesNames;
 	private array $mappingErrors = [];
 
-	public function __construct(EntityManagerInterface $entityManager) {
-		$this->entityManager = $entityManager;
-		$this->entitiesNames = $this->entityManager->getConfiguration()
-		                                      ->getMetadataDriverImpl()->getAllClassNames() ?: [];
+	public function __construct(
+		private readonly EntityManagerInterface $entityManager) {
+	}
 
+	#[Required]
+	public function setEntities(): void {
+		$this->entitiesNames = $this->entityManager->getConfiguration()
+		                                           ->getMetadataDriverImpl()?->getAllClassNames() ?: [];
 		foreach ($this->entitiesNames as $entityName) {
 			$this->entities[$entityName] = $this->entityManager->getClassMetadata($entityName);
 		}
-		$this->checkMapping();
 	}
 
+	#[Required]
 	public function checkMapping(): void {
 		foreach($this->entitiesNames as $entity) {
 			try {
