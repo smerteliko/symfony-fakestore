@@ -115,15 +115,6 @@ cache_redis_clear: ## Clear redis cache
 
 ##
 ## —— App build && execution ————————————————————————————————————————————————
-app_vue_dev: ## Frontend run dev
-	${NPM} dev
-
-app_vue_watch: ## Frontend run watch
-	${NPM} watch
-
-app_vue_prod: ## Frontend run prod buid
-	${NPM} build
-
 app_redis: ## Redis cli
 	${REDIS} redis-cli
 
@@ -136,23 +127,6 @@ app_composer_install: ## Install composer
 app_composer_update: ## Composer updating
 	${DOCKER_COMPOSE_PHP_FPM_EXEC} composer update
 
-app_build_dev:  ## Build dev env (docker, composer, db, frontend dev)
-app_build_dev: 				\
-	dc_build 				\
-	dc_up 					\
-	app_composer_install	\
-	db_diff					\
-	db_migrate				\
-	app_vue_dev
-
-app_build_watch: ## Build dev env watchable (docker, composer, db, frontend watch)
-app_build_watch: 			\
-	dc_build 				\
-	dc_up					\
-	app_composer_install	\
-	db_diff					\
-	db_migrate				\
-	app_vue_watch
 
 app_build_prod: ## Build prod env (docker, composer, db, frontend build)
 app_build_prod: 			\
@@ -161,22 +135,6 @@ app_build_prod: 			\
 	app_composer_install	\
 	db_diff					\
 	db_migrate				\
-	app_vue_prod
-
-app_start_dev: ## Start dev env (docker up, fronted dev)
-app_start_dev:	\
-	dc_up 		\
-	app_vue_dev
-
-app_start_watch: ## Start dev env watchable (docker up, fronted watch)
-app_start_watch: 	\
-	dc_up 			\
-	app_vue_watch
-
-app_start_prod: ## Start prod env  (docker up, fronted prod)
-app_start_prod: 	\
-	dc_up 			\
-	app_vue_prod
 
 app_down: ## APP DOWN !!!!! DROPPING DB && DOCKER CONTAINERS
 app_down:		\

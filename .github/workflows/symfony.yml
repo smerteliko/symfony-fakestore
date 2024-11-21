@@ -1,0 +1,44 @@
+name: CI for Fakestore
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+
+
+jobs:
+  symfony:
+    name: Symfonyfakestore
+    # https://hub.docker.com/_/ubuntu/
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: ${{}}
+      APP_SECRET: ${{}}
+      DATABASE_URL: ${{}}
+      COMPOSE_PROJECT_NAME: ${{}}
+      REDIS_URL: ${{}}
+      DB_USERNAME: ${{}}
+      DB_PASSWORD: ${{}}
+      DB_ROOT_PASSWORD: ${{}}
+      MESSENGER_TRANSPORT_DSN: ${{}}
+      MAILER_DSN: ${{}}
+      MAILER_FROM: ${{}}
+      RABBITMQ_USER: ${{}}
+      RABBITMQ_PASSWORD: ${{}}
+      JWT_SECRET_KEY: ${{}}
+      JWT_PUBLIC_KEY: ${{}}
+      JWT_PASSPHRASE: ${{}}
+      CORS_ALLOW_ORIGIN: ${{}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build Project
+        run: make app_build_prod
+
+      - name: PHPCS fixer
+        run: make php-cs-fixer
+
+
