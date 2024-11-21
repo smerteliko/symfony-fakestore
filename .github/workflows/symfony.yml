@@ -35,10 +35,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build Project
-        run: git config --global --add safe.directory /var/www && make app_build_prod
+      - name: Build docker Project
+        run:  make dc_build && make dc_fix_perm && make dc_up
+        with:
+          options: -v ${{ github.workspace }}:/var/www
+
+      ## —— JWT 💫 —————————————————————————————————————————————————————————————
+      - name: Generate the SSL keys
+        run: bin/console lexik:jwt:generate-keypair
 
       - name: PHPCS fixer
         run: make php-cs-fixer
-
 
