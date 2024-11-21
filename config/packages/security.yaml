@@ -51,6 +51,8 @@ security:
         - { path: ^/user/register, roles: PUBLIC_ACCESS }
         - { path: ^/user/profile/^, roles: IS_AUTHENTICATED_FULLY }
 
+        - { path: ^/file/user-avatar, roles: IS_AUTHENTICATED_FULLY }
+
 when@test:
     security:
         password_hashers:

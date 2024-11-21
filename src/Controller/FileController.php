@@ -42,7 +42,7 @@ class FileController extends AbstractController
 	/**
 	 * @throws JsonException
 	 */
-	#[Route('/user-avatar', name: '_user_avatar', methods: ['POST'])]
+	#[Route('/user-avatar', name: '_user_avatar', methods: ['POST', 'PATCH'])]
     public function newUserAvatar(Request $request,
         ImageFileUploader $fileUploader,
         UserImagesRepository $userImagesRepository,
@@ -50,7 +50,7 @@ class FileController extends AbstractController
 	): JsonResponse
     {
 		$fileUploader->setTargetDirectory('/user-avatar');
-        $file = $request->files->get('file');
+        $file = $request->files->get('user-avatar');
         $violation = $fileUploader->validateImage($file);
         if ($violation) {
             return new JsonResponse(['errors' => $violation->getMessage()], Response::HTTP_BAD_REQUEST);
@@ -72,7 +72,6 @@ class FileController extends AbstractController
         }
         return new JsonResponse([
             'fileName' => $lastFile->getFileName(),
-
         ]);
     }
 }

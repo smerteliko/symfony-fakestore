@@ -451,13 +451,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 		}
 
 		if ($this->userImages) {
-			$rtrnArray['Images'] = [
+			$rtrnArray['userImages'] = [
 				'id' => $this->userImages->getId(),
 				'updatedAt' => $this->userImages->getUpdatedAt(),
 				'createdAt' => $this->userImages->getCreatedAt(),
 			];
 			if ($this->userImages->getImageFile()) {
-				$rtrnArray['Images']['file'] = [
+				$rtrnArray['userImages']['file'] = [
 					'id' => $this->userImages->getImageFile()->getId(),
 					'FileName' => $this->userImages->getImageFile()->getFilename(),
 					'Type' => $this->userImages->getImageFile()->getType(),
