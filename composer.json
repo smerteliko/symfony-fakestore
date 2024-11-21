@@ -1,4 +1,7 @@
 {
+    "name": "smerteliko/symfony-fakestore",
+    "description": "Symfony backend for Fakestore project",
+    "version": "0.0.1",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
