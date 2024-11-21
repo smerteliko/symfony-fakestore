@@ -1,7 +1,7 @@
 name: CI for Fakestore
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "dev" ]
   pull_request:
     branches: [ "master" ]
 
