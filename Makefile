@@ -131,6 +131,7 @@ app_composer_update: ## Composer updating
 app_build_prod: ## Build prod env (docker, composer, db, frontend build)
 app_build_prod: 			\
 	dc_build				\
+	dc_fix_perm				\
 	dc_up					\
 	app_composer_install	\
 	db_diff					\
